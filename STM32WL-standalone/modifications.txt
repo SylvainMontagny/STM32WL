@@ -1,0 +1,39 @@
+STM32WL-standalone
+
+Modification done to enable fragmentation ------------------------------------------------------------------------
+
+--> interop mode
+
+> FragDecoder.c + LmhpFragmentation.c 		added in Middlewares\LoRaWAN\Packages\
+> frag_decoder_if.h + frag_decoder_if.c 	added in LoRaWAN\Target  
+
+> #include "sfu_fwimg_regions.h"		commented in frag_decoder_if.h (line 31)
+> #include "fw_update_agent.h"			commented in frag_decoder_if.c (line 28)
+
+> FwUpdateAgent_Run();				commented in frag_decoder_if.c (line 248)
+
+> LmhpFirmwareManagement.h / .c 		excluded from build
+
+> #define INTEROP_TEST_MODE  			set to  1. frag_decoder_if.h (line 39)
+
+> static uint32_t Crc32(..)			name changed --> static uint32_t Crc32_ . frag_decoder_if.c (line 124)
+> static uint32_t Crc32(..)			name changed --> static uint32_t Crc32_ . frag_decoder_if.c (line 267)
+> Crc32_(UnfragmentedData, size);		name changed --> Crc32_(..) . frag_decoder_if.c (line 250)
+
+> LmHandlerPackageRegister(...			uncommented in LmhpPackageRegistration.c (line 50-53)
+> case PACKAGE_ID_FRAGMENTATION ...		uncommented in LmhpPackageRegistration.c (line 80-84)
+
+> each VLEVEL_M turn into VLEVEL_L		in frag_decoder.c
+
+
+Modification done to make the fragmentation working better -------------------------------------------------------
+
+> SendTXStopFrag()				created in lora_app.c (line 665) 
+						and used in FRAG_DECODER_IF_OnDone() in frag_decoder_if.c (line 258)
+						(this function send a frame to the AS to say the end-device
+						has already re-built the file with the fragments received)
+
+> FRAG_DECODER_IF_OnDone_DataDisplay()		created in frag_decoder_if.c (line 239)
+						and used in FRAG_DECODER_IF_OnDone() in frag_decoder_if.c (line 273)
+
+> #include "lora_app.h"				added in frag_decode_if.c (line 29)
