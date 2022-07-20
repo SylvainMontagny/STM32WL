@@ -1,0 +1,3 @@
+data_init.c:8:6:LoopCopyDataInit	8	static
+data_init.c:22:6:LoopFillZerobss	8	static
+data_init.c:33:6:__gcc_data_init	8	static

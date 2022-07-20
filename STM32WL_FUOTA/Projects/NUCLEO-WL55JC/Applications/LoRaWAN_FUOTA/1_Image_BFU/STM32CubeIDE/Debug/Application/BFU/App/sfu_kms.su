@@ -1,0 +1,4 @@
+sfu_kms.c:71:17:SFU_KMS_BlobToInstall	8	static
+sfu_kms.c:115:17:SFU_KMS_GetBlobInstallInfo	0	static
+sfu_kms.c:131:17:SFU_KMS_EraseBlob	16	static
+sfu_kms.c:158:33:SFU_KMS_CheckPendingBlobInstallation	8	static

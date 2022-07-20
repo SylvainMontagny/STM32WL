@@ -1,0 +1,4 @@
+stm32wlxx_hal_cryp_ex.c:99:19:HAL_CRYPEx_AESGCM_GenerateAuthTAG	24	static
+stm32wlxx_hal_cryp_ex.c:220:19:HAL_CRYPEx_AESCCM_GenerateAuthTAG	24	static
+stm32wlxx_hal_cryp_ex.c:341:7:HAL_CRYPEx_EnableAutoKeyDerivation	0	static
+stm32wlxx_hal_cryp_ex.c:357:7:HAL_CRYPEx_DisableAutoKeyDerivation	0	static

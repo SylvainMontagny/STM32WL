@@ -1,0 +1,9 @@
+LmhpClockSync.c:188:13:LmhpClockSyncIsInitialized	0	static
+LmhpClockSync.c:193:13:LmhpClockSyncIsRunning	0	static
+LmhpClockSync.c:421:13:OnPeriodicTimeStartTimer	8	static
+LmhpClockSync.c:239:13:LmhpClockSyncOnMcpsIndication	56	static
+LmhpClockSync.c:214:13:LmhpClockSyncOnMcpsConfirm	48	static
+LmhpClockSync.c:171:13:LmhpClockSyncInit	16	static
+LmhpClockSync.c:166:15:LmhpClockSyncPackageFactory	0	static
+LmhpClockSync.c:349:24:LmhpClockSyncAppTimeReq	64	static
+LmhpClockSync.c:203:13:LmhpClockSyncProcess	8	static

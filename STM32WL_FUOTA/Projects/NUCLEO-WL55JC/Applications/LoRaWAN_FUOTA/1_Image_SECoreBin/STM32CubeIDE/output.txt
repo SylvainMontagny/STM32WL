@@ -1,0 +1,4 @@
+prebuild.sh : started
+prepareimage with windows executable
+ D:/Documents/Desktop/fuota_antoine/STM32WL_FUOTA/Middlewares/ST/STM32_Secure_Engine/Utilities/KeysAndImages/win/prepareimage/prepareimage.exe
+SECBOOT_ECCDSA_WITH_AES128_CBC_SHA256 selected

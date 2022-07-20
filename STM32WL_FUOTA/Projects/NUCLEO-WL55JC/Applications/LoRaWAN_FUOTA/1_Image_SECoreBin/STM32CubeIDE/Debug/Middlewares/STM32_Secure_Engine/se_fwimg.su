@@ -1,0 +1,3 @@
+se_fwimg.c:55:16:SE_IMG_Write	8	static
+se_fwimg.c:96:16:SE_IMG_Read	8	static
+se_fwimg.c:136:16:SE_IMG_Erase	4	static

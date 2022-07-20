@@ -1,0 +1,4 @@
+cmac.c:59:6:AES_CMAC_Init	8	static
+cmac.c:66:6:AES_CMAC_SetKey	0	static
+cmac.c:71:6:AES_CMAC_Update	48	static
+cmac.c:109:6:AES_CMAC_Final	48	static

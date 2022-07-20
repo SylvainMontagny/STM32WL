@@ -1,0 +1,13 @@
+LoRaMacConfirmQueue.c:135:28:GetElement.isra.0	12	static
+LoRaMacConfirmQueue.c:157:6:LoRaMacConfirmQueueInit	8	static
+LoRaMacConfirmQueue.c:174:6:LoRaMacConfirmQueueAdd	0	static
+LoRaMacConfirmQueue.c:195:6:LoRaMacConfirmQueueRemoveLast	0	static
+LoRaMacConfirmQueue.c:210:6:LoRaMacConfirmQueueRemoveFirst	0	static
+LoRaMacConfirmQueue.c:225:6:LoRaMacConfirmQueueSetStatus	8	static
+LoRaMacConfirmQueue.c:240:26:LoRaMacConfirmQueueGetStatus	8	static
+LoRaMacConfirmQueue.c:255:6:LoRaMacConfirmQueueSetStatusCmn	12	static
+LoRaMacConfirmQueue.c:277:26:LoRaMacConfirmQueueGetStatusCmn	0	static
+LoRaMacConfirmQueue.c:282:6:LoRaMacConfirmQueueIsCmdActive	8	static
+LoRaMacConfirmQueue.c:291:6:LoRaMacConfirmQueueHandleCb	32	static
+LoRaMacConfirmQueue.c:326:9:LoRaMacConfirmQueueGetCnt	0	static
+LoRaMacConfirmQueue.c:331:6:LoRaMacConfirmQueueIsFull	0	static

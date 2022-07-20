@@ -1,0 +1,7 @@
+core_cm4.h:1933:34:__NVIC_SystemReset	0	static,ignoring_inline_asm
+stm32wlxx_it.c:42:6:BusFault_Handler	8	static
+stm32wlxx_it.c:56:6:UsageFault_Handler	8	static
+stm32wlxx_it.c:70:6:SVC_Handler	0	static
+stm32wlxx_it.c:79:6:DebugMon_Handler	0	static
+stm32wlxx_it.c:88:6:PendSV_Handler	0	static
+stm32wlxx_it.c:97:6:SysTick_Handler	0	static

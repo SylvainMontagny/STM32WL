@@ -1,0 +1,12 @@
+radio_fw.c:256:9:RFW_TransmitLongPacket	0	static
+radio_fw.c:421:9:RFW_ReceiveLongPacket	0	static
+radio_fw.c:472:9:RFW_Init	0	static
+radio_fw.c:550:6:RFW_DeInit	0	static
+radio_fw.c:557:9:RFW_Is_Init	0	static
+radio_fw.c:566:9:RFW_Is_LongPacketModeEnabled	0	static
+radio_fw.c:575:6:RFW_SetAntSwitch	0	static
+radio_fw.c:582:9:RFW_TransmitInit	0	static
+radio_fw.c:634:9:RFW_ReceiveInit	0	static
+radio_fw.c:656:6:RFW_DeInit_TxLongPacket	0	static
+radio_fw.c:666:6:RFW_ReceivePayload	0	static
+radio_fw.c:721:6:RFW_SetRadioModem	0	static

@@ -1,0 +1,4 @@
+nvms_low_level.c:120:6:NVMS_LL_Init	0	static
+nvms_low_level.c:133:6:NVMS_LL_IsBlockErased	0	static
+nvms_low_level.c:161:6:NVMS_LL_BlockErase	24	static
+nvms_low_level.c:204:6:NVMS_LL_Write	48	static

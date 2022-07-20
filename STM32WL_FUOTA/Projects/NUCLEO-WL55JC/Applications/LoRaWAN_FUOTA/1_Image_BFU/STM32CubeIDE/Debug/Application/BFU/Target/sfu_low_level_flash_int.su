@@ -1,0 +1,9 @@
+sfu_low_level_flash_int.c:340:24:SFU_LL_FLASH_INT_Clear_Error.part.0	8	static
+sfu_low_level_flash_int.c:46:17:SFU_LL_FLASH_INT_Init	0	static
+sfu_low_level_flash_int.c:58:17:SFU_LL_FLASH_INT_Erase_Size	40	static
+sfu_low_level_flash_int.c:130:17:SFU_LL_FLASH_INT_Write	48	static
+sfu_low_level_flash_int.c:243:17:SFU_LL_FLASH_INT_Read	24	static
+sfu_low_level_flash_int.c:302:17:SFU_LL_FLASH_INT_Compare	12	static
+sfu_low_level_flash_int.c:323:10:SFU_LL_FLASH_INT_GetPage	0	static
+sfu_low_level_flash_int.c:400:6:NMI_Handler	8	static,ignoring_inline_asm
+sfu_low_level_flash_int.c:469:6:HardFault_Handler	0	static

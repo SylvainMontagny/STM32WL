@@ -1,0 +1,15 @@
+se_interface_bootloader.c:87:16:SE_Init	24	static,ignoring_inline_asm
+se_interface_bootloader.c:123:16:SE_Startup	16	static,ignoring_inline_asm
+se_interface_bootloader.c:157:16:SE_LockRestrictServices	16	static,ignoring_inline_asm
+se_interface_bootloader.c:190:16:SE_CM0_Update	16	static,ignoring_inline_asm
+se_interface_bootloader.c:225:16:SE_ExtFlash_Decrypt_Init	24	static,ignoring_inline_asm
+se_interface_bootloader.c:262:16:SE_SFU_IMG_Read	40	static,ignoring_inline_asm
+se_interface_bootloader.c:306:16:SE_SFU_IMG_Write	40	static,ignoring_inline_asm
+se_interface_bootloader.c:344:16:SE_SFU_IMG_Erase	32	static,ignoring_inline_asm
+se_interface_bootloader.c:386:16:SE_Decrypt_Init	32	static,ignoring_inline_asm
+se_interface_bootloader.c:438:16:SE_Decrypt_Append	48	static,ignoring_inline_asm
+se_interface_bootloader.c:484:16:SE_Decrypt_Finish	32	static,ignoring_inline_asm
+se_interface_bootloader.c:530:16:SE_AuthenticateFW_Init	32	static,ignoring_inline_asm
+se_interface_bootloader.c:585:16:SE_AuthenticateFW_Append	48	static,ignoring_inline_asm
+se_interface_bootloader.c:632:16:SE_AuthenticateFW_Finish	32	static,ignoring_inline_asm
+se_interface_bootloader.c:678:16:SE_VerifyHeaderSignature	24	static,ignoring_inline_asm

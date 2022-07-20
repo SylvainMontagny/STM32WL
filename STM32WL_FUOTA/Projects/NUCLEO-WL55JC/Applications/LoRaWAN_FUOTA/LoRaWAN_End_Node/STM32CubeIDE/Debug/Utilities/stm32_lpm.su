@@ -1,0 +1,6 @@
+stm32_lpm.c:122:6:UTIL_LPM_Init	0	static
+stm32_lpm.c:129:6:UTIL_LPM_DeInit	0	static
+stm32_lpm.c:133:6:UTIL_LPM_SetStopMode	8	static,ignoring_inline_asm
+stm32_lpm.c:158:6:UTIL_LPM_SetOffMode	8	static,ignoring_inline_asm
+stm32_lpm.c:183:17:UTIL_LPM_GetMode	0	static,ignoring_inline_asm
+stm32_lpm.c:216:6:UTIL_LPM_EnterLowPower	16	static,ignoring_inline_asm

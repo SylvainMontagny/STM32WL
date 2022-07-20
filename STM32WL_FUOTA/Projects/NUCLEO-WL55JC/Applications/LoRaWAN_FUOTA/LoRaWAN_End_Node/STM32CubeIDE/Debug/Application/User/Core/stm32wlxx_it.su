@@ -1,0 +1,16 @@
+stm32wlxx_it.c:73:6:NMI_Handler	0	static
+stm32wlxx_it.c:88:6:HardFault_Handler	0	static
+stm32wlxx_it.c:103:6:MemManage_Handler	0	static
+stm32wlxx_it.c:118:6:BusFault_Handler	0	static
+stm32wlxx_it.c:133:6:UsageFault_Handler	0	static
+stm32wlxx_it.c:148:6:SVC_Handler	0	static
+stm32wlxx_it.c:161:6:DebugMon_Handler	0	static
+stm32wlxx_it.c:174:6:PendSV_Handler	0	static
+stm32wlxx_it.c:187:6:SysTick_Handler	0	static
+stm32wlxx_it.c:207:6:TAMP_STAMP_LSECSS_SSRU_IRQHandler	0	static
+stm32wlxx_it.c:221:6:EXTI0_IRQHandler	0	static
+stm32wlxx_it.c:235:6:EXTI1_IRQHandler	0	static
+stm32wlxx_it.c:249:6:DMA1_Channel5_IRQHandler	0	static
+stm32wlxx_it.c:263:6:USART2_IRQHandler	0	static
+stm32wlxx_it.c:277:6:RTC_Alarm_IRQHandler	0	static
+stm32wlxx_it.c:291:6:SUBGHZ_Radio_IRQHandler	0	static

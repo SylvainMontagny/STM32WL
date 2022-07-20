@@ -1,0 +1,8 @@
+core_cm4.h:1933:34:__NVIC_SystemReset	0	static,ignoring_inline_asm
+LmhpFirmwareManagement.c:167:13:LmhpFirmwareManagementIsInitialized	0	static
+LmhpFirmwareManagement.c:172:13:LmhpFirmwareManagementIsRunning	0	static
+LmhpFirmwareManagement.c:182:13:LmhpFirmwareManagementProcess	0	static
+LmhpFirmwareManagement.c:353:13:OnRebootTimer	8	static
+LmhpFirmwareManagement.c:187:13:LmhpFirmwareManagementOnMcpsIndication	48	static
+LmhpFirmwareManagement.c:150:13:LmhpFirmwareManagementInit	16	static
+LmhpFirmwareManagement.c:144:15:LmhpFirmwareManagementPackageFactory	0	static

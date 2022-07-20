@@ -1,0 +1,3 @@
+RegionBaseUS.c:75:17:RegionBaseUSComputeNext125kHzJoinChannel	32	static
+RegionBaseUS.c:137:6:RegionBaseUSVerifyFrequencyGroup	8	static
+RegionBaseUS.c:148:10:RegionBaseUSCalcDownlinkFrequency	0	static

@@ -1,0 +1,8 @@
+kms_init.c:82:8:KMS_Initialize	24	static
+kms_init.c:176:7:KMS_Finalize	16	static
+kms_init.c:221:7:KMS_GetTokenInfo	0	static
+kms_init.c:284:7:KMS_OpenSession	20	static
+kms_init.c:459:11:KMS_CheckSessionHdle	0	static
+kms_init.c:416:7:KMS_CloseSession	16	static
+kms_init.c:477:10:KMS_SetStateIdle	0	static
+kms_init.c:493:11:KMS_GetMechanismInfo	0	static

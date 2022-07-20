@@ -1,0 +1,4 @@
+ca_low_level.c:72:6:HAL_CRYP_MspInit	8	static
+ca_low_level.c:89:6:HAL_CRYP_MspDeInit	0	static
+ca_low_level.c:110:6:HAL_PKA_MspInit	8	static
+ca_low_level.c:127:6:HAL_PKA_MspDeInit	0	static

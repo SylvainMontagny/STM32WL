@@ -1,0 +1,9 @@
+kms_enc_dec.c:136:14:encrypt_decrypt_init.part.0	56	static
+kms_enc_dec.c:743:16:KMS_EncryptInit	16	static
+kms_enc_dec.c:817:16:KMS_EncryptUpdate	64	static
+kms_enc_dec.c:771:16:KMS_Encrypt	32	static
+kms_enc_dec.c:985:16:KMS_EncryptFinal	40	static
+kms_enc_dec.c:1137:16:KMS_DecryptInit	16	static
+kms_enc_dec.c:1207:16:KMS_DecryptUpdate	56	static
+kms_enc_dec.c:1161:16:KMS_Decrypt	32	static
+kms_enc_dec.c:1415:16:KMS_DecryptFinal	32	static

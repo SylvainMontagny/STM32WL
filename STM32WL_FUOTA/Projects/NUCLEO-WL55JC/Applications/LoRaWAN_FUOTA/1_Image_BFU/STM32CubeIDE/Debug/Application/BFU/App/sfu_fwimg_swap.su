@@ -1,0 +1,12 @@
+sfu_fwimg_swap.c:277:24:CleanMagicValue	56	static
+sfu_fwimg_swap.c:333:24:EraseSlotIndex	24	static
+sfu_fwimg_swap.c:1460:24:FirmwareToInstall.constprop	360	static
+sfu_fwimg_swap.c:1015:24:DecryptImageInDwlSlot.constprop	1144	static
+sfu_fwimg_swap.c:1239:25:FirmwareToResume.constprop	1016	static
+sfu_fwimg_swap.c:447:24:SwapFirmwareImages.constprop	696	static
+sfu_fwimg_swap.c:1745:27:SFU_IMG_CheckSwapImageHandling	32	static
+sfu_fwimg_swap.c:1881:32:SFU_IMG_CheckPendingInstallation	16	static
+sfu_fwimg_swap.c:2287:10:SFU_IMG_GetTrailerSize	0	static
+sfu_fwimg_swap.c:2297:17:SFU_IMG_EraseDownloadedImg	24	static
+sfu_fwimg_swap.c:2008:17:SFU_IMG_TriggerImageInstallation	96	static
+sfu_fwimg_swap.c:2080:17:SFU_IMG_TriggerResumeInstallation	24	static

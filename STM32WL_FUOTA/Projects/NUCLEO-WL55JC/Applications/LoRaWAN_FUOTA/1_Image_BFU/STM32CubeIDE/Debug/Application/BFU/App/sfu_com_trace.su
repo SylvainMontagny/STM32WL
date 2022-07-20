@@ -1,0 +1,4 @@
+sfu_com_trace.c:47:17:SFU_COM_Init	8	static
+sfu_com_trace.c:60:17:SFU_COM_DeInit	0	static
+sfu_com_trace.c:77:17:SFU_COM_Serial_PutString	0	static
+sfu_com_trace.c:101:1:__io_putchar	16	static

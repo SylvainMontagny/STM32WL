@@ -1,0 +1,16 @@
+stm32wlxx_ll_bus.h:449:22:LL_AHB2_GRP1_EnableClock	8	static
+stm32wlxx_nucleo.c:116:10:BSP_GetVersion	0	static
+stm32wlxx_nucleo.c:134:9:BSP_LED_Init	40	static
+stm32wlxx_nucleo.c:163:9:BSP_LED_DeInit	16	static
+stm32wlxx_nucleo.c:183:9:BSP_LED_On	8	static
+stm32wlxx_nucleo.c:199:9:BSP_LED_Off	8	static
+stm32wlxx_nucleo.c:215:9:BSP_LED_Toggle	8	static
+stm32wlxx_nucleo.c:231:9:BSP_LED_GetState	8	static
+stm32wlxx_nucleo.c:258:9:BSP_PB_Init	48	static
+stm32wlxx_nucleo.c:306:9:BSP_PB_DeInit	16	static
+stm32wlxx_nucleo.c:323:9:BSP_PB_GetState	8	static
+stm32wlxx_nucleo.c:333:6:BSP_PB_IRQHandler	0	static
+stm32wlxx_nucleo.c:347:13:BSP_PB_Callback	0	static
+stm32wlxx_nucleo.c:598:13:BUTTON_SW3_EXTI_Callback	8	static
+stm32wlxx_nucleo.c:589:13:BUTTON_SW2_EXTI_Callback	8	static
+stm32wlxx_nucleo.c:580:13:BUTTON_SW1_EXTI_Callback	8	static

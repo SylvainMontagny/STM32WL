@@ -1,0 +1,4 @@
+NvmDataMgmt.c:52:6:NvmDataMgmtEvent	0	static
+NvmDataMgmt.c:59:10:NvmDataMgmtStore	0	static
+NvmDataMgmt.c:154:10:NvmDataMgmtRestore	0	static
+NvmDataMgmt.c:221:6:NvmDataMgmtFactoryReset	0	static

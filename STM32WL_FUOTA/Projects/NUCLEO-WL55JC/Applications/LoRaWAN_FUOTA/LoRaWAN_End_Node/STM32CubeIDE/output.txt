@@ -1,0 +1,20 @@
+block size =16
+Magic: b'SFU1'!!
+Magic: b'SFU1'!!
+number of segment :6
+0x802b400
+0x803c618
+0x803c620
+0x803c7cc
+0x803c7d0
+number of segment :6
+0x8000138
+0x80085d0
+0x8009470
+0x8011458
+0x80114d8
+Merging
+SBSFU Base = 0x8000000
+Writing header = 0x802b000
+APPLI Base = 0x802b200
+Writing to ../../STM32CubeIDE/Binary/BFU_LoRaWAN_End_Node.bin 247760

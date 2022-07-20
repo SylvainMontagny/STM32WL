@@ -1,0 +1,2 @@
+kms_entry.c:91:14:KMS_Entry_CheckMechanismContent	8	static
+kms_entry.c:173:7:KMS_Entry	48	static

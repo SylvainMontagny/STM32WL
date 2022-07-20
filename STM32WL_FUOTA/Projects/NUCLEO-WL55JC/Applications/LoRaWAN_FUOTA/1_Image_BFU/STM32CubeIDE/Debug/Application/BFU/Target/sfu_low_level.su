@@ -1,0 +1,17 @@
+core_cm4.h:1933:34:__NVIC_SystemReset	0	static,ignoring_inline_asm
+sfu_low_level.c:61:17:SFU_LL_DeInit	0	static
+sfu_low_level.c:96:17:SFU_LL_CRC_Config	8	static
+sfu_low_level.c:76:17:SFU_LL_CRC_Init	8	static
+sfu_low_level.c:46:17:SFU_LL_Init	0	static
+sfu_low_level.c:164:10:SFU_LL_CRC_Calculate	0	static
+sfu_low_level.c:176:17:SFU_LL_UART_Init	8	static
+sfu_low_level.c:214:17:SFU_LL_UART_DeInit	0	static
+sfu_low_level.c:238:17:SFU_LL_UART_Transmit	8	static
+sfu_low_level.c:265:17:SFU_LL_UART_Receive	8	static
+sfu_low_level.c:288:17:SFU_LL_UART_Flush	0	static
+sfu_low_level.c:304:17:SFU_LL_RTC_Init	8	static
+sfu_low_level.c:339:17:SFU_LL_RTC_DeInit	0	static
+sfu_low_level.c:365:6:SFU_LL_RTC_MspInit	144	static
+sfu_low_level.c:435:6:SFU_LL_RTC_MspDeInit	0	static
+sfu_low_level.c:451:6:SFU_LL_UART_MspInit	56	static
+sfu_low_level.c:491:6:SFU_LL_UART_MspDeInit	8	static

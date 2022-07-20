@@ -1,0 +1,5 @@
+sfu_error.c:80:6:SFU_EXCPT_SetError	0	static
+sfu_error.c:100:6:SFU_EXCPT_IrqExceptionHandler	160	static
+sfu_error.c:134:6:SFU_EXCPT_Security_Error	8	static,ignoring_inline_asm
+sfu_error.c:147:17:SFU_EXCPT_Init	0	static
+sfu_error.c:164:17:SFU_EXCPT_DeInit	0	static

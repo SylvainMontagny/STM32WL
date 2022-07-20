@@ -1,0 +1,6 @@
+kms_dyn_obj.c:114:8:KMS_CreateObject	40	static
+kms_dyn_obj.c:185:8:KMS_DestroyObject	24	static
+kms_dyn_obj.c:271:7:KMS_GetAttributeValue	40	static
+kms_dyn_obj.c:435:7:KMS_FindObjectsInit	48	static
+kms_dyn_obj.c:517:7:KMS_FindObjects	24	static
+kms_dyn_obj.c:575:7:KMS_FindObjectsFinal	24	static

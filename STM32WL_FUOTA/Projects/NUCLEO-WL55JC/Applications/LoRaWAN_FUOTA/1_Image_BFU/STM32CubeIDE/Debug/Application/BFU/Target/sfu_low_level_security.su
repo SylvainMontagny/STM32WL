@@ -1,0 +1,5 @@
+sfu_low_level_security.c:219:17:SFU_LL_SECU_CheckApplyStaticProtections	96	static
+sfu_low_level_security.c:335:17:SFU_LL_SECU_CheckApplyRuntimeProtections	0	static
+sfu_low_level_security.c:479:6:SFU_LL_SECU_GetResetSources	0	static
+sfu_low_level_security.c:528:6:SFU_LL_SECU_ClearResetSources	0	static
+sfu_low_level_security.c:540:17:SFU_LL_SECU_IWDG_Refresh	0	static

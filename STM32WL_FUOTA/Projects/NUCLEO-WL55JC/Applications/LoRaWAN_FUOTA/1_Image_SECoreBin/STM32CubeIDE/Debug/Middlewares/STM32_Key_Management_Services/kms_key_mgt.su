@@ -1,0 +1,2 @@
+kms_key_mgt.c:144:16:KMS_DeriveKey	72	static
+kms_key_mgt.c:507:7:KMS_GenerateKeyPair	0	static

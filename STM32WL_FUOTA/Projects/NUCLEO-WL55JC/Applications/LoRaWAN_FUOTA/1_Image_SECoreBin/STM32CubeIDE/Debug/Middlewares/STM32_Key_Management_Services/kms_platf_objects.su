@@ -1,0 +1,15 @@
+kms_platf_objects.c:148:13:KMS_PlatfObjects_NvmStaticObjectList	24	static
+kms_platf_objects.c:178:13:KMS_PlatfObjects_NvmDynamicObjectList	24	static
+kms_platf_objects.c:249:6:KMS_PlatfObjects_EmbeddedRange	0	static
+kms_platf_objects.c:260:20:KMS_PlatfObjects_EmbeddedObject	0	static
+kms_platf_objects.c:272:6:KMS_PlatfObjects_NvmStaticRange	0	static
+kms_platf_objects.c:285:20:KMS_PlatfObjects_NvmStaticObject	0	static
+kms_platf_objects.c:298:6:KMS_PlatfObjects_NvmDynamicRange	0	static
+kms_platf_objects.c:311:20:KMS_PlatfObjects_NvmDynamicObject	0	static
+kms_platf_objects.c:354:7:KMS_PlatfObjects_AllocateAndStore	16	static
+kms_platf_objects.c:451:6:KMS_PlatfObjects_Init	8	static
+kms_platf_objects.c:486:6:KMS_PlatfObjects_Finalize	8	static
+kms_platf_objects.c:515:7:KMS_PlatfObjects_NvmStoreObject	8	static
+kms_platf_objects.c:568:7:KMS_PlatfObjects_NvmRemoveObject	8	static
+kms_platf_objects.c:603:10:KMS_PlatfObjects_GetBlobVerifyKey	0	static
+kms_platf_objects.c:614:10:KMS_PlatfObjects_GetBlobDecryptKey	0	static

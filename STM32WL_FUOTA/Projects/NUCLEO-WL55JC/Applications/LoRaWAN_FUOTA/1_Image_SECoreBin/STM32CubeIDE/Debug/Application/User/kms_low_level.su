@@ -1,0 +1,3 @@
+kms_low_level.c:103:6:KMS_LL_IsBufferInSecureEnclave	16	static
+kms_low_level.c:130:6:KMS_LL_ReportError	0	static
+kms_low_level.c:76:7:KMS_LL_FLASH_Read	8	static

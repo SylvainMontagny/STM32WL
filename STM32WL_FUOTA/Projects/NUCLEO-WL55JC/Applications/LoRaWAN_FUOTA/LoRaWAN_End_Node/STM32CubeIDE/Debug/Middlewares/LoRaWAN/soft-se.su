@@ -1,0 +1,17 @@
+soft-se.c:208:30:GetKeyIndexByID	20	static
+soft-se.c:600:23:SecureElementGetKeyByID	80	static
+soft-se.c:129:13:PrintKey	80	static
+soft-se.c:663:23:SecureElementDeleteDynamicKeys	96	static
+soft-se.c:727:23:SecureElementSetObjHandler	20	static
+soft-se.c:486:23:SecureElementInit	80	static
+soft-se.c:875:23:SecureElementComputeAesCmac	64	static
+soft-se.c:887:23:SecureElementVerifyAesCmac	64	static
+soft-se.c:956:23:SecureElementAesEncrypt	80	static
+soft-se.c:745:23:SecureElementSetKey	144	static
+soft-se.c:1045:23:SecureElementDeriveAndStoreKey	72	static
+soft-se.c:1137:23:SecureElementProcessJoinAccept	24	static
+soft-se.c:1238:23:SecureElementRandomNumber	8	static
+soft-se.c:1248:23:SecureElementSetDevEui	8	static
+soft-se.c:1258:10:SecureElementGetDevEui	0	static
+soft-se.c:1263:23:SecureElementSetJoinEui	8	static
+soft-se.c:1273:10:SecureElementGetJoinEui	0	static

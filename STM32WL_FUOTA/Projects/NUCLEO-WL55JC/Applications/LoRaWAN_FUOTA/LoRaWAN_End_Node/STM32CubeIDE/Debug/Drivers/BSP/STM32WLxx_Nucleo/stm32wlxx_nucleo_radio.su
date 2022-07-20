@@ -1,0 +1,6 @@
+stm32wlxx_nucleo_radio.c:46:9:BSP_RADIO_Init	48	static
+stm32wlxx_nucleo_radio.c:78:9:BSP_RADIO_DeInit	16	static
+stm32wlxx_nucleo_radio.c:105:9:BSP_RADIO_ConfigRFSwitch	8	static
+stm32wlxx_nucleo_radio.c:155:9:BSP_RADIO_GetTxConfig	0	static
+stm32wlxx_nucleo_radio.c:167:9:BSP_RADIO_IsTCXO	0	static
+stm32wlxx_nucleo_radio.c:179:9:BSP_RADIO_IsDCDC	0	static

@@ -1,0 +1,2 @@
+sys_sensors.c:163:10:EnvSensors_Read	0	static
+sys_sensors.c:202:10:EnvSensors_Init	0	static

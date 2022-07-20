@@ -1,0 +1,7 @@
+sfu_low_level_flash.c:33:17:SFU_LL_FLASH_Init	8	static
+sfu_low_level_flash.c:52:17:SFU_LL_FLASH_Erase_Size	0	static
+sfu_low_level_flash.c:74:17:SFU_LL_FLASH_Write	0	static
+sfu_low_level_flash.c:95:17:SFU_LL_FLASH_Read	0	static
+sfu_low_level_flash.c:117:17:SFU_LL_FLASH_Compare	0	static
+sfu_low_level_flash.c:135:17:SFU_LL_FLASH_Config_Exe	0	static
+sfu_low_level_flash.c:158:10:SFU_LL_FLASH_GetPage	0	static

@@ -1,0 +1,17 @@
+CayenneLpp.c:90:6:CayenneLppInit	0	static
+CayenneLpp.c:98:6:CayenneLppReset	0	static
+CayenneLpp.c:106:9:CayenneLppGetSize	0	static
+CayenneLpp.c:114:10:CayenneLppGetBuffer	0	static
+CayenneLpp.c:122:9:CayenneLppCopy	8	static
+CayenneLpp.c:134:9:CayenneLppAddDigitalInput	8	static
+CayenneLpp.c:152:9:CayenneLppAddDigitalOutput	8	static
+CayenneLpp.c:170:9:CayenneLppAddAnalogInput	12	static
+CayenneLpp.c:191:9:CayenneLppAddAnalogOutput	12	static
+CayenneLpp.c:211:9:CayenneLppAddLuminosity	8	static
+CayenneLpp.c:230:9:CayenneLppAddPresence	8	static
+CayenneLpp.c:248:9:CayenneLppAddTemperature	12	static
+CayenneLpp.c:268:9:CayenneLppAddRelativeHumidity	8	static
+CayenneLpp.c:286:9:CayenneLppAddAccelerometer	20	static
+CayenneLpp.c:313:9:CayenneLppAddBarometricPressure	12	static
+CayenneLpp.c:334:9:CayenneLppAddGyrometer	20	static
+CayenneLpp.c:361:9:CayenneLppAddGps	16	static

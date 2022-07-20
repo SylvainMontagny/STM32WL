@@ -1,0 +1,5 @@
+frag_decoder_if.c:133:9:FRAG_DECODER_IF_Erase	16	static
+frag_decoder_if.c:168:9:FRAG_DECODER_IF_Write	24	static
+frag_decoder_if.c:221:6:FRAG_DECODER_IF_OnProgress	32	static
+frag_decoder_if.c:204:9:FRAG_DECODER_IF_Read	8	static
+frag_decoder_if.c:239:6:FRAG_DECODER_IF_OnDone	16	static

@@ -1,0 +1,3 @@
+se_callgate.c:201:16:SE_CallGate	32	static
+se_callgate.c:351:16:SE_CallGateService	32	static
+core_cm4.h:1933:34:__NVIC_SystemReset	0	static,ignoring_inline_asm

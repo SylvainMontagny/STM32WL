@@ -1,0 +1,7 @@
+sfu_interface_crypto_scheme.c:144:16:SFU_Decrypt_Init	48	static
+sfu_interface_crypto_scheme.c:268:16:SFU_Decrypt_Append	32	static
+sfu_interface_crypto_scheme.c:324:16:SFU_Decrypt_Finish	16	static
+sfu_interface_crypto_scheme.c:381:16:SFU_AuthenticateFW_Init	40	static
+sfu_interface_crypto_scheme.c:480:16:SFU_AuthenticateFW_Append	8	static
+sfu_interface_crypto_scheme.c:525:16:SFU_AuthenticateFW_Finish	16	static
+sfu_interface_crypto_scheme.c:578:16:SFU_VerifyHeaderSignature	56	static
