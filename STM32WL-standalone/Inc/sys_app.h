@@ -31,6 +31,7 @@ extern "C" {
 #include "stdint.h"
 #include "sys_conf.h"
 #include "stm32_adv_trace.h"
+#include "General_Setup.h"
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
@@ -68,6 +69,11 @@ extern "C" {
 #else
 #error "APP_LOG_ENABLED not defined or out of range <0,1>"
 #endif /* APP_LOG_ENABLED */
+#if (TERMINAL_COLORS == true)
+	#define APP_LOG_COLOR(COLOR)	do{ {UTIL_ADV_TRACE_COND_FSend(1, T_REG_OFF, 0,COLOR);} }while(0);
+#else
+#define APP_LOG_COLOR(COLOR)
+#endif
 
 /* USER CODE BEGIN EM */
 
