@@ -42,57 +42,79 @@
  LOW_POWER           |  true or false     |    # Enable Low Power mode between two frames (if true)              |
 ---------------------------------------------------------------------------------------------------------------*/
 
+#include "../config_application.h"
 
-#define ACTIVATION_MODE     		OTAA
-#define CLASS						CLASS_A
-#define SEND_BY_PUSH_BUTTON 		false
-#define FRAME_DELAY         		5000
-#define SPREADING_FACTOR    		9
-#define ADAPTIVE_DR         		true
-#define CONFIRMED           		true
-#define PORT                		10
-#define ENABLE_TEMPERATURE     		true
-#define CAYENNE_LPP_         		false
-#define LOW_POWER           		false
+#if (ACTIVATION_MODE != OTAA) && (ACTIVATION_MODE != ABP)
+	#error "ACTIVATION_MODE must be either OTAA or APB in your config_application.h file"
+#endif
 
+#if (CLASS != CLASS_A) &&  (CLASS != CLASS_C)
+	#error "CLASS must be either CLASS_A or CLASS_C in your config_application.h file"
+#endif
 
-#define devEUI_						{ 0x00, 0x80, 0xE1, 0x15, 0x00, 0x0A, 0x9B, 0xD2 }
+#if (SEND_BY_PUSH_BUTTON != true) &&  (CLASS != false)
+	#error "SEND_BY_PUSH_BUTTON must be either true of false in your config_application.h file"
+#endif
 
-// Configuration for ABP Activation Mode
-#define devAddr_ 					( uint32_t )0x260BBBD3
-#define nwkSKey_ 					37,3B,A9,06,ED,0C,9E,AB,45,76,7A,C4,F0,45,48,09
-#define appSKey_ 					DA,20,76,8C,71,83,F2,01,1F,41,EF,63,7C,A7,08,14
+#if FRAME_DELAY < 8000
+	#error "FRAME_DELAY must be greater than 8000 ms in your config_application.h file"
+#endif
 
-
-// Configuration for OTAA Activation Mode
-#define appKey_						BC,67,3B,8F,44,31,AC,E4,A7,B8,41,22,09,AE,1C,45
-#define appEUI_						{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
-
-
-
-#if 		(SPREADING_FACTOR == 12)
+#if (SPREADING_FACTOR == 12)
 #define ADMIN_DR	DR_0
 
-#elif 		(SPREADING_FACTOR == 11)
+#elif (SPREADING_FACTOR == 11)
 #define ADMIN_DR	DR_1
 
-#elif 		(SPREADING_FACTOR == 10)
+#elif (SPREADING_FACTOR == 10)
 #define ADMIN_DR	DR_2
 
-#elif 		(SPREADING_FACTOR == 9)
+#elif (SPREADING_FACTOR == 9)
 #define ADMIN_DR	DR_3
 
-#elif 		(SPREADING_FACTOR == 8)
+#elif (SPREADING_FACTOR == 8)
 #define ADMIN_DR	DR_4
 
-#elif 		(SPREADING_FACTOR == 7)
+#elif (SPREADING_FACTOR == 7)
 #define ADMIN_DR	DR_5
 
 #else
-	#error "Wrong SPREADING_FACTOR definition in your General_Setup.h file"
+	#error "Wrong SPREADING_FACTOR definition in your config_application.h file"
+#endif
+
+#if (ADAPTIVE_DR != true) && (ADAPTIVE_DR != false)
+	#error "ADAPTIVE_DR must be either true of false in your config_application.h file"
+#endif
+
+#if (CONFIRMED != true) && (CONFIRMED != false)
+	#error "CONFIRMED must be either true of false in your config_application.h file"
+#endif
+
+#if (PORT < 1) || (PORT > 255)
+	#error "PORT must be between 1 and 255 in your config_application.h file"
+#endif
+
+#if (PAYLOAD_TEMPERATURE == true)
+	#if (PAYLOAD_HELLO == true) || (CAYENNE_LPP_ == true)
+		#error "PAYLOAD_HELLO or CAYENNE_LPP_ can't be enable when PAYLOAD_TEMPERATURE is enable in your config_application.h file"
+	#endif
+#elif (PAYLOAD_HELLO == true)
+	#if (PAYLOAD_TEMPERATURE == true) || (CAYENNE_LPP_ == true)
+		#error "PAYLOAD_TEMPERATURE or CAYENNE_LPP_ can't be enable when PAYLOAD_HELLO is enable in your config_application.h file"
+	#endif
+#elif (CAYENNE_LPP_ == true)
+	#if (PAYLOAD_TEMPERATURE == true) || (PAYLOAD_HELLO == true)
+		#error "PAYLOAD_TEMPERATURE or PAYLOAD_HELLO can't be enable when CAYENNE_LPP_ is enable in your config_application.h file"
+	#endif
+#elif (PAYLOAD_HELLO == false) && (PAYLOAD_HELLO == false) && (CAYENNE_LPP_ == false)
+		#error "PAYLOAD_TEMPERATURE or PAYLOAD_HELLO or CAYENNE_LPP_ must be selected for the payload in your config_application.h file"
 #endif
 
 
+
+#if (LOW_POWER != true) && (LOW_POWER != false)
+	#error "LOW_POWER must be either true of false in your config_application.h file"
+#endif
 
 
 /* LoRaWAN Activation Mode - Class---------------------------------------------*/
@@ -131,9 +153,9 @@
 
 // Uplink Profile
 #define ADMIN_USER_APP_PORT				PORT					//  lora_app.h
-#define ADMIN_APP_PERSO					0						// 1 (send 0x010203 static) / 0 (none) // CAYENNE must be set to 1 - lora_app.h
 #define ADMIN_CAYENNE					CAYENNE_LPP_			// 0 or 1. If defined, cayenne LPP is enable - lora_app.h
-#define ADMIN_ENABLE_TEMPERATURE		ENABLE_TEMPERATURE		// 1 (send various temperature) / 0 (none) - General_Setup.h
+#define ADMIN_PAYLOAD_TEMPERATURE		PAYLOAD_TEMPERATURE		// 1 (send various temperature) / 0 (none) - General_Setup.h
+#define ADMIN_PAYLOAD_HELLO				PAYLOAD_HELLO			// 1 (send 0x010203 static) / 0 (none) // CAYENNE must be set to 1 - lora_app.h
 
 // Power
 #define ADMIN_LOW_POWER					!LOW_POWER				// 0 (Low Power enabled) / 1 (Low Power disabled)
@@ -146,6 +168,9 @@
 
 /* LoRaWAN Multicast ----------------------------------------------------------*/
 #define ADMIN_GEN_APP_KEY			    F2,55,B7,74,8A,00,FF,7C,22,34,4C,34,02,F6,35,6F 		// se-identity.h
+
+
+
 
 #endif /* APPLICATION_USER_LORAWAN_GENERAL_SETUP_H_ */
 

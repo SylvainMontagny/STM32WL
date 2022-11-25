@@ -263,7 +263,9 @@ void LoRaWAN_Init(void)
     else{
     APP_LOG(0, 1, "> Send frame every:       %d ms\r\n", ADMIN_TxDutyCycleTime);
     }
+
     APP_LOG(0, 1, "> Spreading Factor:       %d \r\n", SPREADING_FACTOR);
+
     if(ADAPTIVE_DR == 1){
     	APP_LOG(0, 1, "> Adaptive Data Rate:     ON \r\n");
     }
@@ -277,14 +279,21 @@ void LoRaWAN_Init(void)
     else{
     	APP_LOG(0, 1, "> Frame:                  Unconfirmed\r\n");
     }
+
     APP_LOG(0, 1, "> App Port number:        %d \r\n", PORT);
 
-    if(ENABLE_TEMPERATURE == 1){
-    	APP_LOG(0, 1, "> Payload format:         1-byte temperature\r\n");
+
+    // ENABLE_TEMPERATURE >>> PAYLOAD_TEMPERATURE
+    // PAYLOAD_HELLO
+    if(PAYLOAD_TEMPERATURE == 1){
+    	APP_LOG(0, 1, "> Payload content:        1-byte temperature\r\n");
     }
-    else{
-    	APP_LOG(0, 1, "> Payload format:         CayenneLPP, sensors\r\n");
+    else if(PAYLOAD_HELLO == 1){
+    	APP_LOG(0, 1, "> Payload content:        String HELLO\r\n");
     }
+    else if(CAYENNE_LPP == 1){
+       	APP_LOG(0, 1, "> Payload content:        CayenneLPP, sensors\r\n");
+       }
 
     if( LOW_POWER == 1){
     	APP_LOG(0, 1, "> Low Power:              ON \r\n");
@@ -292,14 +301,15 @@ void LoRaWAN_Init(void)
     else{
     	APP_LOG(0, 1, "> Low Power:              OFF \r\n");
     }
+
     APP_LOG(0, 1, "\r\n");
+
     if(ACTIVATION_MODE == ABP){
     	APP_LOG(0, 1, "> Activation mode :       ABP \r\n");
     }
     else{
     	APP_LOG(0, 1, "> Activation mode :       OTAA \r\n");
     }
-
 
   BSP_LED_Init(LED_BLUE);
   BSP_LED_Init(LED_GREEN);
@@ -331,8 +341,6 @@ void LoRaWAN_Init(void)
   UTIL_TIMER_SetPeriod(&RxLedTimer, 500);
   UTIL_TIMER_SetPeriod(&JoinLedTimer, 500);
 
-  /* USER CODE END LoRaWAN_Init_1 */
-
   UTIL_SEQ_RegTask((1 << CFG_SEQ_Task_LmHandlerProcess), UTIL_SEQ_RFU, LmHandlerProcess);
   UTIL_SEQ_RegTask((1 << CFG_SEQ_Task_LoRaSendOnTxTimerOrButtonEvent), UTIL_SEQ_RFU, SendTxData);
   /* Init Info table used by LmHandler*/
@@ -340,13 +348,9 @@ void LoRaWAN_Init(void)
 
   /* Init the Lora Stack*/
   LmHandlerInit(&LmHandlerCallbacks);
-
   LmHandlerConfigure(&LmHandlerParams);
 
-  /* USER CODE BEGIN LoRaWAN_Init_2 */
   UTIL_TIMER_Start(&JoinLedTimer);
-
-  /* USER CODE END LoRaWAN_Init_2 */
 
   LmHandlerJoin(ActivationType);
 
@@ -360,16 +364,9 @@ void LoRaWAN_Init(void)
   }
   else
   {
-    /* USER CODE BEGIN LoRaWAN_Init_3 */
-
     /* send every time button is pushed */
     BSP_PB_Init(BUTTON_SW1, BUTTON_MODE_EXTI);
-    /* USER CODE END LoRaWAN_Init_3 */
   }
-
-  /* USER CODE BEGIN LoRaWAN_Init_Last */
-
-  /* USER CODE END LoRaWAN_Init_Last */
 }
 
 /* USER CODE BEGIN PB_Callbacks */
@@ -412,21 +409,25 @@ static void OnRxData(LmHandlerAppData_t *appData, LmHandlerRxParams_t *params)
   {
     BSP_LED_On(LED_BLUE) ;
 
-
     UTIL_TIMER_Start(&RxLedTimer);
 
-
     static const char *slotStrings[] = { "1", "2", "C", "C Multicast", "B Ping-Slot", "B Multicast Ping-Slot" };
-
 
     if (appData->Port == 0){
     	// if port==0, it is join accept or MAC command
     	//APP_LOG(TS_OFF, VLEVEL_L, "MAC Command RECEIVED\r\n");
     }
     else{
-
-		APP_LOG(TS_OFF, VLEVEL_L, "FRAME RECEIVED\r\n");
-
+		APP_LOG(TS_OFF, VLEVEL_L, "FRAME RECEIVED: ");
+		if(appData->Port == ADMIN_USER_APP_PORT) {
+			if (appData->Buffer[0] == 0){
+				APP_LOG(TS_OFF, VLEVEL_L, "LED 3 (RED) goes OFF");
+			}
+			if (appData->Buffer[0] == 1){
+				APP_LOG(TS_OFF, VLEVEL_L, "LED 3 (RED) goes ON");
+			}
+		}
+		APP_LOG(TS_OFF, VLEVEL_L, "\r\n");
 		APP_LOG(TS_OFF, VLEVEL_L, "- Payload:    ");
 		if(appData->BufferSize>0)
 		{
@@ -441,11 +442,7 @@ static void OnRxData(LmHandlerAppData_t *appData, LmHandlerRxParams_t *params)
 		APP_LOG(TS_OFF, VLEVEL_L, "- Data Rate:  %d \r\n",params->Datarate);
 		APP_LOG(TS_OFF, VLEVEL_L, "- RSSI:       %d dBm\r\n",params->Rssi);
 		APP_LOG(TS_OFF, VLEVEL_L, "- SNR:        %d dB\r\n",params->Snr);
-
     }
-
-
-
 
     APP_LOG(TS_OFF, VLEVEL_M, "\r\n###### ========== MCPS-Indication ==========\r\n");
     APP_LOG(TS_OFF, VLEVEL_H, "###### D/L FRAME:%04d | SLOT:%s | PORT:%d | DR:%d | RSSI:%d | SNR:%d\r\n",
@@ -469,11 +466,10 @@ static void OnRxData(LmHandlerAppData_t *appData, LmHandlerRxParams_t *params)
 
 
     APP_LOG(TS_OFF, VLEVEL_H, "\r\n");
-// 362
+
     switch (appData->Port)
     {
       case LORAWAN_SWITCH_CLASS_PORT:
-        /*this port switches the class*/
         if (appData->BufferSize == 1)
         {
           switch (appData->Buffer[0])
@@ -549,7 +545,7 @@ static void SendTxData(void)
 
 #ifdef CAYENNE_LPP
 
-  if(ADMIN_ENABLE_TEMPERATURE)
+  if(ADMIN_PAYLOAD_TEMPERATURE)
   {
 	  temperature_20_25 ();						// change temp value
 
@@ -560,14 +556,19 @@ static void SendTxData(void)
 	  AppData.BufferSize = i;
 
   }
-  else if(APP_PERSO)
+
+  // Ici a la place de APP_PERSO mettre PAYLOAD_HELLO
+  // Modifier le bufffer par le string "hello".
+  else if(ADMIN_PAYLOAD_HELLO)
   {
 	  AppData.Port = LORAWAN_USER_APP_PORT;
 
 	  uint32_t i = 0;
-	  AppData.Buffer[i++] = 1;
-	  AppData.Buffer[i++] = 2;
-	  AppData.Buffer[i++] = 3;
+	  AppData.Buffer[i++] = 'H';
+	  AppData.Buffer[i++] = 'E';
+	  AppData.Buffer[i++] = 'L';
+	  AppData.Buffer[i++] = 'L';
+	  AppData.Buffer[i++] = 'O';
 	  AppData.BufferSize = i;
 
   }
@@ -739,7 +740,7 @@ static void OnTxData(LmHandlerTxParams_t *params)
 
 #ifdef CAYENNE_LPP
 
-  if(APP_PERSO)
+  if(ADMIN_PAYLOAD_HELLO)
   {
 	  APP_LOG(TS_OFF, VLEVEL_H, " | SENDER TYPE: USER\r\n");
   }

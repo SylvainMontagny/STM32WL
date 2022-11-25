@@ -10,9 +10,8 @@ This project is a classic end-node program with Clock Synch. & Multicast & Fragm
 This project shall be used with a NUCLEO-WL55JC1 board.
 
 ### End-Node setup
-A single file is used to setup all the LoRaWAN settings (Keys, Class, Activation method, etc.).
-- The file:     General_Setup.h
-- Its location: STM32WL-standalone\LoRaWAN\App
+A single file is used to setup all the LoRaWAN settings (Keys, Class, Activation method, etc.) :  /LoRaWAN/config_application.h
+
 
 ## End-Node messaging packages
 

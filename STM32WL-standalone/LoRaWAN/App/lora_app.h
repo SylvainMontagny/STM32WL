@@ -49,7 +49,7 @@ extern "C" {
  * CAYENNE_LPP is myDevices Application server.
  */
 #define CAYENNE_LPP									ADMIN_CAYENNE														// see General_Setup.h
-#define APP_PERSO									ADMIN_APP_PERSO														// see General_Setup.h
+//#define APP_PERSO									ADMIN_APP_PERSO														// see General_Setup.h
 
 /*!
  * Defines the application data transmission duty cycle. 10s, value in [ms].
