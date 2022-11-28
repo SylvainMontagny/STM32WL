@@ -390,16 +390,16 @@ LmHandlerErrorStatus_t LmHandlerConfigure( LmHandlerParams_t *handlerParams )
     LoRaMacMibSetRequestConfirm(&mibReq);
 
     if(ADMIN_ACTIVATION_TYPE == 2){
-	MW_LOG(TS_OFF, VLEVEL_L, "> AppEui-JoinEui:         %02X:%02X:%02X:%02X:%02X:%02X:%02X:%02X\r\n",
+	MW_LOG(TS_OFF, VLEVEL_L, "> AppEui-JoinEui          %02X:%02X:%02X:%02X:%02X:%02X:%02X:%02X\r\n",
 		   HEX8(CommissioningParams.JoinEui));
-    MW_LOG(TS_OFF, VLEVEL_L, "> DevEui:                 %02X:%02X:%02X:%02X:%02X:%02X:%02X:%02X\r\n",
+    MW_LOG(TS_OFF, VLEVEL_L, "> DevEui                  %02X:%02X:%02X:%02X:%02X:%02X:%02X:%02X\r\n",
            HEX8(CommissioningParams.DevEui));
 
     }
     if(ADMIN_ACTIVATION_TYPE == 1){
-	MW_LOG(TS_OFF, VLEVEL_L, "> DevEui:                 %02X:%02X:%02X:%02X:%02X:%02X:%02X:%02X\r\n",
+	MW_LOG(TS_OFF, VLEVEL_L, "> DevEui                  %02X:%02X:%02X:%02X:%02X:%02X:%02X:%02X\r\n",
 		   HEX8(CommissioningParams.DevEui));
-    MW_LOG(TS_OFF, VLEVEL_L, "> DevAddr:                %02X:%02X:%02X:%02X\r\n",
+    MW_LOG(TS_OFF, VLEVEL_L, "> DevAddr                 %02X:%02X:%02X:%02X\r\n",
            (unsigned)((unsigned char *)(&CommissioningParams.DevAddr))[3],
            (unsigned)((unsigned char *)(&CommissioningParams.DevAddr))[2],
            (unsigned)((unsigned char *)(&CommissioningParams.DevAddr))[1],

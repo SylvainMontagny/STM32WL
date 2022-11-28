@@ -3366,6 +3366,7 @@ LoRaMacStatus_t LoRaMacInitialization( LoRaMacPrimitives_t* primitives, LoRaMacC
     Radio.Init( &MacCtx.RadioEvents );
 
     // Initialize the Secure Element driver
+    // It's here that we print the Root Keys
     if( SecureElementInit( &Nvm.SecureElement, callbacks->GetUniqueId ) != SECURE_ELEMENT_SUCCESS ) /* ST_WORKAROUND: Add unique ID callback as input parameter */
     {
         return LORAMAC_STATUS_CRYPTO_ERROR;

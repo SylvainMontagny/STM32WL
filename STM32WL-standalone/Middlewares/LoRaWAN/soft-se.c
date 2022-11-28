@@ -136,12 +136,12 @@ void PrintKey( KeyIdentifier_t key )
     {
         if (key == APP_KEY)
         {
-            MW_LOG(TS_OFF, VLEVEL_L, "> AppKey:                 ");
+            MW_LOG(TS_OFF, VLEVEL_L, "> AppKey                  ");
         }
         else if (key == NWK_KEY)
         {
             //MW_LOG(TS_OFF, VLEVEL_L, "> NwkKey:                 ");
-            MW_LOG(TS_OFF, VLEVEL_L, "> AppKey:                 ");
+            MW_LOG(TS_OFF, VLEVEL_L, "> AppKey                  ");
         }
         else if (key == APP_S_KEY)
         {

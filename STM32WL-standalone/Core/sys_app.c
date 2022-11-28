@@ -32,64 +32,19 @@
 #include "sys_debug.h"
 #include "sys_sensors.h"
 
-/* USER CODE BEGIN Includes */
 
-/* USER CODE END Includes */
-
-/* External variables ---------------------------------------------------------*/
-/* USER CODE BEGIN EV */
-
-/* USER CODE END EV */
-
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
 #define MAX_TS_SIZE (int) 16
 
-/**
-  * Defines the maximum battery level
-  */
+
 #define LORAWAN_MAX_BAT   254
-/* USER CODE BEGIN PD */
 
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
-/* USER CODE BEGIN PV */
-
-/* USER CODE END PV */
-
-/* Private function prototypes -----------------------------------------------*/
-/**
-  * @brief Returns sec and msec based on the systime in use
-  * @param buff to update with timestamp
-  * @param size of updated buffer
-  */
 static void TimestampNow(uint8_t *buff, uint16_t *size);
 
-/**
-  * @brief  it calls UTIL_ADV_TRACE_VSNPRINTF
-  */
 static void tiny_snprintf_like(char *buf, uint32_t maxsize, const char *strFormat, ...);
 
-/* USER CODE BEGIN PFP */
-
-/* USER CODE END PFP */
-
-/* Exported functions ---------------------------------------------------------*/
 void SystemApp_Init(void)
 {
-  /* USER CODE BEGIN SystemApp_Init_1 */
 
-  /* USER CODE END SystemApp_Init_1 */
 
   /* Ensure that MSI is wake-up system clock */
   __HAL_RCC_WAKEUPSTOP_CLK_CONFIG(RCC_STOP_WAKEUPCLOCK_MSI);
@@ -252,23 +207,17 @@ uint32_t GetDevAddr(void)
 
 }
 
-/* USER CODE BEGIN EF */
-
-/* USER CODE END EF */
-
-/* Private functions ---------------------------------------------------------*/
 
 static void TimestampNow(uint8_t *buff, uint16_t *size)
 {
-  /* USER CODE BEGIN TimestampNow_1 */
-
-  /* USER CODE END TimestampNow_1 */
   SysTime_t curtime = SysTimeGet();
-  tiny_snprintf_like((char *)buff, MAX_TS_SIZE, "%ds%03d:", curtime.Seconds, curtime.SubSeconds);
-  *size = strlen((char *)buff);
-  /* USER CODE BEGIN TimestampNow_2 */
 
-  /* USER CODE END TimestampNow_2 */
+  /* Old function TimeStamp now with Subseconds */
+  //tiny_snprintf_like((char *)buff, MAX_TS_SIZE, "%ds%03d:", curtime.Seconds, curtime.SubSeconds);
+
+  /* New function TimeStampNow without Subseconds */
+  tiny_snprintf_like((char *)buff, MAX_TS_SIZE, "\r\n%ds:", curtime.Seconds);
+  *size = strlen((char *)buff);
 }
 
 /* Disable StopMode when traces need to be printed */
