@@ -1,22 +1,4 @@
-/*!
-  * @file      CayenneLpp.h
-  *
-  * @brief     Implements the Cayenne Low Power Protocol
-  *
-  * @copyright Revised BSD License, see section \ref LICENSE.
-  *
-  * @code
-  *                ______                              _
-  *               / _____)             _              | |
-  *              ( (____  _____ ____ _| |_ _____  ____| |__
-  *               \____ \| ___ |    (_   _) ___ |/ ___)  _ \
-  *               _____) ) ____| | | || |_| ____( (___| | | |
-  *              (______/|_____)_|_|_| \__)_____)\____)_| |_|
-  *              (C)2013-2018 Semtech
-  *
-  * @endcode
-  *
-  * @author    Miguel Luis ( Semtech )
+
   */
 #ifndef __CAYENNE_LPP_H__
 #define __CAYENNE_LPP_H__
@@ -25,34 +7,10 @@
 extern "C" {
 #endif
 
-/* Includes ------------------------------------------------------------------*/
+
 #include <stdint.h>
 
-/* USER CODE BEGIN Includes */
 
-/* USER CODE END Includes */
-
-/* Exported types ------------------------------------------------------------*/
-/* USER CODE BEGIN ET */
-
-/* USER CODE END ET */
-
-/* Exported constants --------------------------------------------------------*/
-/* USER CODE BEGIN EC */
-
-/* USER CODE END EC */
-
-/* External variables --------------------------------------------------------*/
-/* USER CODE BEGIN EV */
-
-/* USER CODE END EV */
-
-/* Exported macro ------------------------------------------------------------*/
-/* USER CODE BEGIN EM */
-
-/* USER CODE END EM */
-
-/* Exported functions prototypes ---------------------------------------------*/
 void CayenneLppInit(void);
 
 void CayenneLppReset(void);
@@ -87,9 +45,7 @@ uint8_t CayenneLppAddGyrometer(uint8_t channel, int16_t x, int16_t y, int16_t z)
 
 uint8_t CayenneLppAddGps(uint8_t channel, int32_t latitude, int32_t longitude, int32_t meters);
 
-/* USER CODE BEGIN EFP */
 
-/* USER CODE END EFP */
 
 #ifdef __cplusplus
 }

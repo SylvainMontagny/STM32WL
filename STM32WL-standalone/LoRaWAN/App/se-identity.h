@@ -1,40 +1,4 @@
-/*!
- * \file      se-identity.h
- *
- * \brief     Secure Element identity and keys
- *
- * \copyright Revised BSD License, see section \ref LICENSE.
- *
- * \code
- *                ______                              _
- *               / _____)             _              | |
- *              ( (____  _____ ____ _| |_ _____  ____| |__
- *               \____ \| ___ |    (_   _) ___ |/ ___)  _ \
- *               _____) ) ____| | | || |_| ____( (___| | | |
- *              (______/|_____)_|_|_| \__)_____)\____)_| |_|
- *              (C)2020 Semtech
- *
- *               ___ _____ _   ___ _  _____ ___  ___  ___ ___
- *              / __|_   _/_\ / __| |/ / __/ _ \| _ \/ __| __|
- *              \__ \ | |/ _ \ (__| ' <| _| (_) |   / (__| _|
- *              |___/ |_/_/ \_\___|_|\_\_| \___/|_|_\\___|___|
- *              embedded.connectivity.solutions===============
- *
- * \endcode
- *
- */
-/**
-  ******************************************************************************
-  *
-  *          Portions COPYRIGHT 2020 STMicroelectronics
-  *
-  * @file    se-identity.h
-  * @author  MCD Application Team
-  * @brief   Secure Element identity and keys
-  ******************************************************************************
-  */
 
-/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __SOFT_SE_IDENTITY_H__
 #define __SOFT_SE_IDENTITY_H__
 
@@ -42,17 +6,6 @@
 extern "C" {
 #endif
 
-/* Exported Includes --------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-
-/* USER CODE END Includes */
-
-/* Exported types ------------------------------------------------------------*/
-/* USER CODE BEGIN ET */
-
-/* USER CODE END ET */
-
-/* Exported constants --------------------------------------------------------*/
 
 /*!
  ******************************************************************************
@@ -86,8 +39,7 @@ extern "C" {
  ******************************************************************************
  */
 
-/* Includes ------------------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
+
 #include  "General_Setup.h"
 
 /* USER CODE END Includes */
@@ -127,13 +79,11 @@ extern "C" {
  */
 #define LORAWAN_APP_KEY										ADMIN_GEN_APP_KEY													// see General_Setup.h
 
-
 /*!
  * Network root key
  */
 
 #define LORAWAN_NWK_KEY									    ADMIN_OTAA_APP_KEY													// see General_Setup.h
-
 
 /*!
  * Forwarding Network session key

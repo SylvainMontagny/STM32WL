@@ -1,80 +1,19 @@
-/* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * @file    lora_info.c
-  * @author  MCD Application Team
-  * @brief   To give info to the application about LoRaWAN configuration
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
-  */
-/* USER CODE END Header */
 
-/* Includes ------------------------------------------------------------------*/
 #include "LoRaMac.h"
 #include "lora_info.h"
 #include "sys_app.h" /* APP_PRINTF */
 
-/* USER CODE BEGIN Includes */
 
-/* USER CODE END Includes */
-
-/* Private typedef -----------------------------------------------------------*/
-
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-
-/* USER CODE BEGIN PD */
-
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
 static LoraInfo_t loraInfo = {0, 0};
 
-/* USER CODE BEGIN PV */
 
-/* USER CODE END PV */
-
-/* Private function prototypes -----------------------------------------------*/
-
-/* USER CODE BEGIN PFP */
-
-/* USER CODE END PFP */
-
-/* Exported variables --------------------------------------------------------*/
-
-/* USER CODE BEGIN EV */
-
-/* USER CODE END EV */
-
-/* Exported functions --------------------------------------------------------*/
 void LoraInfo_Init(void)
 {
   loraInfo.ActivationMode = 0;
   loraInfo.Region = 0;
   loraInfo.ClassB = 0;
   loraInfo.Kms = 0;
-  /* USER CODE BEGIN LoraInfo_Init_1 */
 
-  /* USER CODE END LoraInfo_Init_1 */
 
 #ifdef  REGION_AS923
   loraInfo.Region |= (1 << LORAMAC_REGION_AS923) ;
@@ -130,27 +69,12 @@ void LoraInfo_Init(void)
   loraInfo.Kms = 1;
   loraInfo.ActivationMode = ACTIVATION_BY_PERSONALIZATION + (OVER_THE_AIR_ACTIVATION << 1);
 #endif /* LORAWAN_KMS */
-  /* USER CODE BEGIN LoraInfo_Init_2 */
 
-  /* USER CODE END LoraInfo_Init_2 */
 }
 
 LoraInfo_t *LoraInfo_GetPtr(void)
 {
-  /* USER CODE BEGIN LoraInfo_GetPtr */
 
-  /* USER CODE END LoraInfo_GetPtr */
   return &loraInfo;
 }
 
-/* USER CODE BEGIN EF */
-
-/* USER CODE END EF */
-
-/* Private functions --------------------------------------------------------*/
-
-/* USER CODE BEGIN PF */
-
-/* USER CODE END PF */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
