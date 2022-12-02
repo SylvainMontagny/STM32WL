@@ -1,5 +1,5 @@
 
-  */
+
 #ifndef __CAYENNE_LPP_H__
 #define __CAYENNE_LPP_H__
 
