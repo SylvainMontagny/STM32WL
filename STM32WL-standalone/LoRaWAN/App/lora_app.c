@@ -18,8 +18,11 @@
 #include "sys_sensors.h"
 
 #include  "General_Setup.h"
-
 uint8_t simuTemperature(void);
+static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error);
+#define RX_BUFF_SIZE 10
+static uint8_t rxBuff[RX_BUFF_SIZE];
+
 
 typedef enum TxEventType_e
 {
@@ -146,8 +149,45 @@ void LoRaWAN_Init(void)
   else
   {
 
-    BSP_PB_Init(BUTTON_SW1, BUTTON_MODE_EXTI);
+    BSP_PB_Init(BUTTON_SW1, BUTTON_MODE_EXTI);		// BUTTON_SW1 = PA0, IRQ number = EXTI0_IRQn
   }
+  HAL_Delay(100);									// Otherwise, starting RX trace below has a side effect on the log
+  UTIL_ADV_TRACE_StartRxProcess(byteReception);		// Starts the RX USART2 process by interrupt
+}
+
+// Callback for byte reception
+static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
+	static uint32_t index = 0;
+
+	USART2->TDR = *PData;
+
+	if ( *PData == '\r' ){
+		rxBuff[index] = '\0';
+
+		if ( strcmp(rxBuff , "p") == 0){
+			APP_LOG_COLOR(GREEN);
+			APP_LOG(0, 1, "\tSimulated Push Button Event\r\n");
+			//__NVIC_SetPendingIRQ(BUTTON_SW1_EXTI_IRQn);
+			HAL_GPIO_EXTI_Callback(BUTTON_SW1_PIN);
+		}
+		else if ( strcmp(rxBuff , "help") == 0 || strcmp(rxBuff , "h") == 0){
+			APP_LOG_COLOR(BLUE);
+			APP_LOG(0, 1, "\t- p \t\t Simulate a Push Button event\r\n");
+			APP_LOG(0, 1, "\t- h \t\t Help\r\n");
+		}
+		else{
+			APP_LOG_COLOR(GREEN);
+			APP_LOG(0, 1, "\tUnknown command\r\n");
+		}
+		index = 0;
+	}
+	else{
+		rxBuff[index++] = *PData;
+		if ( index == RX_BUFF_SIZE ){
+			index = 0;
+		}
+	}
+	APP_LOG_COLOR(RESET_COLOR);
 }
 
 /* USER CODE BEGIN PB_Callbacks */
