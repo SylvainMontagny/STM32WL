@@ -119,7 +119,7 @@ void LoRaWAN_Init(void)
   UTIL_TIMER_Create(&JoinLedTimer, 0xFFFFFFFFU, UTIL_TIMER_PERIODIC, OnJoinTimerLedEvent, NULL);
   UTIL_TIMER_SetPeriod(&TxLedTimer, 500);
   UTIL_TIMER_SetPeriod(&RxLedTimer, 500);
-  UTIL_TIMER_SetPeriod(&JoinLedTimer, 500);
+  UTIL_TIMER_SetPeriod(&JoinLedTimer, 1000);
 
   UTIL_SEQ_RegTask((1 << CFG_SEQ_Task_LmHandlerProcess), UTIL_SEQ_RFU, LmHandlerProcess);
   UTIL_SEQ_RegTask((1 << CFG_SEQ_Task_LoRaSendOnTxTimerOrButtonEvent), UTIL_SEQ_RFU, SendTxData);
@@ -133,9 +133,13 @@ void LoRaWAN_Init(void)
   /* Print Session Keys for ABP - Print Root Key for OTAA :LmHandlerConfigure() > LoRaMacInitialization() > SecureElementInit() > PrintKey() */
   LmHandlerConfigure(&LmHandlerParams);
 
+  /* Join Red LED starts blinking */
   UTIL_TIMER_Start(&JoinLedTimer);
 
   /* Join procedure for OTAA */
+  /* First try to Join Network. Next time the Device tries to send data (LmHandlerSend), it will check the Join.
+   * If the first Join was NOT successul, it sends another Join.
+   */
   LmHandlerJoin(ActivationType);
 
   /* Create TIMER for sending next Tx Frame  */
@@ -167,8 +171,12 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 		if ( strcmp(rxBuff , "p") == 0){
 			APP_LOG_COLOR(GREEN);
 			APP_LOG(0, 1, "\tSimulated Push Button Event\r\n");
-			//__NVIC_SetPendingIRQ(BUTTON_SW1_EXTI_IRQn);
 			HAL_GPIO_EXTI_Callback(BUTTON_SW1_PIN);
+		}
+		else if ( strcmp(rxBuff , "t") == 0){
+			APP_LOG_COLOR(GREEN);
+			APP_LOG(0, 1, "\tSimulated Timer Event\r\n");
+			OnTxTimerEvent(NULL);
 		}
 		else if ( strcmp(rxBuff , "help") == 0 || strcmp(rxBuff , "h") == 0){
 			APP_LOG_COLOR(BLUE);
@@ -502,6 +510,7 @@ static void OnJoinRequest(LmHandlerJoinParams_t *joinParams)
     {
       APP_LOG_COLOR(RED);
       APP_LOG(TS_OFF, VLEVEL_L, "\r\n> JOIN FAILED ...\r\n");
+      LmHandlerJoin(ActivationType);
       APP_LOG_COLOR(RESET_COLOR);
     }
     APP_LOG(0, 1, " \r\n");
