@@ -152,7 +152,6 @@ void LoRaWAN_Init(void)
   /* Send every time button is pushed */
   else
   {
-
     BSP_PB_Init(BUTTON_SW1, BUTTON_MODE_EXTI);		// BUTTON_SW1 = PA0, IRQ number = EXTI0_IRQn
   }
   HAL_Delay(100);									// Otherwise, starting RX trace below has a side effect on the log
@@ -174,13 +173,21 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 			HAL_GPIO_EXTI_Callback(BUTTON_SW1_PIN);
 		}
 		else if ( strcmp(rxBuff , "t") == 0){
-			APP_LOG_COLOR(GREEN);
-			APP_LOG(0, 1, "\tSimulated Timer Event\r\n");
-			OnTxTimerEvent(NULL);
+			if (EventType == TX_ON_TIMER){
+				APP_LOG_COLOR(GREEN);
+				APP_LOG(0, 1, "\tSimulated Timer Event\r\n");
+				OnTxTimerEvent(NULL);
+			}
+			else{
+				APP_LOG_COLOR(RED);
+				APP_LOG(0, 1, "\tSimulated Timer Event NOT available in this mode\r\n");
+			}
+
 		}
 		else if ( strcmp(rxBuff , "help") == 0 || strcmp(rxBuff , "h") == 0){
 			APP_LOG_COLOR(BLUE);
 			APP_LOG(0, 1, "\t- p \t\t Simulate a Push Button event\r\n");
+			APP_LOG(0, 1, "\t- t \t\t Simulate a Timer Event\r\n");
 			APP_LOG(0, 1, "\t- h \t\t Help\r\n");
 		}
 		else{
@@ -504,6 +511,16 @@ static void OnJoinRequest(LmHandlerJoinParams_t *joinParams)
       {
         APP_LOG(TS_OFF, VLEVEL_L, "\r\n> JOINED = OTAA !\r\n");
       }
+
+
+	  if(SEND_BY_PUSH_BUTTON == true){
+		  APP_LOG(0, 1, "> Press Push Button (B1) to send a frame \r\n");
+	  }
+	  else{
+		  APP_LOG(0, 1, "> Wait %d ms for the next frame\r\n", ADMIN_TxDutyCycleTime);
+	  }
+
+
       APP_LOG_COLOR(RESET_COLOR);
     }
     else
