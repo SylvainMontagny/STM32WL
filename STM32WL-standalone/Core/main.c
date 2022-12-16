@@ -1,8 +1,6 @@
 
 #include "main.h"
 #include "app_lorawan.h"
-
-
 #include "sys_app.h"
 
 void SystemClock_Config(void);

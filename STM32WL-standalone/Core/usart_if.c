@@ -1,55 +1,12 @@
-/* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * @file    usart_if.c
-  * @author  MCD Application Team
-  * @brief   Configuration of UART driver interface for hyperterminal communication
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
-  *
-  ******************************************************************************
-  */
-/* USER CODE END Header */
 
-/* Includes ------------------------------------------------------------------*/
 #include "usart_if.h"
 
-/* USER CODE BEGIN Includes */
-
-/* USER CODE END Includes */
-
-/* External variables ---------------------------------------------------------*/
-/**
-  * @brief DMA handle
-  */
 extern DMA_HandleTypeDef hdma_usart2_tx;
-
-/**
-  * @brief UART handle
-  */
 extern UART_HandleTypeDef huart2;
 
-/**
-  * @brief buffer to receive 1 character
-  */
 uint8_t charRx;
 
-/* USER CODE BEGIN EV */
 
-/* USER CODE END EV */
-
-/* Private typedef -----------------------------------------------------------*/
-/**
-  * @brief Trace driver callbacks handler
-  */
 const UTIL_ADV_TRACE_Driver_s UTIL_TraceDriver =
 {
   vcom_Init,
@@ -58,25 +15,7 @@ const UTIL_ADV_TRACE_Driver_s UTIL_TraceDriver =
   vcom_Trace_DMA,
 };
 
-/* USER CODE BEGIN PTD */
 
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
-/**
-  * @brief  TX complete callback
-  * @return none
-  */
 static void (*TxCpltCallback)(void *);
 /**
   * @brief  RX complete callback
@@ -87,17 +26,6 @@ static void (*TxCpltCallback)(void *);
   */
 static void (*RxCpltCallback)(uint8_t *rxChar, uint16_t size, uint8_t error);
 
-/* USER CODE BEGIN PV */
-
-/* USER CODE END PV */
-
-/* Private function prototypes -----------------------------------------------*/
-
-/* USER CODE BEGIN PFP */
-
-/* USER CODE END PFP */
-
-/* Exported functions --------------------------------------------------------*/
 
 UTIL_ADV_TRACE_Status_t vcom_Init(void (*cb)(void *))
 {
@@ -116,9 +44,7 @@ UTIL_ADV_TRACE_Status_t vcom_Init(void (*cb)(void *))
 
 UTIL_ADV_TRACE_Status_t vcom_DeInit(void)
 {
-  /* USER CODE BEGIN vcom_DeInit_1 */
 
-  /* USER CODE END vcom_DeInit_1 */
   /* ##-1- Reset peripherals ################################################## */
   __HAL_RCC_USART2_FORCE_RESET();
   __HAL_RCC_USART2_RELEASE_RESET();
@@ -131,40 +57,23 @@ UTIL_ADV_TRACE_Status_t vcom_DeInit(void)
   HAL_NVIC_DisableIRQ(DMA1_Channel5_IRQn);
 
   return UTIL_ADV_TRACE_OK;
-  /* USER CODE END 1 */
-  /* USER CODE BEGIN vcom_DeInit_2 */
-
-  /* USER CODE END vcom_DeInit_2 */
 }
 
 void vcom_Trace(uint8_t *p_data, uint16_t size)
 {
-  /* USER CODE BEGIN vcom_Trace_1 */
-
-  /* USER CODE END vcom_Trace_1 */
   HAL_UART_Transmit(&huart2, p_data, size, 1000);
-  /* USER CODE BEGIN vcom_Trace_2 */
-
-  /* USER CODE END vcom_Trace_2 */
 }
 
 UTIL_ADV_TRACE_Status_t vcom_Trace_DMA(uint8_t *p_data, uint16_t size)
 {
-  /* USER CODE BEGIN vcom_Trace_DMA_1 */
-
-  /* USER CODE END vcom_Trace_DMA_1 */
   HAL_UART_Transmit_DMA(&huart2, p_data, size);
   return UTIL_ADV_TRACE_OK;
-  /* USER CODE BEGIN vcom_Trace_DMA_2 */
 
-  /* USER CODE END vcom_Trace_DMA_2 */
 }
 
 UTIL_ADV_TRACE_Status_t vcom_ReceiveInit(void (*RxCb)(uint8_t *rxChar, uint16_t size, uint8_t error))
 {
-  /* USER CODE BEGIN vcom_ReceiveInit_1 */
 
-  /* USER CODE END vcom_ReceiveInit_1 */
   UART_WakeUpTypeDef WakeUpSelection;
 
   /*record call back*/
@@ -191,16 +100,12 @@ UTIL_ADV_TRACE_Status_t vcom_ReceiveInit(void (*RxCb)(uint8_t *rxChar, uint16_t 
   HAL_UART_Receive_IT(&huart2, &charRx, 1);
 
   return UTIL_ADV_TRACE_OK;
-  /* USER CODE BEGIN vcom_ReceiveInit_2 */
 
-  /* USER CODE END vcom_ReceiveInit_2 */
 }
 
 void vcom_Resume(void)
 {
-  /* USER CODE BEGIN vcom_Resume_1 */
 
-  /* USER CODE END vcom_Resume_1 */
   /*to re-enable lost UART settings*/
   if (HAL_UART_Init(&huart2) != HAL_OK)
   {
@@ -212,21 +117,15 @@ void vcom_Resume(void)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN vcom_Resume_2 */
 
-  /* USER CODE END vcom_Resume_2 */
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart2)
 {
-  /* USER CODE BEGIN HAL_UART_TxCpltCallback_1 */
 
-  /* USER CODE END HAL_UART_TxCpltCallback_1 */
   /* buffer transmission complete*/
   TxCpltCallback(NULL);
-  /* USER CODE BEGIN HAL_UART_TxCpltCallback_2 */
 
-  /* USER CODE END HAL_UART_TxCpltCallback_2 */
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart2)
@@ -244,14 +143,4 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart2)
   /* USER CODE END HAL_UART_RxCpltCallback_2 */
 }
 
-/* USER CODE BEGIN EF */
 
-/* USER CODE END EF */
-
-/* Private Functions Definition -----------------------------------------------*/
-
-/* USER CODE BEGIN PrFD */
-
-/* USER CODE END PrFD */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

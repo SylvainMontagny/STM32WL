@@ -1,36 +1,3 @@
-/**
- * Copyright (c) 1990 The Regents of the University of California. 
-* All rights reserved. 
-* 
-* Redistribution and use in source and binary forms are permitted 
-* provided that the above copyright notice and this paragraph are 
-* duplicated in all such forms and that any documentation, 
-* advertising materials, and other materials related to such 
-* distribution and use acknowledge that the software was developed 
-* by the University of California, Berkeley.  The name of the 
-* University may not be used to endorse or promote products derived 
-* from this software without specific prior written permission. 
-* THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR 
-* IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED 
-* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. 
-*/
-/******************************************************************************
- * @file    stm32_tiny_sscanf.c
- * @author  MCD Application Team
- * @brief   Tiny implementation of sscanf
- ******************************************************************************
- * @attention
- *
- * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics. 
- * All rights reserved.</center></h2>
- *
- * This software component is licensed by ST under BSD 3-Clause license,
- * the "License"; You may not use this file except in compliance with the 
- * License. You may obtain a copy of the License at:
- *                        opensource.org/licenses/BSD-3-Clause
- *
- ******************************************************************************
- */
 
 
 /*

@@ -1,25 +1,4 @@
-/* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * @file    sys_app.c
-  * @author  MCD Application Team
-  * @brief   Initializes HW and SW system entities (not related to the radio)
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
-  *
-  ******************************************************************************
-  */
-/* USER CODE END Header */
 
-/* Includes ------------------------------------------------------------------*/
 #include <stdio.h>
 #include "platform.h"
 #include "sys_app.h"
@@ -35,16 +14,13 @@
 
 #define MAX_TS_SIZE (int) 16
 
-
 #define LORAWAN_MAX_BAT   254
 
 static void TimestampNow(uint8_t *buff, uint16_t *size);
-
 static void tiny_snprintf_like(char *buf, uint32_t maxsize, const char *strFormat, ...);
 
 void SystemApp_Init(void)
 {
-
 
   /* Ensure that MSI is wake-up system clock */
   __HAL_RCC_WAKEUPSTOP_CLK_CONFIG(RCC_STOP_WAKEUPCLOCK_MSI);
@@ -93,13 +69,9 @@ void SystemApp_Init(void)
   */
 void UTIL_SEQ_Idle(void)
 {
-  /* USER CODE BEGIN UTIL_SEQ_Idle_1 */
 
-  /* USER CODE END UTIL_SEQ_Idle_1 */
   UTIL_LPM_EnterLowPower();
-  /* USER CODE BEGIN UTIL_SEQ_Idle_2 */
 
-  /* USER CODE END UTIL_SEQ_Idle_2 */
 }
 
 uint8_t GetBatteryLevel(void)
@@ -107,9 +79,6 @@ uint8_t GetBatteryLevel(void)
   uint8_t batteryLevel = 0;
   uint16_t batteryLevelmV;
 
-  /* USER CODE BEGIN GetBatteryLevel_0 */
-
-  /* USER CODE END GetBatteryLevel_0 */
 
   batteryLevelmV = (uint16_t) SYS_GetBatteryLevel();
 
@@ -129,29 +98,18 @@ uint8_t GetBatteryLevel(void)
 
   APP_LOG(TS_ON, VLEVEL_M, "VDDA= %d\r\n", batteryLevel);
 
-  /* USER CODE BEGIN GetBatteryLevel_2 */
-
-  /* USER CODE END GetBatteryLevel_2 */
-
   return batteryLevel;  /* 1 (very low) to 254 (fully charged) */
 }
 
 uint16_t GetTemperatureLevel(void)
 {
   uint16_t temperatureLevel = 0;
-
   temperatureLevel = (uint16_t)(SYS_GetTemperatureLevel() / 256);
-  /* USER CODE BEGIN GetTemperatureLevel */
-
-  /* USER CODE END GetTemperatureLevel */
   return temperatureLevel;
 }
 
 void GetUniqueId(uint8_t *id)
 {
-  /* USER CODE BEGIN GetUniqueId_1 */
-
-  /* USER CODE END GetUniqueId_1 */
   uint32_t val = 0;
   val = LL_FLASH_GetUDN();
   if (val == 0xFFFFFFFF)  /* Normally this should not happen */
@@ -181,18 +139,12 @@ void GetUniqueId(uint8_t *id)
     id[1] = (val >> 8) & 0xFF;
     id[0] = (val >> 16) & 0xFF;
   }
-
-  /* USER CODE BEGIN GetUniqueId_2 */
-
-  /* USER CODE END GetUniqueId_2 */
 }
 
 uint32_t GetDevAddr(void)
 {
   uint32_t val = 0;
-  /* USER CODE BEGIN GetDevAddr_1 */
 
-  /* USER CODE END GetDevAddr_1 */
 
   val = LL_FLASH_GetUDN();
   if (val == 0xFFFFFFFF)
@@ -200,11 +152,7 @@ uint32_t GetDevAddr(void)
     val = ((HAL_GetUIDw0()) ^ (HAL_GetUIDw1()) ^ (HAL_GetUIDw2()));
   }
 
-  /* USER CODE BEGIN GetDevAddr_2 */
-
-  /* USER CODE END GetDevAddr_2 */
   return val;
-
 }
 
 
@@ -223,59 +171,28 @@ static void TimestampNow(uint8_t *buff, uint16_t *size)
 /* Disable StopMode when traces need to be printed */
 void UTIL_ADV_TRACE_PreSendHook(void)
 {
-  /* USER CODE BEGIN UTIL_ADV_TRACE_PreSendHook_1 */
-
-  /* USER CODE END UTIL_ADV_TRACE_PreSendHook_1 */
   UTIL_LPM_SetStopMode((1 << CFG_LPM_UART_TX_Id), UTIL_LPM_DISABLE);
-  /* USER CODE BEGIN UTIL_ADV_TRACE_PreSendHook_2 */
-
-  /* USER CODE END UTIL_ADV_TRACE_PreSendHook_2 */
 }
 /* Re-enable StopMode when traces have been printed */
 void UTIL_ADV_TRACE_PostSendHook(void)
 {
-  /* USER CODE BEGIN UTIL_LPM_SetStopMode_1 */
-
-  /* USER CODE END UTIL_LPM_SetStopMode_1 */
   UTIL_LPM_SetStopMode((1 << CFG_LPM_UART_TX_Id), UTIL_LPM_ENABLE);
-  /* USER CODE BEGIN UTIL_LPM_SetStopMode_2 */
-
-  /* USER CODE END UTIL_LPM_SetStopMode_2 */
 }
 
 static void tiny_snprintf_like(char *buf, uint32_t maxsize, const char *strFormat, ...)
 {
-  /* USER CODE BEGIN tiny_snprintf_like_1 */
-
-  /* USER CODE END tiny_snprintf_like_1 */
   va_list vaArgs;
   va_start(vaArgs, strFormat);
   UTIL_ADV_TRACE_VSNPRINTF(buf, maxsize, strFormat, vaArgs);
   va_end(vaArgs);
-  /* USER CODE BEGIN tiny_snprintf_like_2 */
-
-  /* USER CODE END tiny_snprintf_like_2 */
 }
-
-/* USER CODE BEGIN PrFD */
-
-/* USER CODE END PrFD */
-
-/* HAL overload functions ---------------------------------------------------------*/
 
 /**
   * @note This function overwrites the __weak one from HAL
   */
 HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 {
-  /*Don't enable SysTick if TIMER_IF is based on other counters (e.g. RTC) */
-  /* USER CODE BEGIN HAL_InitTick_1 */
-
-  /* USER CODE END HAL_InitTick_1 */
   return HAL_OK;
-  /* USER CODE BEGIN HAL_InitTick_2 */
-
-  /* USER CODE END HAL_InitTick_2 */
 }
 
 /**
@@ -283,14 +200,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   */
 uint32_t HAL_GetTick(void)
 {
-  /* TIMER_IF can be based on other counter the SysTick e.g. RTC */
-  /* USER CODE BEGIN HAL_GetTick_1 */
-
-  /* USER CODE END HAL_GetTick_1 */
   return TIMER_IF_GetTimerValue();
-  /* USER CODE BEGIN HAL_GetTick_2 */
-
-  /* USER CODE END HAL_GetTick_2 */
 }
 
 /**
@@ -298,18 +208,7 @@ uint32_t HAL_GetTick(void)
   */
 void HAL_Delay(__IO uint32_t Delay)
 {
-  /* TIMER_IF can be based on other counter the SysTick e.g. RTC */
-  /* USER CODE BEGIN HAL_Delay_1 */
-
-  /* USER CODE END HAL_Delay_1 */
   TIMER_IF_DelayMs(Delay);
-  /* USER CODE BEGIN HAL_Delay_2 */
-
-  /* USER CODE END HAL_Delay_2 */
 }
 
-/* USER CODE BEGIN Overload_HAL_weaks */
 
-/* USER CODE END Overload_HAL_weaks */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
