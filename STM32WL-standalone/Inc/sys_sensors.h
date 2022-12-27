@@ -46,38 +46,15 @@ typedef struct
   int16_t altitudeGps;    /*!< in m */
   int16_t altitudeBar ;   /*!< in m * 10 */
   /**more may be added*/
-  /* USER CODE BEGIN sensor_t */
 
-  /* USER CODE END sensor_t */
 } sensor_t;
 
-/* USER CODE BEGIN ET */
 
-/* USER CODE END ET */
-
-/* Exported constants --------------------------------------------------------*/
-
-/* USER CODE BEGIN EC */
 #if defined (SENSOR_ENABLED) && (SENSOR_ENABLED == 1) && defined (X_NUCLEO_IKS01A2)
 #define HTS221_0    0U
 #define LPS22HB_0   1U
 #endif /* SENSOR_ENABLED & X_NUCLEO_IKS01A2 */
-/* USER CODE END EC */
 
-/* External variables --------------------------------------------------------*/
-/* USER CODE BEGIN EV */
-
-/* USER CODE END EV */
-
-/* Exported macro ------------------------------------------------------------*/
-/* USER CODE BEGIN EM */
-
-/* USER CODE END EM */
-
-/* Exported functions prototypes ---------------------------------------------*/
-/**
-  * @brief  initialize the environmental sensor
-  */
 int32_t EnvSensors_Init(void);
 
 /**
@@ -86,13 +63,10 @@ int32_t EnvSensors_Init(void);
   */
 int32_t EnvSensors_Read(sensor_t *sensor_data);
 
-/* USER CODE BEGIN EFP */
 
-/* USER CODE END EFP */
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __SENSORS_H__ */
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+#endif
