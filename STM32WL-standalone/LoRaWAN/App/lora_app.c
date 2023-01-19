@@ -133,6 +133,9 @@ void LoRaWAN_Init(void)
   /* Print Session Keys for ABP - Print Root Key for OTAA :LmHandlerConfigure() > LoRaMacInitialization() > SecureElementInit() > PrintKey() */
   LmHandlerConfigure(&LmHandlerParams);
 
+  // Let all print out terminated. Otherwise logs are affected.
+  HAL_Delay(500);
+
   /* Join Red LED starts blinking */
   UTIL_TIMER_Start(&JoinLedTimer);
 
@@ -140,7 +143,7 @@ void LoRaWAN_Init(void)
   /* First try to Join Network. Next time the Device tries to send data (LmHandlerSend), it will check the Join.
    * If the first Join was NOT successul, it sends another Join.
    */
-  LmHandlerJoin(ActivationType);
+//  LmHandlerJoin(ActivationType); // 19 janv 23 / Join is now at the end of LoRaWAN_Init()
 
   /* Create TIMER for sending next Tx Frame  */
   if (EventType == TX_ON_TIMER)
@@ -154,8 +157,11 @@ void LoRaWAN_Init(void)
   {
     BSP_PB_Init(BUTTON_SW1, BUTTON_MODE_EXTI);		// BUTTON_SW1 = PA0, IRQ number = EXTI0_IRQn
   }
-  HAL_Delay(100);									// Otherwise, starting RX trace below has a side effect on the log
+  									// Otherwise, starting RX trace below has a side effect on the log
   UTIL_ADV_TRACE_StartRxProcess(byteReception);		// Starts the RX USART2 process by interrupt
+
+  // Join Request
+  LmHandlerJoin(ActivationType);
 }
 
 // Callback for byte reception
@@ -184,10 +190,18 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 			}
 
 		}
+		else if ( strcmp(rxBuff , "r") == 0){
+			APP_LOG_COLOR(GREEN);
+			APP_LOG(0, 1, "\tThe Device is resetting...\r\n");
+			NVIC_SystemReset();
+		}
+
+
 		else if ( strcmp(rxBuff , "help") == 0 || strcmp(rxBuff , "h") == 0){
 			APP_LOG_COLOR(BLUE);
 			APP_LOG(0, 1, "\t- p \t\t Simulate a Push Button event\r\n");
 			APP_LOG(0, 1, "\t- t \t\t Simulate a Timer Event\r\n");
+			APP_LOG(0, 1, "\t- r \t\t Reset End-Device\r\n");
 			APP_LOG(0, 1, "\t- h \t\t Help\r\n");
 		}
 		else{
