@@ -4,8 +4,10 @@
 ## 1.1. Presentation
 This standalone project is a single-core application inspired by ST "End-Node" example (see STM32Cube MCU Package for STM32WL series). The source code has been mofified with STM32CubeIDE. 
 
-:heavy_check_mark: A single file is used to configure the application behavior and setup all LoRaWAN settings (Root Keys or Sessions Keys). 
-:heavy_check_mark: This file is : **/LoRaWAN/config_application.h**
+:heavy_check_mark: A single file is used to configure the application behavior and setup all LoRaWAN settings (Root Keys or Sessions Keys).
+
+:heavy_check_mark: This file is : **/LoRaWAN/config_application.h**.
+
 :heavy_check_mark: This project works on a **NUCLEO-WL55JC1 board**.
 
 ## 1.2. Running the application
