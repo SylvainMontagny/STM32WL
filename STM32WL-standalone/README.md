@@ -58,42 +58,42 @@ This payloads can be:
 * all sensors payload in a Cayenne LPP format (if CAYENNE_LPP_ is enable).
 
 :four: **Choose the way you send data**   
-    * use the B3 push button (SEND_BY_PUSH_BUTTON = true)
-    **or**
-    * uSe a period of FRAME_DELAY ms (when SEND_BY_PUSH_BUTTON = false).
+* use the B3 push button (SEND_BY_PUSH_BUTTON = true)
+**or**
+* uSe a period of FRAME_DELAY ms (when SEND_BY_PUSH_BUTTON = false).
 
 :five: **Select the low power feature**
 
 :six: **Enter the LoRaWAN Keys and EUI**
-    * devEUI, devAddr, nwkSKey and appSKey for an ABP end-device.
-    * devEUI, appKeys and appEUI in case of OTAA end-device. 
+* devEUI, devAddr, nwkSKey and appSKey for an ABP end-device.
+* devEUI, appKeys and appEUI in case of OTAA end-device. 
 
 :seven:  ** Open a serial terminal **
-	* 115200 bps - 8 bits - 1 stop bit.
+* 115200 bps - 8 bits - 1 stop bit.
  
 :eight: ** Run your code **
-	* On the serial link, you should see the application running.
+* On the serial link, you should see the application running.
 
 # 2. LoRaWAN Application layer Advanced features
 In addition to the previous application, this project also provide **Clock Synchronization**, **Multicast** and **Fragmentation** messaging packages activated. 
 
 ## Clock Synchronization
-- Package version implemented:          1
-- Dedicated LoRaWAN port:               202
+* Package version implemented:          1
+* Dedicated LoRaWAN port:               202
 
 ## Multicast
-- Package version implemented:          1
-- Dedicated LoRaWAN port:               200
+* Package version implemented:          1
+* Dedicated LoRaWAN port:               200
 
 ## Fragmentation
-- Package version implemented:          1
-- Dedicated LoRaWAN port:               201
-- Fragmentation algorithm implemented:  FEC (Forward Error Correction)
-- Available fragmentation mode:         Interop (This mode represents the minimum test proving that the end device is able to receive a data block file from the server.
+* Package version implemented:          1
+* Dedicated LoRaWAN port:               201
+* Fragmentation algorithm implemented:  FEC (Forward Error Correction)
+* Available fragmentation mode:         Interop (This mode represents the minimum test proving that the end device is able to receive a data block file from the server.
                                         It doesn’t allow you to perform FUOTA)
-- Added modification:                   The ST package implements the version 1 of the Fragmented data block layer messaging package. That means there is no _FragDataBlockReceivedReq_ command used by the end-device to signal the fragmentation server that a data block has been completely received (command only offered by the version 2 of the package). A dedicated function has been added. When the whole data block has been rebuilt, `SendTXStopFrag()` sends 0x0001 on port 186. Payload and port are arbitrary chosen and can be adjusted. To stop sending fragments, your fragmentation server should be able to understand this message.
+* Added modification:                   The ST package implements the version 1 of the Fragmented data block layer messaging package. That means there is no _FragDataBlockReceivedReq_ command used by the end-device to signal the fragmentation server that a data block has been completely received (command only offered by the version 2 of the package). A dedicated function has been added. When the whole data block has been rebuilt, `SendTXStopFrag()` sends 0x0001 on port 186. Payload and port are arbitrary chosen and can be adjusted. To stop sending fragments, your fragmentation server should be able to understand this message.
 
 # 3. Want to learn more about LoRaWAN ?
-- [LoRaWAN for Advanced Users books](https://www.univ-smb.fr/lorawan/en/free-book/)
-- [LoRaWAN for beginers videos](https://www.udemy.com/course/lora-lorawan-internet-of-things/?referralCode=21DED0F1021F4E261955)
+* [LoRaWAN for Advanced Users books](https://www.univ-smb.fr/lorawan/en/free-book/)
+* [LoRaWAN for beginers videos](https://www.udemy.com/course/lora-lorawan-internet-of-things/?referralCode=21DED0F1021F4E261955)
 
