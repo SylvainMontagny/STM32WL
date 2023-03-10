@@ -37,27 +37,25 @@ This standalone project is a single-core application inspired by ST "End-Node" e
  
 ### 1.2.3. Application configuration
 :one: **STM32CubeIDE installation**
-
-	* STM32CubeIDE and drivers can be downloaded from ST's website
-	
-	* To open the project, double click on the file **STM32WL-standalone\.project**.
+* STM32CubeIDE and drivers can be downloaded from ST's website
+* To open the project, double click on the file **STM32WL-standalone\.project**.
 	
 The configuration of the project is done with the file /LoRaWAN/config_application.h and configure the following project parameters:
 
 :two: **Configuration the LoRaWAN information**
-    * The activation mode (ACTIVATION_MODE)
-    * The class (CLASS)
-    * The spreading factor (SPREADING_FACTOR). The default Bandwidth is 125 kHz.
-    * The type of frame (CONFIRMED)
-    * The application port (PORT)
+* The activation mode (ACTIVATION_MODE)
+* The class (CLASS)
+* The spreading factor (SPREADING_FACTOR). The default Bandwidth is 125 kHz.
+* The type of frame (CONFIRMED)
+* The application port (PORT)
 
 :three: **Configuration of the application payload:**
 This payloads can be:
-    * HELLO String (if PAYLOAD_HELLO is enable) 
-    **or**
-    * 1 byte simulated temperature (if PAYLOAD_TEMPERATURE is enable)
-    **or**
-    * all sensors payload in a Cayenne LPP format (if CAYENNE_LPP_ is enable).
+* HELLO String (if PAYLOAD_HELLO is enable)
+**or**
+* 1 byte simulated temperature (if PAYLOAD_TEMPERATURE is enable)
+**or**
+* all sensors payload in a Cayenne LPP format (if CAYENNE_LPP_ is enable).
 
 :four: **Choose the way you send data**   
     * use the B3 push button (SEND_BY_PUSH_BUTTON = true)
