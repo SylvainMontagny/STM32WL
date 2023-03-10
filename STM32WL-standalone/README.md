@@ -37,7 +37,9 @@ This standalone project is a single-core application inspired by ST "End-Node" e
  
 ### 1.2.3. Application configuration
 :one: **STM32CubeIDE installation**
+
 	* STM32CubeIDE and drivers can be downloaded from ST's website
+	
 	* To open the project, double click on the file **STM32WL-standalone\.project**.
 	
 The configuration of the project is done with the file /LoRaWAN/config_application.h and configure the following project parameters:
