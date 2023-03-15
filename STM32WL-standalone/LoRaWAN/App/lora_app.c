@@ -95,13 +95,13 @@ void LoRaWAN_Init(void)
     APP_LOG(0, 1, "> Frame                   %s",(CONFIRMED == true) ? "Confirmed\r\n" : "Unconfirmed\r\n");
     APP_LOG(0, 1, "> App Port number         %d \r\n", PORT);
 
-    if(PAYLOAD_TEMPERATURE == 1){
+    if(PAYLOAD_TEMPERATURE == true){
     	APP_LOG(0, 1, "> Payload content         1-byte temperature\r\n");
     }
-    else if(PAYLOAD_HELLO == 1){
+    else if(PAYLOAD_HELLO == true){
     	APP_LOG(0, 1, "> Payload content:        String HELLO\r\n");
     }
-    else if(CAYENNE_LPP == 1){
+    else if(CAYENNE_LPP == true){
        	APP_LOG(0, 1, "> Payload content:        CayenneLPP, sensors\r\n");
        }
     //APP_LOG(0, 1, "> Low Power:              %s",(LOW_POWER == true) ? "ON \r\n" : "OFF \r\n");
@@ -252,15 +252,9 @@ static void SendTxData(void)
   sensor_t sensor_data;
   UTIL_TIMER_Time_t nextTxIn = 0;
 
-#ifdef CAYENNE_LPP
+
   uint8_t channel = 0;
-#else
-  uint16_t humidity = 0;
-  uint32_t i = 0;
-  int32_t latitude = 0;
-  int32_t longitude = 0;
-  uint16_t altitudeGps = 0;
-#endif /* CAYENNE_LPP */
+
 
   EnvSensors_Read(&sensor_data);
   temperature = (SYS_GetTemperatureLevel() >> 8);
@@ -268,7 +262,7 @@ static void SendTxData(void)
 
   AppData.Port = LORAWAN_USER_APP_PORT;
 
-#ifdef CAYENNE_LPP
+
 
   if(ADMIN_PAYLOAD_TEMPERATURE)
   {
@@ -290,7 +284,7 @@ static void SendTxData(void)
 	  AppData.Buffer[i++] = 'O';
 	  AppData.BufferSize = i;
   }
-  else
+  else if(ADMIN_CAYENNE)
   {
 	CayenneLppReset();
 	CayenneLppAddBarometricPressure(channel++, pressure);
@@ -309,42 +303,7 @@ static void SendTxData(void)
   }
 
 
-#else  /* not CAYENNE_LPP */
-  humidity    = (uint16_t)(sensor_data.humidity * 10);            /* in %*10     */
 
-  AppData.Buffer[i++] = AppLedStateOn;
-  AppData.Buffer[i++] = (uint8_t)((pressure >> 8) & 0xFF);
-  AppData.Buffer[i++] = (uint8_t)(pressure & 0xFF);
-  AppData.Buffer[i++] = (uint8_t)(temperature & 0xFF);
-  AppData.Buffer[i++] = (uint8_t)((humidity >> 8) & 0xFF);
-  AppData.Buffer[i++] = (uint8_t)(humidity & 0xFF);
-
-  if ((LmHandlerParams.ActiveRegion == LORAMAC_REGION_US915) || (LmHandlerParams.ActiveRegion == LORAMAC_REGION_AU915)
-      || (LmHandlerParams.ActiveRegion == LORAMAC_REGION_AS923))
-  {
-    AppData.Buffer[i++] = 0;
-    AppData.Buffer[i++] = 0;
-    AppData.Buffer[i++] = 0;
-    AppData.Buffer[i++] = 0;
-  }
-  else
-  {
-    latitude = sensor_data.latitude;
-    longitude = sensor_data.longitude;
-
-    AppData.Buffer[i++] = GetBatteryLevel();        /* 1 (very low) to 254 (fully charged) */
-    AppData.Buffer[i++] = (uint8_t)((latitude >> 16) & 0xFF);
-    AppData.Buffer[i++] = (uint8_t)((latitude >> 8) & 0xFF);
-    AppData.Buffer[i++] = (uint8_t)(latitude & 0xFF);
-    AppData.Buffer[i++] = (uint8_t)((longitude >> 16) & 0xFF);
-    AppData.Buffer[i++] = (uint8_t)((longitude >> 8) & 0xFF);
-    AppData.Buffer[i++] = (uint8_t)(longitude & 0xFF);
-    AppData.Buffer[i++] = (uint8_t)((altitudeGps >> 8) & 0xFF);
-    AppData.Buffer[i++] = (uint8_t)(altitudeGps & 0xFF);
-  }
-
-  AppData.BufferSize = i;
-#endif /* CAYENNE_LPP */
 
   if (LORAMAC_HANDLER_SUCCESS == LmHandlerSend(&AppData, LORAWAN_DEFAULT_CONFIRMED_MSG_STATE, &nextTxIn, false))
   {
