@@ -145,18 +145,10 @@ void LoRaWAN_Init(void)
    */
 //  LmHandlerJoin(ActivationType); // 19 janv 23 / Join is now at the end of LoRaWAN_Init()
 
-  /* Create TIMER for sending next Tx Frame  */
-  if (EventType == TX_ON_TIMER)
-  {
-    UTIL_TIMER_Create(&TxTimer,  0xFFFFFFFFU, UTIL_TIMER_ONESHOT, OnTxTimerEvent, NULL);
-    UTIL_TIMER_SetPeriod(&TxTimer,  APP_TX_DUTYCYCLE);
-    UTIL_TIMER_Start(&TxTimer);
-  }
-  /* Send every time button is pushed */
-  else
-  {
-    BSP_PB_Init(BUTTON_SW1, BUTTON_MODE_EXTI);		// BUTTON_SW1 = PA0, IRQ number = EXTI0_IRQn
-  }
+ // Remove Create timer here >>> Create when Join is accepted
+
+
+
   									// Otherwise, starting RX trace below has a side effect on the log
   UTIL_ADV_TRACE_StartRxProcess(byteReception);		// Starts the RX USART2 process by interrupt
 
@@ -298,8 +290,6 @@ static void SendTxData(void)
   }
 
 
-
-
   if (LORAMAC_HANDLER_SUCCESS == LmHandlerSend(&AppData, LORAWAN_DEFAULT_CONFIRMED_MSG_STATE, &nextTxIn, false))
   {
 	  /* FRAME SENT is written with TimeStamp ON > See function timeStampNow in sys_app.c */
@@ -344,7 +334,7 @@ static void OnTxData(LmHandlerTxParams_t *params)
 				  APP_LOG(0, 1, "(hex)  |  ");
 
 				  for(int i=0;i<AppData.BufferSize;i++){
-				  	APP_LOG(0, 1, "%u ", AppData.Buffer[i]);
+				  	APP_LOG(0, 1, "%03u ", AppData.Buffer[i]);
 				  }
 				 	APP_LOG(0, 1, "(dec)");
 
@@ -404,7 +394,7 @@ static const char *slotStrings[] = { "1", "2", "C", "C Multicast", "B Ping-Slot"
 
 		  if(appData->BufferSize>0)
 			{
-				for(int i=0;i<appData->BufferSize;i++){
+				for(int i=0 ; i<appData->BufferSize ; i++){
 				  APP_LOG(0, 1, "%02X ", appData->Buffer[i]);
 				}
 				APP_LOG(0, 1, "(hex) ");
@@ -485,11 +475,27 @@ static void OnJoinRequest(LmHandlerJoinParams_t *joinParams)
 		  APP_LOG(0, 1, "> Press Push Button (B1) to send a frame \r\n");
 	  }
 	  else{
-		  APP_LOG(0, 1, "> Wait %d ms for the next frame\r\n", ADMIN_TxDutyCycleTime);
+		  APP_LOG(0, 1, "> Frames will be send every %d ms\r\n", ADMIN_TxDutyCycleTime);
 	  }
 
-
       APP_LOG_COLOR(RESET_COLOR);
+
+      /* Create TIMER for sending next Tx Frame  */
+      // if (EventType == TX_ON_TIMER)
+      if (SEND_BY_PUSH_BUTTON == true)
+       {
+    	 BSP_PB_Init(BUTTON_SW1, BUTTON_MODE_EXTI);		// BUTTON_SW1 = PA0, IRQ number = EXTI0_IRQn
+
+       }
+       /* Send every time button is pushed */
+       else
+       {
+    	 UTIL_TIMER_Create(&TxTimer,  0xFFFFFFFFU, UTIL_TIMER_ONESHOT, OnTxTimerEvent, NULL);
+    	 UTIL_TIMER_SetPeriod(&TxTimer,  APP_TX_DUTYCYCLE);
+    	 UTIL_TIMER_Start(&TxTimer);
+       }
+      // Send a the first frame here
+      SendTxData();
     }
     else
     {
@@ -497,8 +503,9 @@ static void OnJoinRequest(LmHandlerJoinParams_t *joinParams)
       APP_LOG(TS_OFF, VLEVEL_L, "\r\n> JOIN FAILED ...\r\n");
       LmHandlerJoin(ActivationType);
       APP_LOG_COLOR(RESET_COLOR);
+      APP_LOG(0, 1, " \r\n");
     }
-    APP_LOG(0, 1, " \r\n");
+
   }
 }
 
