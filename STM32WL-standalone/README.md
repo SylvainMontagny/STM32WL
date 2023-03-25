@@ -68,10 +68,10 @@ This payloads can be:
 * devEUI, devAddr, nwkSKey and appSKey for an ABP end-device.
 * devEUI, appKeys and appEUI in case of OTAA end-device. 
 
-:seven:  ** Open a serial terminal **
+:seven:  **Open a serial terminal**
 * 115200 bps - 8 bits - 1 stop bit.
  
-:eight: ** Run your code **
+:eight: **Run your code**
 * On the serial link, you should see the application running.
 
 # 2. LoRaWAN Application layer Advanced features
