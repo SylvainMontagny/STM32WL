@@ -42,6 +42,12 @@ This project shall be used with a NUCLEO-WL55JC1 board.
 
 
 ## Want to learn more about LoRaWAN advanced features ?
-See **_LoRaWAN Advanced Features_** book.
-Available here: [https://www.univ-smb.fr/lorawan/en/free-book/]
+Savoie Mont Blanc University provides many educationnal ressources about LoRaWAN:
+
+:notebook: One free ebook available here:[LoRaWAN for advanced users](https://www.univ-smb.fr/lorawan/en/free-book/)
+
+:tv: E-learning platform available here: [LoRaWAN for beginers videos](https://www.udemy.com/course/lora-lorawan-internet-of-things/?referralCode=21DED0F1021F4E261955)
+
+:bulb: 2 days training sessions available here: [LoRaWAN and IoT Training](https://www.univ-smb.fr/lorawan/avada_portfolio/formation-distanciel/)
+
 

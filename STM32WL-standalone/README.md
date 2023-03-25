@@ -94,6 +94,11 @@ In addition to the previous application, this project also provide **Clock Synch
 * Added modification:                   The ST package implements the version 1 of the Fragmented data block layer messaging package. That means there is no _FragDataBlockReceivedReq_ command used by the end-device to signal the fragmentation server that a data block has been completely received (command only offered by the version 2 of the package). A dedicated function has been added. When the whole data block has been rebuilt, `SendTXStopFrag()` sends 0x0001 on port 186. Payload and port are arbitrary chosen and can be adjusted. To stop sending fragments, your fragmentation server should be able to understand this message.
 
 # 3. Want to learn more about LoRaWAN ?
-* [LoRaWAN for Advanced Users books](https://www.univ-smb.fr/lorawan/en/free-book/)
-* [LoRaWAN for beginers videos](https://www.udemy.com/course/lora-lorawan-internet-of-things/?referralCode=21DED0F1021F4E261955)
+Savoie Mont Blanc University provides many educationnal ressources about LoRaWAN:
+
+:notebook: One free ebook available here:[LoRaWAN for beginers books](https://www.univ-smb.fr/lorawan/en/free-book/)
+
+:tv: E-learning platform available here: [LoRaWAN for beginers videos](https://www.udemy.com/course/lora-lorawan-internet-of-things/?referralCode=21DED0F1021F4E261955)
+
+:bulb: 2 days training sessions available here: [LoRaWAN and IoT Training](https://www.univ-smb.fr/lorawan/avada_portfolio/formation-distanciel/)
 
