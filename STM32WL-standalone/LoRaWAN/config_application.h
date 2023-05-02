@@ -6,7 +6,7 @@
 #define CONFIRMED           		false
 #define PORT                		15
 
-#define SEND_BY_PUSH_BUTTON 		false
+#define SEND_BY_PUSH_BUTTON 		true
 #define FRAME_DELAY         		10000
 #define PAYLOAD_HELLO				true
 #define PAYLOAD_TEMPERATURE    		false
