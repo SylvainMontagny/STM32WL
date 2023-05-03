@@ -311,8 +311,8 @@ static void SendTxData(void)
 
   if (LORAMAC_HANDLER_SUCCESS == LmHandlerSend(&AppData, LORAWAN_DEFAULT_CONFIRMED_MSG_STATE, &nextTxIn, false))
   {
-	  /* FRAME SENT is written with TimeStamp ON > See function timeStampNow in sys_app.c */
-	  APP_LOG(TS_ON, VLEVEL_L, " FRAME SENT\r\n");
+	  /* This is written with TimeStamp ON > See function timeStampNow in sys_app.c */
+	  //APP_LOG(TS_ON, VLEVEL_L, " Packet transmitted\r\n");
   }
   else if (nextTxIn > 0)
   {
@@ -344,6 +344,12 @@ static void OnTxData(LmHandlerTxParams_t *params)
     		  BSP_LED_On(LED_GREEN) ;
 			  UTIL_TIMER_Start(&TxLedTimer);
 
+			 /* if (CONFIRMED == true){
+				  APP_LOG_COLOR(GREEN);
+				  APP_LOG(0, 1, " ACK Received \r\n");
+				  APP_LOG_COLOR(RESET_COLOR);
+			  }*/
+
 			  APP_LOG(0, 1, "- Payload     ");
 			  if(AppData.BufferSize>0)
 			  {
@@ -374,11 +380,11 @@ static void OnTxData(LmHandlerTxParams_t *params)
 			  //APP_LOG(TS_OFF, VLEVEL_L, "- TX Power:   %d\r\n",params->TxPower);
     	}
     	else{
-    		APP_LOG_COLOR(GREEN);
-    		APP_LOG(TS_OFF, VLEVEL_L, "  \r\nMAC COMMAND SENT (no data)\r\n");
+    		//APP_LOG_COLOR(GREEN);
+    		//APP_LOG(TS_OFF, VLEVEL_L, "  \r\nMAC COMMAND SENT (no data)\r\n");
     		APP_LOG(TS_OFF, VLEVEL_L, "- Fcnt        %d \r\n",params->UplinkCounter);
     		//APP_LOG(TS_OFF, VLEVEL_L, "- Port        %d \r\n",params->AppData.Port);
-    		APP_LOG_COLOR(RESET_COLOR);
+    		//APP_LOG_COLOR(RESET_COLOR);
     		// A MAC Command has been transmitted
     		// This is to fix the LOG issue when the first frame is sent in ABP. It seems that the Device wants to send a frame with port=0
     		// /!\ When using ABP on TTN, the FCnt = 2 is MAC command, index, a frame is sent with the following Frame Payload = 0703070307030703070308

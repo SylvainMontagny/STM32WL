@@ -59,6 +59,10 @@
 #include "LoRaMac.h"
 #include "mw_log_conf.h"
 
+// Edit sylvain
+#include "sys_app.h"
+// End Edit
+
 #ifndef LORAMAC_VERSION
 /*!
  * LoRaWAN version definition.
@@ -1482,10 +1486,13 @@ static void LoRaMacHandleMcpsRequest( void )
                     if( stopRetransmission == false )
                     {
                         AckTimeoutRetriesProcess( );
+                        // Ici on a pas recu l'ACK
                     }
                     else
                     {
-                        AckTimeoutRetriesFinalize( );
+
+
+                    	AckTimeoutRetriesFinalize( );
                     }
                 }
             }
@@ -3162,7 +3169,14 @@ static void AckTimeoutRetriesProcess( void )
     if( MacCtx.AckTimeoutRetriesCounter < MacCtx.AckTimeoutRetries )
     {
         MacCtx.AckTimeoutRetriesCounter++;
-        if( ( MacCtx.AckTimeoutRetriesCounter % 2 ) == 1 )
+
+        // Edit sylvain
+        APP_LOG_COLOR(RED);
+		APP_LOG(TS_ON, VLEVEL_L, " No ACK Received > Retry %d" , MacCtx.AckTimeoutRetriesCounter);
+		APP_LOG_COLOR(RESET_COLOR);
+		// End Edit
+
+        if( ( MacCtx.AckTimeoutRetriesCounter % 2 ) == 1 ) // Le SF augmente toutes les deux trames.
         {
             GetPhyParams_t getPhy;
             PhyParam_t phyParam;
@@ -3172,6 +3186,11 @@ static void AckTimeoutRetriesProcess( void )
             getPhy.Datarate = Nvm.MacGroup1.ChannelsDatarate;
             phyParam = RegionGetPhyParam( Nvm.MacGroup2.Region, &getPhy );
             Nvm.MacGroup1.ChannelsDatarate = phyParam.Value;
+            // Edit sylvain
+			APP_LOG_COLOR(RED);
+			APP_LOG(TS_OFF, VLEVEL_L, " > Increase SF");
+			APP_LOG_COLOR(RESET_COLOR);
+			// End Edit
         }
     }
 }
@@ -3188,7 +3207,19 @@ static void AckTimeoutRetriesFinalize( void )
 
         MacCtx.NodeAckRequested = false;
         MacCtx.McpsConfirm.AckReceived = false;
+        // Edit sylvain
+               APP_LOG_COLOR(RED);
+       		APP_LOG(TS_ON, VLEVEL_L, " No ACK Received > End of transmission \r\n" );
+       		APP_LOG_COLOR(RESET_COLOR);
+       		// End Edit
     }
+    // Edit sylvain
+    else{
+    	APP_LOG_COLOR(GREEN);
+		APP_LOG(TS_ON, VLEVEL_L, " ACK Received\r\n");
+		APP_LOG_COLOR(RESET_COLOR);
+    }
+		// End Edit
     MacCtx.McpsConfirm.NbRetries = MacCtx.AckTimeoutRetriesCounter;
 }
 

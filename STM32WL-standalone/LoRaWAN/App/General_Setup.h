@@ -145,6 +145,7 @@
 #define ADMIN_RX2_DR				DR_0								// possible values: DR_0 to DR_5 - RegionEU868.h
 #define ADMIN_ADR_ACK_LIMIT			8									// Default value=64. RegionCommon.h
 #define ADMIN_ADR_ACK_DELAY			4									// Default value=32. RegionCommon.h
+#define ADMIN_MAX_ACK_RETRIES		8									// Number of retries when using confirmed packet. Default value=8. LoRaMac.h
 
 /* LoRaWAN Application --------------------------------------------------------*/
 
@@ -165,7 +166,7 @@
 
 /* Device LOGs ----------------------------------------------------------------*/
 #define ADMIN_VERBOSE					VLEVEL_L				// possible values: VLEVEL_H / VLEVEL_M / VLEVEL_L - Utilities-Conf.h
-#define ADMIN_KEY_EXTRACT								1		// possible values: 1 (display all keys), 0 (none) - lorawan_conf.h
+#define ADMIN_KEY_EXTRACT				1						// possible values: 1 (display all keys), 0 (none) - lorawan_conf.h
 
 
 /* LoRaWAN Multicast ----------------------------------------------------------*/

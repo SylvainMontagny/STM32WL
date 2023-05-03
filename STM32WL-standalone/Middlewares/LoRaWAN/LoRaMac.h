@@ -93,11 +93,12 @@ extern "C"
 #include "secure-element-nvm.h"
 #include "LoRaMacClassBNvm.h"
 #include "lorawan_conf.h"
+#include "General_Setup.h"
 
 /*!
  * Maximum number of times the MAC layer tries to get an acknowledge.
  */
-#define MAX_ACK_RETRIES                             8
+#define MAX_ACK_RETRIES                             ADMIN_MAX_ACK_RETRIES
 
 /*!
  * Frame direction definition for up-link communications

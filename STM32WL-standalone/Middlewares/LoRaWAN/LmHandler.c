@@ -51,6 +51,10 @@
 #include "lorawan_version.h"
 #include "lora_info.h"
 
+//edit sylvain
+#include "sys_app.h"
+// fin edit
+
 #if (!defined (LORAWAN_KMS) || (LORAWAN_KMS == 0))
 #else /* LORAWAN_KMS == 1 */
 #include "kms.h"
@@ -623,18 +627,31 @@ LmHandlerErrorStatus_t LmHandlerSend( LmHandlerAppData_t *appData, LmHandlerMsgT
         if( isTxConfirmed == LORAMAC_HANDLER_UNCONFIRMED_MSG )
         {
             mcpsReq.Type = MCPS_UNCONFIRMED;
+            // Edit sylvain
+            if (mcpsReq.Req.Unconfirmed.fPort == 0){
+            	APP_LOG(TS_ON, VLEVEL_L, " Sending MAC Command\r\n");
+            }
+            else{
+            	APP_LOG(TS_ON, VLEVEL_L, " Sending Unconfirmed Data Up\r\n");
+
+            }
+            // End Edit
+
         }
         else
         {
             mcpsReq.Type = MCPS_CONFIRMED;
             mcpsReq.Req.Confirmed.NbTrials = 8;
+            // Edit sylvain
+            APP_LOG(TS_ON, VLEVEL_L, " Sending Confirmed Data Up - First try");
+            // End Edit
         }
     }
 
     TxParams.AppData = *appData;
     TxParams.Datarate = LmHandlerParams.TxDatarate;
 
-    status = LoRaMacMcpsRequest(&mcpsReq, allowDelayedTx);
+    status = LoRaMacMcpsRequest(&mcpsReq, allowDelayedTx); // 1er Envoi du message mcpsReq
     if (nextTxIn != NULL)
     {
         *nextTxIn = mcpsReq.ReqReturn.DutyCycleWaitTime;
