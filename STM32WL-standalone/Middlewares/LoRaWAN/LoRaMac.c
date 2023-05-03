@@ -61,6 +61,7 @@
 
 // Edit sylvain
 #include "sys_app.h"
+extern uint8_t isRxConfirmed;
 // End Edit
 
 #ifndef LORAMAC_VERSION
@@ -1112,7 +1113,13 @@ static void ProcessRadioRxDone( void )
             {
                 if( macHdr.Bits.MType == FRAME_TYPE_DATA_CONFIRMED_DOWN )
                 {
-                    Nvm.MacGroup1.SrvAckRequested = true;
+                	// Edit Sylvain
+                	if (macMsgData.FPort != 0){
+                		//APP_LOG(TS_ON, VLEVEL_L, " Receive Confirmed Data Down\r\n");
+                		isRxConfirmed = 1;
+                	}
+                	// End sylvain
+                	Nvm.MacGroup1.SrvAckRequested = true;
                     if( Nvm.MacGroup2.Version.Fields.Minor == 0 )
                     {
                         Nvm.MacGroup1.LastRxMic = macMsgData.MIC;
@@ -1121,6 +1128,12 @@ static void ProcessRadioRxDone( void )
                 }
                 else
                 {
+                	// Edit Sylvain
+                	if (macMsgData.FPort != 0){
+                		//APP_LOG(TS_ON, VLEVEL_L, " Receive Unconfirmed Data Down\r\n");
+                		isRxConfirmed = 0;
+                	}
+                	// End sylvain
                     Nvm.MacGroup1.SrvAckRequested = false;
                     MacCtx.McpsIndication.McpsIndication = MCPS_UNCONFIRMED;
                 }
@@ -3219,12 +3232,12 @@ static void AckTimeoutRetriesFinalize( void )
         MacCtx.NodeAckRequested = false;
         MacCtx.McpsConfirm.AckReceived = false;
         // Edit sylvain
-               APP_LOG_COLOR(RED);
+            APP_LOG_COLOR(RED);
        		APP_LOG(TS_OFF, VLEVEL_L, " > No ACK Received > End of transmission \r\n" );
        		APP_LOG_COLOR(RESET_COLOR);
        		// End Edit
     }
-    // Edit sylvain
+    	// Edit sylvain
     else{
     	APP_LOG_COLOR(GREEN);
 		APP_LOG(TS_OFF, VLEVEL_L, " > ACK Received\r\n");

@@ -24,6 +24,7 @@ uint8_t simuTemperature(void);
 static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error);
 #define RX_BUFF_SIZE 10
 static uint8_t rxBuff[RX_BUFF_SIZE];
+uint8_t isRxConfirmed;
 
 
 typedef enum TxEventType_e
@@ -410,7 +411,13 @@ static const char *slotStrings[] = { "1", "2", "C", "C Multicast", "B Ping-Slot"
 		  BSP_LED_On(LED_BLUE) ;
 		  UTIL_TIMER_Start(&RxLedTimer);
 		  APP_LOG_COLOR(BOLDBLUE);
-		  APP_LOG(TS_ON, VLEVEL_L, " FRAME RECEIVED\r\n");
+		  if (isRxConfirmed == 1){
+			  APP_LOG(TS_ON, VLEVEL_L, " Receiving Confirmed Data Down.\r\n");
+		  }
+		  else{
+			  APP_LOG(TS_ON, VLEVEL_L, " Receiving Unconfirmed Data Down.\r\n");
+		  }
+
 		  APP_LOG_COLOR(BLUE);
 		  APP_LOG(TS_OFF, VLEVEL_L, "- Payload     ");
 
