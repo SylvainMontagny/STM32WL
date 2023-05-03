@@ -2005,6 +2005,17 @@ static void ProcessMacCommands( uint8_t *payload, uint8_t macIndex, uint8_t comm
                     // Update MAC index
                     macIndex += linkAdrNbBytesParsed - 1;
                 }
+            	// Edit Sylvain
+                APP_LOG_COLOR(GREEN);
+				/*if(CONFIRMED == true){
+					APP_LOG(TS_OFF, VLEVEL_L, "\r\n");
+				}*/
+				APP_LOG(TS_OFF, VLEVEL_L, " > ADR Request Received\r\n");
+				/*if(CONFIRMED == false){
+					APP_LOG(TS_OFF, VLEVEL_L, "\r\n");
+				}*/
+				APP_LOG_COLOR(RESET_COLOR);
+				// End edit
                 break;
             }
             case SRV_MAC_DUTY_CYCLE_REQ:
@@ -3172,7 +3183,7 @@ static void AckTimeoutRetriesProcess( void )
 
         // Edit sylvain
         APP_LOG_COLOR(RED);
-		APP_LOG(TS_ON, VLEVEL_L, " No ACK Received > Retry %d" , MacCtx.AckTimeoutRetriesCounter);
+		APP_LOG(TS_OFF, VLEVEL_L, " > No ACK Received > Retry %d\r\n" , MacCtx.AckTimeoutRetriesCounter);
 		APP_LOG_COLOR(RESET_COLOR);
 		// End Edit
 
@@ -3188,7 +3199,7 @@ static void AckTimeoutRetriesProcess( void )
             Nvm.MacGroup1.ChannelsDatarate = phyParam.Value;
             // Edit sylvain
 			APP_LOG_COLOR(RED);
-			APP_LOG(TS_OFF, VLEVEL_L, " > Increase SF");
+			APP_LOG(TS_OFF, VLEVEL_L, " > Increase SF\r\n");
 			APP_LOG_COLOR(RESET_COLOR);
 			// End Edit
         }
@@ -3209,14 +3220,14 @@ static void AckTimeoutRetriesFinalize( void )
         MacCtx.McpsConfirm.AckReceived = false;
         // Edit sylvain
                APP_LOG_COLOR(RED);
-       		APP_LOG(TS_ON, VLEVEL_L, " No ACK Received > End of transmission \r\n" );
+       		APP_LOG(TS_OFF, VLEVEL_L, " > No ACK Received > End of transmission \r\n" );
        		APP_LOG_COLOR(RESET_COLOR);
        		// End Edit
     }
     // Edit sylvain
     else{
     	APP_LOG_COLOR(GREEN);
-		APP_LOG(TS_ON, VLEVEL_L, " ACK Received\r\n");
+		APP_LOG(TS_OFF, VLEVEL_L, " > ACK Received\r\n");
 		APP_LOG_COLOR(RESET_COLOR);
     }
 		// End Edit

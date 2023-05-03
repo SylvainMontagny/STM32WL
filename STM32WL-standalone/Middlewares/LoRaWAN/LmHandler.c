@@ -643,7 +643,7 @@ LmHandlerErrorStatus_t LmHandlerSend( LmHandlerAppData_t *appData, LmHandlerMsgT
             mcpsReq.Type = MCPS_CONFIRMED;
             mcpsReq.Req.Confirmed.NbTrials = 8;
             // Edit sylvain
-            APP_LOG(TS_ON, VLEVEL_L, " Sending Confirmed Data Up - First try");
+            APP_LOG(TS_ON, VLEVEL_L, " Sending Confirmed Data Up - First try\r\n");
             // End Edit
         }
     }
