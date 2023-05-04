@@ -25,6 +25,7 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error);
 #define RX_BUFF_SIZE 60
 static uint8_t rxBuff[RX_BUFF_SIZE];
 uint8_t isRxConfirmed;
+uint32_t LoRaMode = 0;
 
 
 typedef enum TxEventType_e
@@ -79,6 +80,9 @@ static UTIL_TIMER_Object_t JoinLedTimer;
 
 void LoRaWAN_Init(void)
 {
+	// Starts the RX USART2 process by interrupt
+	UTIL_ADV_TRACE_StartRxProcess(byteReception);
+
 	APP_LOG_COLOR(CLEAR_SCREEN);
 	APP_LOG_COLOR(RESET_COLOR);
 	APP_LOG(0, 1, " \r\n");
@@ -87,147 +91,138 @@ void LoRaWAN_Init(void)
     APP_LOG(0, 1, "###### Savoie Mont Blanc University ####\r\n");
     APP_LOG(0, 1, " \r\n");
 
-    APP_LOG(0, 1, "> Activation mode         %s",(ACTIVATION_MODE == ABP) ? "ABP \r\n" : "OTAA \r\n");
-    if(SEND_BY_PUSH_BUTTON == true){
-    	APP_LOG(0, 1, "> Send frame              On push button event \r\n");
-    }
-    else{
-    	APP_LOG(0, 1, "> Send frame every        %d ms\r\n", ADMIN_TxDutyCycleTime);
-    }
-    APP_LOG(0, 1, "> Spreading Factor        %d \r\n", SPREADING_FACTOR);
-    APP_LOG(0, 1, "> Adaptive Data Rate      %s", (ADAPTIVE_DR == true) ? "ON \r\n" : "OFF \r\n");
-    APP_LOG(0, 1, "> Frame                   %s",(CONFIRMED == true) ? "Confirmed\r\n" : "Unconfirmed\r\n");
-    APP_LOG(0, 1, "> App Port number         %d \r\n", PORT);
+    BSP_LED_Init(LED_BLUE);
+	BSP_LED_Init(LED_GREEN);
+	BSP_LED_Init(LED_RED);
 
-    if(PAYLOAD_TEMPERATURE == true){
-    	APP_LOG(0, 1, "> Payload content         1-byte temperature\r\n");
-    }
-    else if(PAYLOAD_HELLO == true){
-    	APP_LOG(0, 1, "> Payload content:        String HELLO\r\n");
-    }
-    else if(CAYENNE_LPP == true){
-       	APP_LOG(0, 1, "> Payload content:        CayenneLPP, sensors\r\n");
-       }
-    //APP_LOG(0, 1, "> Low Power:              %s",(LOW_POWER == true) ? "ON \r\n" : "OFF \r\n");
-    APP_LOG(0, 1, "\r\n");
+	BSP_PB_Init(BUTTON_SW1, BUTTON_MODE_EXTI);		// BUTTON_SW1 = PA0, IRQ number = EXTI0_IRQn
+	BSP_PB_Init(BUTTON_SW2, BUTTON_MODE_GPIO);
 
+/****** Raw LoRa Packet Application *************/
+	if ( BSP_PB_GetState(BUTTON_SW2) == 0 ) {
 
-  APP_LOG_COLOR(BLUE);
-  BSP_LED_Init(LED_BLUE);
-  BSP_LED_Init(LED_GREEN);
-  BSP_LED_Init(LED_RED);
-  BSP_PB_Init(BUTTON_SW2, BUTTON_MODE_EXTI);
+			LoRaMode = 1;
+			APP_LOG_COLOR(BLUE);
+			APP_LOG(0, 1, "Raw LoRa Packet Application\r\n\r\n");
 
-  UTIL_TIMER_Create(&TxLedTimer, 0xFFFFFFFFU, UTIL_TIMER_ONESHOT, OnTxTimerLedEvent, NULL);
-  UTIL_TIMER_Create(&RxLedTimer, 0xFFFFFFFFU, UTIL_TIMER_ONESHOT, OnRxTimerLedEvent, NULL);
-  UTIL_TIMER_Create(&JoinLedTimer, 0xFFFFFFFFU, UTIL_TIMER_PERIODIC, OnJoinTimerLedEvent, NULL);
-  UTIL_TIMER_SetPeriod(&TxLedTimer, 500);
-  UTIL_TIMER_SetPeriod(&RxLedTimer, 500);
-  UTIL_TIMER_SetPeriod(&JoinLedTimer, 1000);
+			APP_LOG_COLOR(WHITE);
+			APP_LOG(0, 1, "Type the following command to send a Raw LoRa Packet\r\n");
+			APP_LOG(0, 1, "> Command format : LORA=Frequency:Power:SF:Payload\r\n");
+			APP_LOG(0, 1, "> Example :        LORA=868100000:14:7:48454C4C4F \r\n");
+	}
 
-  UTIL_SEQ_RegTask((1 << CFG_SEQ_Task_LmHandlerProcess), UTIL_SEQ_RFU, LmHandlerProcess);
-  UTIL_SEQ_RegTask((1 << CFG_SEQ_Task_LoRaSendOnTxTimerOrButtonEvent), UTIL_SEQ_RFU, SendTxData);
-  /* Init Info table used by LmHandler*/
-  LoraInfo_Init();
+/***** LoRaWAN Standalone Application  ***********/
+	else{
+			APP_LOG(0, 1, "> Activation mode         %s",(ACTIVATION_MODE == ABP) ? "ABP \r\n" : "OTAA \r\n");
+			if(SEND_BY_PUSH_BUTTON == true){
+				APP_LOG(0, 1, "> Send frame              On push button event \r\n");
+			}
+			else{
+				APP_LOG(0, 1, "> Send frame every        %d ms\r\n", ADMIN_TxDutyCycleTime);
+			}
+			APP_LOG(0, 1, "> Spreading Factor        %d \r\n", SPREADING_FACTOR);
+			APP_LOG(0, 1, "> Adaptive Data Rate      %s", (ADAPTIVE_DR == true) ? "ON \r\n" : "OFF \r\n");
+			APP_LOG(0, 1, "> Frame                   %s",(CONFIRMED == true) ? "Confirmed\r\n" : "Unconfirmed\r\n");
+			APP_LOG(0, 1, "> App Port number         %d \r\n", PORT);
 
-  /* Initialize all callbacks */
-  LmHandlerInit(&LmHandlerCallbacks);
+			if(PAYLOAD_TEMPERATURE == true){
+				APP_LOG(0, 1, "> Payload content         1-byte temperature\r\n");
+			}
+			else if(PAYLOAD_HELLO == true){
+				APP_LOG(0, 1, "> Payload content:        String HELLO\r\n");
+			}
+			else if(CAYENNE_LPP == true){
+				APP_LOG(0, 1, "> Payload content:        CayenneLPP, sensors\r\n");
+			   }
+			//APP_LOG(0, 1, "> Low Power:              %s",(LOW_POWER == true) ? "ON \r\n" : "OFF \r\n");
+			APP_LOG(0, 1, "\r\n");
+		   APP_LOG_COLOR(BLUE);
 
-  /* Print LoRaWAN information : DevEUI & Devaddr when ABP - DevEUI & AppEUI-JoinEUI for OTAA */
-  /* Print Session Keys for ABP - Print Root Key for OTAA :LmHandlerConfigure() > LoRaMacInitialization() > SecureElementInit() > PrintKey() */
-  LmHandlerConfigure(&LmHandlerParams);
+		  UTIL_TIMER_Create(&TxLedTimer, 0xFFFFFFFFU, UTIL_TIMER_ONESHOT, OnTxTimerLedEvent, NULL);
+		  UTIL_TIMER_Create(&RxLedTimer, 0xFFFFFFFFU, UTIL_TIMER_ONESHOT, OnRxTimerLedEvent, NULL);
+		  UTIL_TIMER_Create(&JoinLedTimer, 0xFFFFFFFFU, UTIL_TIMER_PERIODIC, OnJoinTimerLedEvent, NULL);
+		  UTIL_TIMER_SetPeriod(&TxLedTimer, 500);
+		  UTIL_TIMER_SetPeriod(&RxLedTimer, 500);
+		  UTIL_TIMER_SetPeriod(&JoinLedTimer, 1000);
 
-  // Let all print out terminated. Otherwise logs are affected.
-  HAL_Delay(500);
+		  UTIL_SEQ_RegTask((1 << CFG_SEQ_Task_LmHandlerProcess), UTIL_SEQ_RFU, LmHandlerProcess);
+		  UTIL_SEQ_RegTask((1 << CFG_SEQ_Task_LoRaSendOnTxTimerOrButtonEvent), UTIL_SEQ_RFU, SendTxData);
 
-  /* Join Red LED starts blinking */
-  UTIL_TIMER_Start(&JoinLedTimer);
+		  LoraInfo_Init();
 
-  /* Join procedure for OTAA */
-  /* First try to Join Network. Next time the Device tries to send data (LmHandlerSend), it will check the Join.
-   * If the first Join was NOT successul, it sends another Join.
-   */
-//  LmHandlerJoin(ActivationType); // 19 janv 23 / Join is now at the end of LoRaWAN_Init()
+		  /* Initialize all callbacks */
+		  LmHandlerInit(&LmHandlerCallbacks);
 
- // Remove Create timer here >>> Create when Join is accepted
+		  /* Print LoRaWAN information : DevEUI & Devaddr when ABP - DevEUI & AppEUI-JoinEUI for OTAA */
+		  /* Print Session Keys for ABP - Print Root Key for OTAA :LmHandlerConfigure() > LoRaMacInitialization() > SecureElementInit() > PrintKey() */
+		  LmHandlerConfigure(&LmHandlerParams);
 
+		  /* Let all print out terminated. Otherwise logs are affected.*/
+		  HAL_Delay(500);
 
+		  /* Join Red LED starts blinking */
+		  UTIL_TIMER_Start(&JoinLedTimer);
 
-  									// Otherwise, starting RX trace below has a side effect on the log
-  UTIL_ADV_TRACE_StartRxProcess(byteReception);		// Starts the RX USART2 process by interrupt
+		  /* Join procedure for OTAA */
+		  /* First try to Join Network. Next time the Device tries to send data (LmHandlerSend), it will check the Join.
+		   * If the first Join was NOT successful, it sends another Join.
+		   */
+		  LmHandlerJoin(ActivationType);
+	}
 
-  // Join Request
-  LmHandlerJoin(ActivationType);
 }
-
-
 
 
 // Callback for byte reception
 static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 	static uint32_t index = 0;
-	static uint32_t lora = 0;
 
 	USART2->TDR = *PData;
 
 	if ( *PData == '\r' ){
 		rxBuff[index] = '\0';
 
-		if ( strcmp(rxBuff , "p") == 0){
-			APP_LOG_COLOR(GREEN);
-			APP_LOG(0, 1, "\tSimulated Push Button Event\r\n");
-			HAL_GPIO_EXTI_Callback(BUTTON_SW1_PIN);
-		}
-		else if ( strcmp(rxBuff , "t") == 0){
-			if (EventType == TX_ON_TIMER){
-				APP_LOG_COLOR(GREEN);
-				APP_LOG(0, 1, "\tSimulated Timer Event\r\n");
-				OnTxTimerEvent(NULL);
-			}
-			else{
-				APP_LOG_COLOR(RED);
-				APP_LOG(0, 1, "\tSimulated Timer Event NOT available in this mode\r\n");
-			}
+		if ( strcmp(rxBuff , "t") == 0){
 
+			APP_LOG_COLOR(GREEN);
+			APP_LOG(0, 1, "\tTransmition required the by user\r\n");
+			UTIL_SEQ_SetTask((1 << CFG_SEQ_Task_LoRaSendOnTxTimerOrButtonEvent), CFG_SEQ_Prio_0);
+			if (SEND_BY_PUSH_BUTTON == false){
+				UTIL_TIMER_Start(&TxTimer);
+			}
 		}
 		else if ( strcmp(rxBuff , "r") == 0){
 			APP_LOG_COLOR(GREEN);
 			APP_LOG(0, 1, "\tThe Device is resetting...\r\n");
 			NVIC_SystemReset();
 		}
-
-
-
+		else if ( strcmp(rxBuff , "help") == 0 || strcmp(rxBuff , "h") == 0){
+			APP_LOG_COLOR(BLUE);
+			APP_LOG(0, 1, "\t- t \t\t transmission of a new LoRaWAN packet\r\n");
+			APP_LOG(0, 1, "\t- r \t\t Reset End-Device\r\n");
+			APP_LOG(0, 1, "\t- h \t\t Help\r\n");
+			APP_LOG(0, 1, "\t- lora \t\t Enter Raw LoRa Packet mode\r\n");
+		}
 
 		else if ( strcmp(rxBuff , "lora") == 0 ){
-			if( lora == 0 ){
-				lora = 1;
+			if( LoRaMode == 0 ){
+				LoRaMode = 1;
 				UTIL_TIMER_Stop(&TxTimer);
 				BSP_PB_DeInit(BUTTON_SW1);
 				APP_LOG_COLOR(RED);
 				APP_LOG(0, 1, "\tLoRaWAN application stops - Enter Raw LoRa Packet mode\r\n");
 				APP_LOG_COLOR(WHITE);
-				APP_LOG(0, 1, "\r\tLoRa frame format: LORA=Frequency:Power:SF:Payload\r\n");
-				APP_LOG(0,1,"\r\tExample:           LORA=868100000:14:7:48454C4C4F \r\n");
+			    APP_LOG(0, 1, "\r\nType the following command to send a Raw LoRa Packet\r\n");
+			    APP_LOG(0, 1, "> Command format : LORA=Frequency:Power:SF:Payload\r\n");
+			    APP_LOG(0, 1, "> Example :        LORA=868100000:14:7:48454C4C4F \r\n");
 			}
 			else{
 				APP_LOG_COLOR(RED);
 				APP_LOG(0, 1, "\r\n - You already entered the Raw LoRa Packet mode\r\n - To send a LoRa command please use this format: LORA=Frequency:Power:SF:Payload\r\n");
 			}
 		}
-		else if (lora==1){
-			PrepareLoRaFrame(rxBuff); // pour l'instant aucune action sur le retour de la fonction (mais utile de faire un retour pour sortir de la fonction en cas d'erreur)
-		}
-
-
-
-
-		else if ( strcmp(rxBuff , "help") == 0 || strcmp(rxBuff , "h") == 0){
-			APP_LOG_COLOR(BLUE);
-			APP_LOG(0, 1, "\t- p \t\t Simulate a Push Button event\r\n");
-			APP_LOG(0, 1, "\t- t \t\t Simulate a Timer Event\r\n");
-			APP_LOG(0, 1, "\t- r \t\t Reset End-Device\r\n");
-			APP_LOG(0, 1, "\t- h \t\t Help\r\n");
+		else if (LoRaMode == 1){
+			PrepareLoRaFrame(rxBuff);
 		}
 
 		else{
@@ -246,23 +241,11 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 }
 
 
-
-
-/* USER CODE BEGIN PB_Callbacks */
-/* Note: Current the stm32wlxx_it.c generated by STM32CubeMX does not support BSP for PB in EXTI mode. */
-/* In order to get a push button IRS by code automatically generated */
-/* HAL_GPIO_EXTI_Callback is today the only available possibility. */
-/* Using HAL_GPIO_EXTI_Callback() shortcuts the BSP. */
-/* If users wants to go through the BSP, stm32wlxx_it.c should be updated  */
-/* in the USER CODE SESSION of the correspondent EXTIn_IRQHandler() */
-/* to call the BSP_PB_IRQHandler() or the HAL_EXTI_IRQHandler(&H_EXTI_n);. */
-/* Then the below HAL_GPIO_EXTI_Callback() can be replaced by BSP callback */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   switch (GPIO_Pin)
   {
     case  BUTTON_SW1_PIN:
-      /* Note: when "EventType == TX_ON_TIMER" this GPIO is not initialized */
       UTIL_SEQ_SetTask((1 << CFG_SEQ_Task_LoRaSendOnTxTimerOrButtonEvent), CFG_SEQ_Prio_0);
       break;
     case  BUTTON_SW2_PIN:
@@ -281,17 +264,13 @@ static void SendTxData(void)
   sensor_t sensor_data;
   UTIL_TIMER_Time_t nextTxIn = 0;
 
-
   uint8_t channel = 0;
-
 
   EnvSensors_Read(&sensor_data);
   temperature = (SYS_GetTemperatureLevel() >> 8);
   pressure    = (uint16_t)(sensor_data.pressure * 100 / 10);      /* in hPa / 10 */
 
   AppData.Port = LORAWAN_USER_APP_PORT;
-
-
 
   if(ADMIN_PAYLOAD_TEMPERATURE)
   {
@@ -463,7 +442,6 @@ static const char *slotStrings[] = { "1", "2", "C", "C Multicast", "B Ping-Slot"
 		  APP_LOG_COLOR(GREEN);
 		  switch (appData->Buffer[0])
 		  {
-
 			case 0: LmHandlerRequestClass(CLASS_A); APP_LOG(TS_OFF, VLEVEL_L, "Switch to class A\r\n"); break;
 			case 1: LmHandlerRequestClass(CLASS_B); APP_LOG(TS_OFF, VLEVEL_L, "Switch to class B\r\n"); break;
 			case 2: LmHandlerRequestClass(CLASS_C); APP_LOG(TS_OFF, VLEVEL_L, "Switch to class C\r\n"); break;
@@ -518,29 +496,30 @@ static void OnJoinRequest(LmHandlerJoinParams_t *joinParams)
 
 
 	  if(SEND_BY_PUSH_BUTTON == true){
-		  APP_LOG(0, 1, "> Press Push Button (B1) to send a frame \r\n");
+		  APP_LOG(0, 1, "> Packets will be sent on a Push Button event (B1) \r\n");
 	  }
 	  else{
-		  APP_LOG(0, 1, "> Frames will be send every %d ms\r\n", ADMIN_TxDutyCycleTime);
+		  APP_LOG(0, 1, "> Packets will be sent every %d ms OR on a Push Button event (B1) \r\n", ADMIN_TxDutyCycleTime);
 	  }
 
       APP_LOG_COLOR(RESET_COLOR);
 
       /* Create TIMER for sending next Tx Frame  */
       // if (EventType == TX_ON_TIMER)
-      if (SEND_BY_PUSH_BUTTON == true)
+    /*  if (SEND_BY_PUSH_BUTTON == true)
        {
     	 BSP_PB_Init(BUTTON_SW1, BUTTON_MODE_EXTI);		// BUTTON_SW1 = PA0, IRQ number = EXTI0_IRQn
 
-       }
+       }*/
        /* Send every time button is pushed */
-       else
+      if (SEND_BY_PUSH_BUTTON == false)
        {
     	 UTIL_TIMER_Create(&TxTimer,  0xFFFFFFFFU, UTIL_TIMER_ONESHOT, OnTxTimerEvent, NULL);
     	 UTIL_TIMER_SetPeriod(&TxTimer,  APP_TX_DUTYCYCLE);
     	 UTIL_TIMER_Start(&TxTimer);
        }
-      // Send a the first frame here (except in push Button mode)
+
+      // Send a first frame just after the Join (When using timer event to send packets)
 	  if(SEND_BY_PUSH_BUTTON == false){
 		  SendTxData();
 	  }
