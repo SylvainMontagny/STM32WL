@@ -22,7 +22,7 @@
 #include  "General_Setup.h"
 uint8_t simuTemperature(void);
 static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error);
-#define RX_BUFF_SIZE 10
+#define RX_BUFF_SIZE 60
 static uint8_t rxBuff[RX_BUFF_SIZE];
 uint8_t isRxConfirmed;
 
@@ -195,6 +195,10 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 			APP_LOG(0, 1, "\tThe Device is resetting...\r\n");
 			NVIC_SystemReset();
 		}
+
+
+
+
 		else if ( strcmp(rxBuff , "lora") == 0 ){
 			if( lora == 0 ){
 				lora = 1;
@@ -202,9 +206,22 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 				BSP_PB_DeInit(BUTTON_SW1);
 				APP_LOG_COLOR(RED);
 				APP_LOG(0, 1, "\tLoRaWAN application stops - Enter Raw LoRa Packet mode\r\n");
+				APP_LOG_COLOR(WHITE);
+				APP_LOG(0, 1, "\r\tLoRa frame format: LORA=Frequency:Power:SF:Payload\r\n");
+				APP_LOG(0,1,"\r\tExample:           LORA=868100000:14:7:48454C4C4F \r\n");
 			}
-			LoRa_Send();
+			else{
+				APP_LOG_COLOR(RED);
+				APP_LOG(0, 1, "\r\n - You already entered the Raw LoRa Packet mode\r\n - To send a LoRa command please use this format: LORA=Frequency:Power:SF:Payload\r\n");
+			}
 		}
+		else if (lora==1){
+			PrepareLoRaFrame(rxBuff); // pour l'instant aucune action sur le retour de la fonction (mais utile de faire un retour pour sortir de la fonction en cas d'erreur)
+		}
+
+
+
+
 		else if ( strcmp(rxBuff , "help") == 0 || strcmp(rxBuff , "h") == 0){
 			APP_LOG_COLOR(BLUE);
 			APP_LOG(0, 1, "\t- p \t\t Simulate a Push Button event\r\n");

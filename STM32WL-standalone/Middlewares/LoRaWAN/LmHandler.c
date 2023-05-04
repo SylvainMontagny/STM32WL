@@ -632,7 +632,7 @@ LmHandlerErrorStatus_t LmHandlerSend( LmHandlerAppData_t *appData, LmHandlerMsgT
             	APP_LOG(TS_ON, VLEVEL_L, " Sending MAC Command\r\n");
             }
             else{
-            	APP_LOG(TS_ON, VLEVEL_L, " Sending Unconfirmed Data Up\r\n");
+            	APP_LOG(TS_ON, VLEVEL_L, " Sending Unconfirmed Data Up.\r\n");
 
             }
             // End Edit
