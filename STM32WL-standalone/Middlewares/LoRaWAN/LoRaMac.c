@@ -2328,6 +2328,11 @@ static LoRaMacStatus_t Send( LoRaMacHeader_t* macHdr, uint8_t fPort, void* fBuff
     if( Nvm.MacGroup1.SrvAckRequested == true )
     {
         fCtrl.Bits.Ack = 1;
+        // Edit sylvain
+        APP_LOG(TS_OFF, VLEVEL_L, GREEN);
+        APP_LOG(TS_OFF, VLEVEL_L, "     Sending ACK\r\n");
+        APP_LOG(TS_OFF, VLEVEL_L, RESET_COLOR);
+        // End Edit
     }
 
     // ADR next request
