@@ -2020,13 +2020,25 @@ static void ProcessMacCommands( uint8_t *payload, uint8_t macIndex, uint8_t comm
                 }
             	// Edit Sylvain
                 APP_LOG_COLOR(GREEN);
-				/*if(CONFIRMED == true){
-					APP_LOG(TS_OFF, VLEVEL_L, "\r\n");
-				}*/
-				APP_LOG(TS_OFF, VLEVEL_L, " > ADR Request Received\r\n");
-				/*if(CONFIRMED == false){
-					APP_LOG(TS_OFF, VLEVEL_L, "\r\n");
-				}*/
+				APP_LOG(TS_OFF, VLEVEL_L, " > ADR Request Received : ");
+				switch  (linkAdrDatarate){
+					case DR_0 : APP_LOG(TS_OFF, VLEVEL_L, "SF12"); break;
+					case DR_1 : APP_LOG(TS_OFF, VLEVEL_L, "SF11"); break;
+					case DR_2 : APP_LOG(TS_OFF, VLEVEL_L, "SF10"); break;
+					case DR_3 : APP_LOG(TS_OFF, VLEVEL_L, "SF9"); break;
+					case DR_4 : APP_LOG(TS_OFF, VLEVEL_L, "SF8"); break;
+					case DR_5 : APP_LOG(TS_OFF, VLEVEL_L, "SF7"); break;
+				}
+				switch  (linkAdrTxPower){
+					case TX_POWER_0 : APP_LOG(TS_OFF, VLEVEL_L, " - Power 6/6\r\n"); break;
+					case TX_POWER_1 : APP_LOG(TS_OFF, VLEVEL_L, " - Power 5/6\r\n"); break;
+					case TX_POWER_2 : APP_LOG(TS_OFF, VLEVEL_L, " - Power 4/6\r\n"); break;
+					case TX_POWER_3 : APP_LOG(TS_OFF, VLEVEL_L, " - Power 3/6\r\n"); break;
+					case TX_POWER_4 : APP_LOG(TS_OFF, VLEVEL_L, " - Power 2/6\r\n"); break;
+					case TX_POWER_5 : APP_LOG(TS_OFF, VLEVEL_L, " - Power 1/6\r\n"); break;
+					case TX_POWER_6 : APP_LOG(TS_OFF, VLEVEL_L, " - Power 0/6\r\n"); break;
+					case TX_POWER_7 : APP_LOG(TS_OFF, VLEVEL_L, " - Power 0/6\r\n"); break; // Shouldn't happen but it does for unknown reasons.
+				}
 				APP_LOG_COLOR(RESET_COLOR);
 				// End edit
                 break;
@@ -2314,6 +2326,7 @@ static LoRaMacStatus_t Send( LoRaMacHeader_t* macHdr, uint8_t fPort, void* fBuff
     fCtrl.Bits.FOptsLen      = 0;
     fCtrl.Bits.Adr           = Nvm.MacGroup2.AdrCtrlOn;
 
+
     // Check class b
     if( Nvm.MacGroup2.DeviceClass == CLASS_B )
     {
@@ -2349,6 +2362,15 @@ static LoRaMacStatus_t Send( LoRaMacHeader_t* macHdr, uint8_t fPort, void* fBuff
 
     fCtrl.Bits.AdrAckReq = LoRaMacAdrCalcNext( &adrNext, &Nvm.MacGroup1.ChannelsDatarate,
                                                &Nvm.MacGroup1.ChannelsTxPower, &adrAckCounter );
+
+    // Edit sylvain
+    if( fCtrl.Bits.AdrAckReq == 1 )
+    {
+        APP_LOG(TS_OFF, VLEVEL_L, GREEN);
+        APP_LOG(TS_OFF, VLEVEL_L, "     Sending FORCE ADR REQ\r\n");
+        APP_LOG(TS_OFF, VLEVEL_L, RESET_COLOR);
+    }
+    // End Edit
 
     // Prepare the frame
     status = PrepareFrame( macHdr, &fCtrl, fPort, fBuffer, fBufferSize );
