@@ -28,6 +28,7 @@
 #define false	 		0
 
 
+
 /*---------------------------------------------------------------------------------------------------------------
  ACTIVATION_MODE     |    ABP or OTAA     |    # Selection of Activation Method                                  |
  CLASS               | CLASS_A or CLASS_C |    # Class selection												 |
@@ -170,7 +171,7 @@
 
 
 /* LoRaWAN Multicast ----------------------------------------------------------*/
-#define ADMIN_GEN_APP_KEY			    F2,55,B7,74,8A,00,FF,7C,22,34,4C,34,02,F6,35,6F 		// se-identity.h
+#define ADMIN_GEN_APP_KEY			    00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00 		// se-identity.h
 
 
 /***** Escape Caracters *****/

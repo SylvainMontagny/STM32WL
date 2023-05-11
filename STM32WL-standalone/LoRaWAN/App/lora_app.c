@@ -114,6 +114,14 @@ void LoRaWAN_Init(void)
 /***** LoRaWAN Standalone Application  ***********/
 	else{
 			APP_LOG(0, 1, "> Activation mode         %s",(ACTIVATION_MODE == ABP) ? "ABP \r\n" : "OTAA \r\n");
+			if(CLASS == CLASS_A){
+				APP_LOG(0, 1, "> Class                   A\r\n");
+			}else if(CLASS == CLASS_B){
+					  APP_LOG(0, 1, "> Class                   B\r\n");
+					}
+					else if(CLASS == CLASS_C){
+							  APP_LOG(0, 1, "> Class                   C\r\n");
+							}
 			if(SEND_BY_PUSH_BUTTON == true){
 				APP_LOG(0, 1, "> Send frame              On push button event \r\n");
 			}
