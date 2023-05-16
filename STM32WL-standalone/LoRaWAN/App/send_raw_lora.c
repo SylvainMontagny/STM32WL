@@ -2,6 +2,8 @@
 #include "radio.h"
 #include "radio_ex.h"
 #include "sys_app.h"
+#include "stm32_tiny_sscanf.h"
+#include "stm32_seq.h"
 
 volatile uint32_t RadioTxDone_flag = 0;
 

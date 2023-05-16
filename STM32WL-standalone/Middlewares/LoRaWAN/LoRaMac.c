@@ -61,7 +61,10 @@
 
 // Edit sylvain
 #include "sys_app.h"
+
 extern uint8_t isRxConfirmed;
+extern uint8_t txBUFFER[100];
+extern uint8_t size_txBUFFER;
 // End Edit
 
 #ifndef LORAMAC_VERSION
@@ -2828,6 +2831,11 @@ static LoRaMacStatus_t PrepareFrame( LoRaMacHeader_t* macHdr, LoRaMacFrameCtrl_t
     memcpy1( MacCtx.AppData, ( uint8_t* ) fBuffer, fBufferSize );
     MacCtx.AppDataSize = fBufferSize;
     MacCtx.PktBuffer[0] = macHdr->Value;
+
+    // Edit sylvain
+      memcpy1( txBUFFER, ( uint8_t* ) fBuffer, fBufferSize );
+      size_txBUFFER=fBufferSize;
+    // End Edit
 
     switch( macHdr->Bits.MType )
     {

@@ -23,10 +23,12 @@
 uint8_t simuTemperature(void);
 static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error);
 #define RX_BUFF_SIZE 60
+
 static uint8_t rxBuff[RX_BUFF_SIZE];
 uint8_t isRxConfirmed;
 uint32_t LoRaMode = 0;
-
+uint8_t size_txBUFFER = 0;
+uint8_t txBUFFER[100];
 
 typedef enum TxEventType_e
 {
@@ -69,7 +71,7 @@ static LmHandlerParams_t LmHandlerParams =
   .PingPeriodicity =          LORAWAN_DEFAULT_PING_SLOT_PERIODICITY
 };
 
-static TxEventType_t EventType = ADMIN_TX_TYPE;
+//static TxEventType_t EventType = ADMIN_TX_TYPE;
 static UTIL_TIMER_Object_t TxTimer;
 static uint8_t AppDataBuffer[LORAWAN_APP_DATA_BUFFER_MAX_SIZE];
 static LmHandlerAppData_t AppData = { 0, 0, AppDataBuffer };
@@ -267,7 +269,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 static void SendTxData(void)
 {
-  uint16_t pressure = 0;
+  //uint16_t pressure = 0;
   int16_t temperature = 0;
   sensor_t sensor_data;
   UTIL_TIMER_Time_t nextTxIn = 0;
@@ -276,7 +278,7 @@ static void SendTxData(void)
 
   EnvSensors_Read(&sensor_data);
   temperature = (SYS_GetTemperatureLevel() >> 8);
-  pressure    = (uint16_t)(sensor_data.pressure * 100 / 10);      /* in hPa / 10 */
+  //pressure    = (uint16_t)(sensor_data.pressure * 100 / 10);      /* in hPa / 10 */
 
   AppData.Port = LORAWAN_USER_APP_PORT;
 
@@ -356,6 +358,22 @@ static void OnTxData(LmHandlerTxParams_t *params)
 			  }*/
 
 			  APP_LOG(0, 1, "- Payload     ");
+
+			  if(AppData.BufferSize>0)
+			  {
+
+				  for(int i=0;i<size_txBUFFER;i++){
+					  APP_LOG(0, 1, "%02X ", txBUFFER[i]);
+				  }
+				  APP_LOG(0, 1, "(hex)  |  ");
+
+				  for(int i=0;i<size_txBUFFER;i++){
+					  APP_LOG(0, 1, "%03u ", txBUFFER[i]);
+				  }
+				  APP_LOG(0, 1, "(dec)");
+			  }
+
+			  /*
 			  if(AppData.BufferSize>0)
 			  {
 				  for(int i=0;i<AppData.BufferSize;i++){
@@ -367,7 +385,7 @@ static void OnTxData(LmHandlerTxParams_t *params)
 				  	APP_LOG(0, 1, "%03u ", AppData.Buffer[i]);
 				  }
 				 	APP_LOG(0, 1, "(dec)");
-			  }
+			  }*/
 
 			  APP_LOG(TS_OFF, VLEVEL_L, "\r\n");
 			  APP_LOG(TS_OFF, VLEVEL_L, "- Port        %d \r\n",params->AppData.Port);
