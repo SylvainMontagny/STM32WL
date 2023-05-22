@@ -1,5 +1,6 @@
 
 #include <stdio.h>
+#include <time.h>
 #include "platform.h"
 #include "sys_app.h"
 #include "adc_if.h"
@@ -12,7 +13,12 @@
 #include "sys_sensors.h"
 
 
-#define MAX_TS_SIZE (int) 16
+
+// Edit Sylvain: Increase TIme Stamp String for Clock Synch
+#define MAX_TS_SIZE (int) 30 // Default value : 16
+
+uint32_t isClockSynchronised = 0;
+// End
 
 #define LORAWAN_MAX_BAT   254
 
@@ -156,15 +162,21 @@ uint32_t GetDevAddr(void)
 }
 
 
+
 static void TimestampNow(uint8_t *buff, uint16_t *size)
 {
+  // Edit Sylvain
+  //!\\ BE CAREFUL - MAX_TS_SIZE (Core/sys_app.c) and  UTIL_ADV_TRACE_TMP_MAX_TIMESTMAP_SIZE (/Drivers/Inc/utilities_conf.h) have been increase to 30
   SysTime_t curtime = SysTimeGet();
+  time_t rawTime = (time_t)curtime.Seconds;
+  struct tm* timeInfo = gmtime(&rawTime);
 
-  /* Old function TimeStamp now with Subseconds */
-  //tiny_snprintf_like((char *)buff, MAX_TS_SIZE, "%ds%03d:", curtime.Seconds, curtime.SubSeconds);
-
-  /* New function TimeStampNow without Subseconds */
-  tiny_snprintf_like((char *)buff, MAX_TS_SIZE, "\r\n%ds:", curtime.Seconds);
+  if( isClockSynchronised == 1){
+  tiny_snprintf_like((char *)buff, MAX_TS_SIZE, "\r\n%d/%02d/%02d %02d:%02d:%02d:" ,(timeInfo->tm_year) + 1900, timeInfo->tm_mon + 1, timeInfo->tm_mday, timeInfo->tm_hour, timeInfo->tm_min, timeInfo->tm_sec);
+  }
+  else{
+	  tiny_snprintf_like((char *)buff, MAX_TS_SIZE, "\r\n%02d/%02d %02d:%02d:%02d:" ,timeInfo->tm_mon + 1, timeInfo->tm_mday, timeInfo->tm_hour, timeInfo->tm_min, timeInfo->tm_sec);
+  }
   *size = strlen((char *)buff);
 }
 

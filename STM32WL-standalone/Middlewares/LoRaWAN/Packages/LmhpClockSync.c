@@ -42,6 +42,7 @@
 #define CLOCK_SYNC_ID                               1
 #define CLOCK_SYNC_VERSION                          1
 
+extern uint32_t isClockSynchronised;
 /*!
  * Package current context
  */
@@ -263,6 +264,11 @@ static void LmhpClockSyncOnMcpsIndication( McpsIndication_t *mcpsIndication )
 
                 // Check if a more precise time correction has been received.
                 // If yes then don't process and ignore this answer.
+
+                // Edit Sylvain
+                isClockSynchronised = 1;
+                // End edit
+
                 if( mcpsIndication->DeviceTimeAnsReceived == true )
                 {
                     cmdIndex += 5;
