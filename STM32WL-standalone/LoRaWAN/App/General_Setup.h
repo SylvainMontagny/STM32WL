@@ -93,7 +93,7 @@
 	#error "CONFIRMED must be either true of false in your config_application.h file"
 #endif
 
-#if (PORT < 1) || (PORT > 255)
+#if (APP_PORT < 1) || (APP_PORT > 255)
 	#error "PORT must be between 1 and 255 in your config_application.h file"
 #endif
 
@@ -156,7 +156,7 @@
 #define ADMIN_TX_CONFIRMED_TYPE					CONFIRMED						// possible values: LORAMAC_HANDLER_UNCONFIRMED_MSG / LORAMAC_HANDLER_CONFIRMED_MSG - lora_app.h
 
 // Uplink Profile
-#define ADMIN_USER_APP_PORT				PORT					//  lora_app.h
+#define ADMIN_USER_APP_PORT				APP_PORT					//  lora_app.h
 #define ADMIN_CAYENNE					CAYENNE_LPP_			// 0 or 1. If defined, cayenne LPP is enable - lora_app.h
 #define ADMIN_PAYLOAD_TEMPERATURE		PAYLOAD_TEMPERATURE		// 1 (send various temperature) / 0 (none) - General_Setup.h
 #define ADMIN_PAYLOAD_HELLO				PAYLOAD_HELLO			// 1 (send 0x010203 static) / 0 (none) // CAYENNE must be set to 1 - lora_app.h

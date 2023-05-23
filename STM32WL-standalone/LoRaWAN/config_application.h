@@ -1,17 +1,18 @@
 
 #define ACTIVATION_MODE     		OTAA
 #define CLASS						CLASS_A
-#define SPREADING_FACTOR    		8
+#define SPREADING_FACTOR    		7
 #define ADAPTIVE_DR         		false
 #define CONFIRMED           		false
-#define PORT                		15
+#define APP_PORT                	15
 
-#define SEND_BY_PUSH_BUTTON 		true
-#define FRAME_DELAY         		10000
+#define SEND_BY_PUSH_BUTTON 		false
+#define FRAME_DELAY         		12000
 #define PAYLOAD_HELLO				true
 #define PAYLOAD_TEMPERATURE    		false
 #define CAYENNE_LPP_         		false
 #define LOW_POWER           		false
+
 
 
 #define devEUI_						{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
