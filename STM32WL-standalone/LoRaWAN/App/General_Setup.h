@@ -164,6 +164,9 @@
 // Power
 #define ADMIN_LOW_POWER					!LOW_POWER				// 0 (Low Power enabled) / 1 (Low Power disabled)
 
+// Sensors
+#define ADMIN_SENSOR_ENABLED			false					// 0 (No sensors) / 1 (Sensors Board IKS01A3)
+
 
 /* Device LOGs ----------------------------------------------------------------*/
 #define ADMIN_VERBOSE					VLEVEL_L				// possible values: VLEVEL_H / VLEVEL_M / VLEVEL_L - Utilities-Conf.h

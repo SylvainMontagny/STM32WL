@@ -1,237 +1,98 @@
 
 #include "stdint.h"
 #include "sys_conf.h"
+#include "sys_app.h"
 #include "sys_sensors.h"
+#include "stts751_reg.h"
+#include "i2c.h"
 
-/* USER CODE BEGIN Includes */
-#if defined (SENSOR_ENABLED) && (SENSOR_ENABLED == 1)
-#if defined (X_NUCLEO_IKS01A2)
-#warning "IKS drivers are today available for several families but not stm32WL"
-#warning "up to the user adapt IKS low layer to map it on WL board driver"
-#warning "this code would work only if user provide necessary IKS and BSP layers"
-#include "iks01a2_env_sensors.h"
-#elif defined (X_NUCLEO_IKS01A3)
-/*
-## How to add IKS01A3 to CubeWL
+int16_t stts751_raw_temperature;
+static stts751_id_t whoamI;
+static uint8_t tx_buffer[100];
 
- 1. Download STM32CubeExpansion_MEMS1_V8.0.0
- 2. Copy Drivers From `STM32CubeExpansion_MEMS1_V8.0.0\Drivers\BSP\IKS01A3` to CubeWL `Drivers\BSP\IKS01A3` and add to the IDE Project
- 3. Copy `STM32CubeExpansion_MEMS1_V8.0.0\Drivers\BSP\IKS01A3\iks01a3_conf_template.h` into `Projects\NUCLEO-WL55JC\Applications\LoRaWAN\End_Node\LoRaWAN\Target\iks01a3_conf.h`.
- 4. Copy files nucleo_l476rg_bus.c/nucleo_l476rg_bus.h  from `STM32L476RG-Nucleo\Applications\IKS01A3\ActiveTime\Inc and \Src` to `Projects\NUCLEO-WL55JC\Applications\LoRaWAN\End_Node\LoRaWAN\Target` and rename to `nucleo_wl55jc_bus.c` and `nucleo_wl55jc_bus.h` respectively
- 5. Update `nucleo_wl55jc_bus.c`  include files  to
- ```bash
-#include "nucleo_wl55jc_bus.h"
-#include "stm32wlxx_nucleo_errno.h"
-#include "stm32wlxx_hal.h"
-```
 
-6. Update definitions in `nucleo_wl55jc_bus.h`(to be commented since already defined elsewhere)
+stmdev_ctx_t dev_ctx; // Not used but to comply with ST library
 
- ```bash
-//#define USE_HAL_SPI_REGISTER_CALLBACKS 0
-//#define USE_HAL_I2C_REGISTER_CALLBACKS 0
-```
 
-7. copy following components and add them (.c and .h) into IDE Project
-
-../../../../../../Drivers/BSP/Components/lsm6dso
-../../../../../../Drivers/BSP/Components/lis2dw12
-../../../../../../Drivers/BSP/Components/lis2mdl
-../../../../../../Drivers/BSP/Components/hts221
-../../../../../../Drivers/BSP/Components/lps22hh
-../../../../../../Drivers/BSP/Components/stts751
-../../../../../../Drivers/BSP/Components/Common
-
-8. Enable #define HAL_I2C_MODULE_ENABLED in stm32_hal_conf.h
-9. Add stm32wlxx_hal_i2c.c and stm32wlxx_hal_i2c_ex.c in the IDE Project
-10. Update hi2c->Instance in `nucleo_wl55jc_bus.c` to
-
-```bash
-  hi2c->Instance = I2C2;
-```
-
-11. Update msp function in `nucleo_wl55jc_bus.c`
-
-```bash
-static void I2C2_MspInit(I2C_HandleTypeDef *i2cHandle)
-{
-  GPIO_InitTypeDef GPIO_InitStruct;
-
-  GPIO_InitStruct.Pin = GPIO_PIN_11 | GPIO_PIN_12;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-  GPIO_InitStruct.Alternate = GPIO_AF4_I2C2;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  __HAL_RCC_I2C2_CLK_ENABLE();
-}
-
-static void I2C2_MspDeInit(I2C_HandleTypeDef *i2cHandle)
-{
-  __HAL_RCC_I2C2_CLK_DISABLE();
-
-  HAL_GPIO_DeInit(GPIOA, GPIO_PIN_11 | GPIO_PIN_12);
-
-}
-```
-12. Replace I2C1xx by MX_I2C2xx and i2c1 by i2c2 in `nucleo_wl55jc_bus.c`
-13. Replace I2C1xx by MX_I2C2xx in `nucleo_wl55jc_bus.h`
-*/
-#warning "IKS drivers are today available for several families but not stm32WL, follow steps defined in sys_sensors.c"
-#include "iks01a3_env_sensors.h"
-#else  /* not X_IKS01xx */
-#error "user to include its sensor drivers"
-#endif  /* X_NUCLEO_IKS01xx */
-#elif !defined (SENSOR_ENABLED)
-#error SENSOR_ENABLED not defined
-#endif  /* SENSOR_ENABLED */
-/* USER CODE END Includes */
-
-/* External variables ---------------------------------------------------------*/
-/* USER CODE BEGIN EV */
-
-/* USER CODE END EV */
-
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-
-/* USER CODE BEGIN PD */
-#define STSOP_LATTITUDE           ((float) 43.618622 )  /*!< default latitude position */
-#define STSOP_LONGITUDE           ((float) 7.051415  )  /*!< default longitude position */
-#define MAX_GPS_POS               ((int32_t) 8388607 )  /*!< 2^23 - 1 */
-#define HUMIDITY_DEFAULT_VAL      50.0f                 /*!< default humidity */
-#define TEMPERATURE_DEFAULT_VAL   18.0f                 /*!< default temperature */
-#define PRESSURE_DEFAULT_VAL      1000.0f               /*!< default pressure */
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
-
-/* USER CODE BEGIN PV */
-#if defined (SENSOR_ENABLED) && (SENSOR_ENABLED == 1)
-#if defined (X_NUCLEO_IKS01A2)
-#warning "IKS drivers are today available for several families but not stm32WL"
-#warning "up to the user adapt IKS low layer to map it on WL board driver"
-#warning "this code would work only if user provide necessary IKS and BSP layers"
-IKS01A2_ENV_SENSOR_Capabilities_t EnvCapabilities;
-#elif defined (X_NUCLEO_IKS01A3)
-IKS01A3_ENV_SENSOR_Capabilities_t EnvCapabilities;
-#else  /* not X_IKS01Ax */
-#error "user to include its sensor drivers"
-#endif  /* X_NUCLEO_IKS01 */
-#elif !defined (SENSOR_ENABLED)
-#error SENSOR_ENABLED not defined
-#endif  /* SENSOR_ENABLED */
-/* USER CODE END PV */
-
-/* Private function prototypes -----------------------------------------------*/
-/* USER CODE BEGIN PFP */
-
-/* USER CODE END PFP */
-
-/* Exported functions --------------------------------------------------------*/
 int32_t  EnvSensors_Read(sensor_t *sensor_data)
 {
-  /* USER CODE BEGIN EnvSensors_Read */
-  float HUMIDITY_Value = HUMIDITY_DEFAULT_VAL;
-  float TEMPERATURE_Value = TEMPERATURE_DEFAULT_VAL;
-  float PRESSURE_Value = PRESSURE_DEFAULT_VAL;
-
-#if defined (SENSOR_ENABLED) && (SENSOR_ENABLED == 1)
-#if (USE_IKS01A2_ENV_SENSOR_HTS221_0 == 1)
-  IKS01A2_ENV_SENSOR_GetValue(HTS221_0, ENV_HUMIDITY, &HUMIDITY_Value);
-  IKS01A2_ENV_SENSOR_GetValue(HTS221_0, ENV_TEMPERATURE, &TEMPERATURE_Value);
-#endif /* USE_IKS01A2_ENV_SENSOR_HTS221_0 */
-#if (USE_IKS01A2_ENV_SENSOR_LPS22HB_0 == 1)
-  IKS01A2_ENV_SENSOR_GetValue(LPS22HB_0, ENV_PRESSURE, &PRESSURE_Value);
-  IKS01A2_ENV_SENSOR_GetValue(LPS22HB_0, ENV_TEMPERATURE, &TEMPERATURE_Value);
-#endif /* USE_IKS01A2_ENV_SENSOR_LPS22HB_0 */
-#if (USE_IKS01A3_ENV_SENSOR_HTS221_0 == 1)
-  IKS01A3_ENV_SENSOR_GetValue(IKS01A3_HTS221_0, ENV_HUMIDITY, &HUMIDITY_Value);
-  IKS01A3_ENV_SENSOR_GetValue(IKS01A3_HTS221_0, ENV_TEMPERATURE, &TEMPERATURE_Value);
-#endif /* USE_IKS01A3_ENV_SENSOR_HTS221_0 */
-#if (USE_IKS01A3_ENV_SENSOR_LPS22HH_0 == 1)
-  IKS01A3_ENV_SENSOR_GetValue(IKS01A3_LPS22HH_0, ENV_PRESSURE, &PRESSURE_Value);
-  IKS01A3_ENV_SENSOR_GetValue(IKS01A3_LPS22HH_0, ENV_TEMPERATURE, &TEMPERATURE_Value);
-#endif /* USE_IKS01A3_ENV_SENSOR_LPS22HH_0 */
-#elif !defined (SENSOR_ENABLED)
-#error SENSOR_ENABLED not defined
-#endif  /* SENSOR_ENABLED */
-
-  sensor_data->humidity    = HUMIDITY_Value;
-  sensor_data->temperature = TEMPERATURE_Value;
-  sensor_data->pressure    = PRESSURE_Value;
-
-  sensor_data->latitude  = (int32_t)((STSOP_LATTITUDE  * MAX_GPS_POS) / 90);
-  sensor_data->longitude = (int32_t)((STSOP_LONGITUDE  * MAX_GPS_POS) / 180);
-
-  return 0;
+#if SENSOR_ENABLED == 1
+	memset(&stts751_raw_temperature, 0, sizeof(int16_t));
+	stts751_temperature_raw_get(&dev_ctx, &stts751_raw_temperature);
+	sensor_data->stts751_temperature = stts751_from_lsb_to_celsius( stts751_raw_temperature );
+	//sprintf((char *)tx_buffer, "Temperature [degC]:%3.2f\r\n",  temperature_degC);
+	//APP_LOG(0, 1,tx_buffer);
+#endif
+	return 0;
 
 }
 
 int32_t  EnvSensors_Init(void)
 {
-#if defined (SENSOR_ENABLED) && (SENSOR_ENABLED == 1)
-  /* Init */
-#if (USE_IKS01A2_ENV_SENSOR_HTS221_0 == 1)
-  IKS01A2_ENV_SENSOR_Init(HTS221_0, ENV_TEMPERATURE | ENV_HUMIDITY);
-#endif /* USE_IKS01A2_ENV_SENSOR_HTS221_0 */
-#if (USE_IKS01A2_ENV_SENSOR_LPS22HB_0 == 1)
-  IKS01A2_ENV_SENSOR_Init(LPS22HB_0, ENV_TEMPERATURE | ENV_PRESSURE);
-#endif /* USE_IKS01A2_ENV_SENSOR_LPS22HB_0 */
-#if (USE_IKS01A3_ENV_SENSOR_HTS221_0 == 1)
-  IKS01A3_ENV_SENSOR_Init(IKS01A3_HTS221_0, ENV_TEMPERATURE | ENV_HUMIDITY);
-#endif /* USE_IKS01A3_ENV_SENSOR_HTS221_0 */
-#if (USE_IKS01A3_ENV_SENSOR_LPS22HH_0 == 1)
-  IKS01A3_ENV_SENSOR_Init(IKS01A3_LPS22HH_0, ENV_TEMPERATURE | ENV_PRESSURE);
-#endif /* USE_IKS01A3_ENV_SENSOR_LPS22HH_0 */
+#if SENSOR_ENABLED == 1
 
-  /* Enable */
-#if (USE_IKS01A2_ENV_SENSOR_HTS221_0 == 1)
-  IKS01A2_ENV_SENSOR_Enable(HTS221_0, ENV_HUMIDITY);
-  IKS01A2_ENV_SENSOR_Enable(HTS221_0, ENV_TEMPERATURE);
-#endif /* USE_IKS01A2_ENV_SENSOR_HTS221_0 */
-#if (USE_IKS01A2_ENV_SENSOR_LPS22HB_0 == 1)
-  IKS01A2_ENV_SENSOR_Enable(LPS22HB_0, ENV_PRESSURE);
-  IKS01A2_ENV_SENSOR_Enable(LPS22HB_0, ENV_TEMPERATURE);
-#endif /* USE_IKS01A2_ENV_SENSOR_LPS22HB_0 */
-#if (USE_IKS01A3_ENV_SENSOR_HTS221_0 == 1)
-  IKS01A3_ENV_SENSOR_Enable(IKS01A3_HTS221_0, ENV_HUMIDITY);
-  IKS01A3_ENV_SENSOR_Enable(IKS01A3_HTS221_0, ENV_TEMPERATURE);
-#endif /* USE_IKS01A3_ENV_SENSOR_HTS221_0 */
-#if (USE_IKS01A3_ENV_SENSOR_LPS22HH_0 == 1)
-  IKS01A3_ENV_SENSOR_Enable(IKS01A3_LPS22HH_0, ENV_PRESSURE);
-  IKS01A3_ENV_SENSOR_Enable(IKS01A3_LPS22HH_0, ENV_TEMPERATURE);
-#endif /* USE_IKS01A3_ENV_SENSOR_LPS22HH_0 */
+	stts751_device_id_get(&dev_ctx, &whoamI);
+	if ( (whoamI.product_id != STTS751_ID_1xxxx) || (whoamI.manufacturer_id != STTS751_ID_MAN) || (whoamI.revision_id != STTS751_REV) ){
+		APP_LOG_COLOR(RED);
+		APP_LOG(0, 1, "\n\r> Temperature sensor STTS751 not found\r\n");
+	}
+	else{
+		APP_LOG_COLOR(GREEN);
+		APP_LOG(0, 1, "\r\n> Temperature sensor STTS751 ready\r\n");
+	}
+	APP_LOG_COLOR(RESET_COLOR);
+	stts751_temp_data_rate_set(&dev_ctx, STTS751_TEMP_ODR_1Hz);
+	stts751_resolution_set(&dev_ctx, STTS751_11bit);
 
-  /* Get capabilities */
-#if (USE_IKS01A2_ENV_SENSOR_HTS221_0 == 1)
-  IKS01A2_ENV_SENSOR_GetCapabilities(HTS221_0, &EnvCapabilities);
-#endif /* USE_IKS01A2_ENV_SENSOR_HTS221_0 */
-#if (USE_IKS01A2_ENV_SENSOR_LPS22HB_0 == 1)
-  IKS01A2_ENV_SENSOR_GetCapabilities(LPS22HB_0, &EnvCapabilities);
-#endif /* USE_IKS01A2_ENV_SENSOR_LPS22HB_0 */
-#if (USE_IKS01A3_ENV_SENSOR_HTS221_0 == 1)
-  IKS01A3_ENV_SENSOR_GetCapabilities(IKS01A3_HTS221_0, &EnvCapabilities);
-#endif /* USE_IKS01A3_ENV_SENSOR_HTS221_0 */
-#if (USE_IKS01A3_ENV_SENSOR_LPS22HH_0 == 1)
-  IKS01A3_ENV_SENSOR_GetCapabilities(IKS01A3_LPS22HH_0, &EnvCapabilities);
-#endif /* USE_IKS01A3_ENV_SENSOR_LPS22HH_0 */
-
-#elif !defined (SENSOR_ENABLED)
-#error SENSOR_ENABLED not defined
-#endif /* SENSOR_ENABLED  */
-  return 0;
+#endif
+	return 0;
 
 }
+
+
+/**
+  * @brief  Read generic device register
+  *
+  * @param  ctx   read / write interface definitions(ptr)
+  * @param  reg   register to read
+  * @param  data  pointer to buffer that store the data read(ptr)
+  * @param  len   number of consecutive register to read
+  * @retval          interface status (MANDATORY: return 0 -> no Error)
+  *
+  */
+int32_t stts751_read_reg(stmdev_ctx_t *ctx, uint8_t reg,
+                                uint8_t *data,
+                                uint16_t len)
+{
+
+
+	 HAL_I2C_Mem_Read(&hi2c2, STTS751_1xxxx_ADD_7K5, reg, I2C_MEMADD_SIZE_8BIT, data, len, 1000);
+
+  return 0;
+}
+
+/**
+  * @brief  Write generic device register
+  *
+  * @param  ctx   read / write interface definitions(ptr)
+  * @param  reg   register to write
+  * @param  data  pointer to data to write in register reg(ptr)
+  * @param  len   number of consecutive register to write
+  * @retval          interface status (MANDATORY: return 0 -> no Error)
+  *
+  */
+int32_t stts751_write_reg(stmdev_ctx_t *ctx, uint8_t reg,
+                                 uint8_t *data,
+                                 uint16_t len)
+{
+
+
+  HAL_I2C_Mem_Write(&hi2c2, STTS751_1xxxx_ADD_7K5, reg, I2C_MEMADD_SIZE_8BIT, (uint8_t*) data, len, 1000);
+
+  return 0;
+}
+
+
+
 
 

@@ -10,7 +10,11 @@ int main(void)
 
   HAL_Init();
   SystemClock_Config();
+  MX_I2C2_Init();
   MX_LoRaWAN_Init();
+
+  /*Initialize the Sensors */
+  EnvSensors_Init();
 
   while (1)
   {

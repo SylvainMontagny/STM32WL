@@ -50,8 +50,7 @@ void SystemApp_Init(void)
   /*Initialize the temperature and Battery measurement services */
   SYS_InitMeasurement();
 
-  /*Initialize the Sensors */
-  EnvSensors_Init();
+
 
   /*Init low power manager*/
   UTIL_LPM_Init();
