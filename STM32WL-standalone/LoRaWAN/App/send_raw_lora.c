@@ -121,8 +121,8 @@ int8_t SendLoRaFrame(const char* buff_payload){
 		return -1;
 	}
 	APP_LOG_COLOR(GREEN);
-	//APP_LOG(0,1,"\r\n  -- Start LoRa Frame Transmission -- \r\n");
-	APP_PRINTF("\r\n> Freq=%d / Pow=%d / SF=%d / Payload=%s / Size=%d \r\n",testParam.freq,testParam.power,testParam.loraSf_datarate,buff_payload,payloadLen);
+	APP_LOG(0,1,"\r\n> Packet transmitted \r\n");
+	APP_PRINTF("> Freq=%d / Pow=%d / SF=%d / Payload=%s / Size=%d \r\n\r\n",testParam.freq,testParam.power,testParam.loraSf_datarate,buff_payload,payloadLen);
 	Radio.SetChannel(testParam.freq);
 	LoRa_TxConfig.lora.Bandwidth = RADIO_LORA_BW_125;
 	LoRa_TxConfig.lora.SpreadingFactor = (RADIO_LoRaSpreadingFactors_t) testParam.loraSf_datarate; /*BitRate*/

@@ -149,6 +149,7 @@
 #define ADMIN_MAX_ACK_RETRIES		8									// Number of retries when using confirmed packet. Default value=8. LoRaMac.h
 
 /* LoRaWAN Application --------------------------------------------------------*/
+#define RAW_LORA_APP					true
 
 // Uplink Mode
 #define ADMIN_TX_TYPE							SEND_BY_PUSH_BUTTON				// possible values: 0 (by timer, every TxDutyCycleTime) / 1 (by button B3) - lora_app.c

@@ -101,7 +101,7 @@ void LoRaWAN_Init(void)
 	BSP_PB_Init(BUTTON_SW2, BUTTON_MODE_GPIO);
 
 /****** Raw LoRa Packet Application *************/
-	if ( BSP_PB_GetState(BUTTON_SW2) == 0 ) {
+	if ( BSP_PB_GetState(BUTTON_SW2) == 0 || RAW_LORA_APP == true) {
 
 			LoRaMode = 1;
 			APP_LOG_COLOR(BLUE);
@@ -110,7 +110,7 @@ void LoRaWAN_Init(void)
 			APP_LOG_COLOR(WHITE);
 			APP_LOG(0, 1, "Type the following command to send a Raw LoRa Packet\r\n");
 			APP_LOG(0, 1, "> Command format : LORA=Frequency:Power:SF:Payload\r\n");
-			APP_LOG(0, 1, "> Example :        LORA=868100000:14:7:48454C4C4F \r\n");
+			APP_LOG(0, 1, "> Example :        LORA=868100000:14:7:48454C4C4F \r\n\r\n");
 	}
 
 /***** LoRaWAN Standalone Application  ***********/
@@ -270,31 +270,28 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 static void SendTxData(void)
 {
   //uint16_t pressure = 0;
-  int16_t temperature = 0;
   sensor_t sensor_data;
   UTIL_TIMER_Time_t nextTxIn = 0;
-
+  uint32_t i = 0;
   uint8_t channel = 0;
 
   EnvSensors_Read(&sensor_data);
-  temperature = (SYS_GetTemperatureLevel() >> 8);
-  //pressure    = (uint16_t)(sensor_data.pressure * 100 / 10);      /* in hPa / 10 */
+  sensor_data.stm32wl_temperature = (SYS_GetTemperatureLevel() >> 8);
 
-  AppData.Port = LORAWAN_USER_APP_PORT;
 
-  if(ADMIN_PAYLOAD_TEMPERATURE)
+  AppData.Port = APP_PORT;
+
+  if(ADMIN_SENSOR_ENABLED){
+	  AppData.Buffer[i++] = sensor_data.stts751_temperature_int8;
+	  AppData.BufferSize = i;
+  }
+  else if(PAYLOAD_TEMPERATURE)
   {
-	  //temperature_20_25 ();						// change temp value
-	  AppData.Port = LORAWAN_USER_APP_PORT;
-	  uint32_t i = 0;
 	  AppData.Buffer[i++] = simuTemperature();
 	  AppData.BufferSize = i;
   }
-  else if(ADMIN_PAYLOAD_HELLO)
+  else if(PAYLOAD_HELLO)
   {
-	  AppData.Port = LORAWAN_USER_APP_PORT;
-
-	  uint32_t i = 0;
 	  AppData.Buffer[i++] = 'H';
 	  AppData.Buffer[i++] = 'E';
 	  AppData.Buffer[i++] = 'L';
@@ -302,12 +299,12 @@ static void SendTxData(void)
 	  AppData.Buffer[i++] = 'O';
 	  AppData.BufferSize = i;
   }
-  else if(ADMIN_CAYENNE)
+  else if(CAYENNE_LPP_)
   {
 	CayenneLppReset();
 	//CayenneLppAddBarometricPressure(channel++, pressure);
-	CayenneLppAddTemperature(channel++, temperature);
-	CayenneLppAddRelativeHumidity(channel++, (uint16_t)(sensor_data.humidity));
+	CayenneLppAddTemperature(channel++, sensor_data.stts751_temperature_float);
+	CayenneLppAddRelativeHumidity(channel++, (uint16_t)(sensor_data.humidity_simulated));
 	//CayenneLppAddAnalogInput(channel++, GetBatteryLevel()*33/255);
 	//CayenneLppAddDigitalInput(channel++, GetBatteryLevel());
 	CayenneLppAddDigitalOutput(channel++, AppLedStateOn);

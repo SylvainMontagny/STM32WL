@@ -57,6 +57,8 @@ int32_t __weak stts751_read_reg(stmdev_ctx_t *ctx, uint8_t reg,
   return ret;
 }
 
+
+
 /**
   * @brief  Write generic device register
   *
@@ -77,6 +79,8 @@ int32_t __weak stts751_write_reg(stmdev_ctx_t *ctx, uint8_t reg,
 
   return ret;
 }
+
+
 
 /**
   * @}
