@@ -97,21 +97,28 @@
 	#error "PORT must be between 1 and 255 in your config_application.h file"
 #endif
 
-#if (PAYLOAD_TEMPERATURE == true)
-	#if (PAYLOAD_HELLO == true) || (CAYENNE_LPP_ == true)
-		#error "PAYLOAD_HELLO or CAYENNE_LPP_ can't be enable when PAYLOAD_TEMPERATURE is enable in your config_application.h file"
+
+#if(PAYLOAD_HELLO)
+	#if (PAYLOAD_TEMPERATURE || PAYLOAD_HUMIDITY || CAYENNE_LPP_)
+		#error "PAYLOAD_TEMPERATURE or PAYLOAD_HUMIDITY or CAYENNE_LPP_ can't be enable when PAYLOAD_HELLO is enable in your config_application.h file"
 	#endif
-#elif (PAYLOAD_HELLO == true)
-	#if (PAYLOAD_TEMPERATURE == true) || (CAYENNE_LPP_ == true)
-		#error "PAYLOAD_TEMPERATURE or CAYENNE_LPP_ can't be enable when PAYLOAD_HELLO is enable in your config_application.h file"
-	#endif
-#elif (CAYENNE_LPP_ == true)
-	#if (PAYLOAD_TEMPERATURE == true) || (PAYLOAD_HELLO == true)
-		#error "PAYLOAD_TEMPERATURE or PAYLOAD_HELLO can't be enable when CAYENNE_LPP_ is enable in your config_application.h file"
-	#endif
-#elif (PAYLOAD_HELLO == false) && (PAYLOAD_HELLO == false) && (CAYENNE_LPP_ == false)
-		#error "PAYLOAD_TEMPERATURE or PAYLOAD_HELLO or CAYENNE_LPP_ must be selected for the payload in your config_application.h file"
 #endif
+
+//#if (PAYLOAD_TEMPERATURE == true)
+//	#if (PAYLOAD_HELLO == true) || (CAYENNE_LPP_ == true)
+//		#error "PAYLOAD_HELLO or CAYENNE_LPP_ can't be enable when PAYLOAD_TEMPERATURE is enable in your config_application.h file"
+//	#endif
+//#elif (PAYLOAD_HELLO == true)
+//	#if (PAYLOAD_TEMPERATURE == true) || (CAYENNE_LPP_ == true)
+//		#error "PAYLOAD_TEMPERATURE or CAYENNE_LPP_ can't be enable when PAYLOAD_HELLO is enable in your config_application.h file"
+//	#endif
+//#elif (CAYENNE_LPP_ == true)
+//	#if (PAYLOAD_TEMPERATURE == true) || (PAYLOAD_HELLO == true)
+//		#error "PAYLOAD_TEMPERATURE or PAYLOAD_HELLO can't be enable when CAYENNE_LPP_ is enable in your config_application.h file"
+//	#endif
+//#elif (PAYLOAD_HELLO == false) && (PAYLOAD_HELLO == false) && (CAYENNE_LPP_ == false)
+//		#error "PAYLOAD_TEMPERATURE or PAYLOAD_HELLO or CAYENNE_LPP_ must be selected for the payload in your config_application.h file"
+//#endif
 
 
 
@@ -149,7 +156,7 @@
 #define ADMIN_MAX_ACK_RETRIES		8									// Number of retries when using confirmed packet. Default value=8. LoRaMac.h
 
 /* LoRaWAN Application --------------------------------------------------------*/
-#define RAW_LORA_APP					true
+#define RAW_LORA_APP					false
 
 // Uplink Mode
 #define ADMIN_TX_TYPE							SEND_BY_PUSH_BUTTON				// possible values: 0 (by timer, every TxDutyCycleTime) / 1 (by button B3) - lora_app.c
@@ -166,7 +173,7 @@
 #define ADMIN_LOW_POWER					!LOW_POWER				// 0 (Low Power enabled) / 1 (Low Power disabled)
 
 // Sensors
-#define ADMIN_SENSOR_ENABLED			false					// 0 (No sensors) / 1 (Sensors Board IKS01A3)
+#define ADMIN_SENSOR_ENABLED			true					// 0 (No sensors) / 1 (Sensors Board IKS01A3)
 
 
 /* Device LOGs ----------------------------------------------------------------*/

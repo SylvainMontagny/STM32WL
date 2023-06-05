@@ -53,9 +53,10 @@ int32_t  EnvSensors_Read(sensor_t *sensor_data)
       if (sensor_data->hts221_humidity_float > 100) {
     	  sensor_data->hts221_humidity_float = 100;
       }
+      sensor_data->hts221_humidity_int8  =  (int8_t)sensor_data->hts221_humidity_float;
 
-      sprintf((char *)tx_buffer, "Humidity [%%]:%3.2f\r\n", sensor_data->hts221_humidity_float);
-      APP_LOG(0, 1,tx_buffer);
+      //sprintf((char *)tx_buffer, "Humidity [%%]:%3.2f\r\n", sensor_data->hts221_humidity_float);
+      //APP_LOG(0, 1,tx_buffer);
     }
 
     if (reg.status_reg.t_da) {
@@ -63,8 +64,8 @@ int32_t  EnvSensors_Read(sensor_t *sensor_data)
       memset(&hts221_raw_temperature, 0x00, sizeof(int16_t));
       hts221_temperature_raw_get(&dev_ctx, &hts221_raw_temperature);
       sensor_data->hts221_temperature_float =  hts221_linear_interpolation(&lin_temp, hts221_raw_temperature);
-      sprintf((char *)tx_buffer, "Temperature [degC]:%6.2f\r\n", sensor_data->hts221_temperature_float );
-      APP_LOG(0, 1,tx_buffer);
+      //sprintf((char *)tx_buffer, "Temperature [degC]:%6.2f\r\n", sensor_data->hts221_temperature_float );
+      //APP_LOG(0, 1,tx_buffer);
     }
 #endif
 	return 0;
@@ -96,9 +97,12 @@ int32_t  EnvSensors_Init(void)
 
 	if ( hts221_whoamI != HTS221_ID ){
 		APP_LOG_COLOR(RED);
-		APP_LOG(0, 1, "\n\r> Temperature - Humidity sensor HTS221 not found\r\n");
+		APP_LOG(0, 1, "> Temperature - Humidity sensor HTS221 not found\r\n");
 	}
 	else{
+		APP_LOG_COLOR(GREEN);
+		APP_LOG(0, 1, "> Temperature - Humidity sensor HTS221 ready\r\n");
+		APP_LOG_COLOR(RESET_COLOR);
 		/* Read humidity calibration coefficient */
 		hts221_hum_adc_point_0_get(&dev_ctx, &lin_hum.x0);
 		hts221_hum_rh_point_0_get(&dev_ctx, &lin_hum.y0);

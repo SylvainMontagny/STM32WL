@@ -9,6 +9,8 @@ typedef struct
 
   float hts221_temperature_float;
   float hts221_humidity_float;
+  int8_t hts221_temperature_int8;
+  int8_t hts221_humidity_int8;
 
   int8_t stm32wl_temperature;
 

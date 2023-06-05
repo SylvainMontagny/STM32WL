@@ -21,6 +21,7 @@
 
 #include  "General_Setup.h"
 uint8_t simuTemperature(void);
+uint8_t simuHumidity(void);
 static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error);
 #define RX_BUFF_SIZE 60
 
@@ -135,9 +136,31 @@ void LoRaWAN_Init(void)
 			APP_LOG(0, 1, "> Uplink Frame            %s",(CONFIRMED == true) ? "Confirmed\r\n" : "Unconfirmed\r\n");
 			APP_LOG(0, 1, "> App Port number         %d \r\n", APP_PORT);
 
-			if(PAYLOAD_TEMPERATURE == true){
+			if(CAYENNE_LPP && SENSOR_ENABLED){
+				APP_LOG(0, 1, "> Payload content:        CayenneLPP, sensors\r\n");
+			}
+			else if(CAYENNE_LPP && !SENSOR_ENABLED){
+				APP_LOG(0, 1, "> Payload content:        CayenneLPP, simulated values\r\n");
+			}
+			else if(PAYLOAD_TEMPERATURE && !PAYLOAD_HUMIDITY && SENSOR_ENABLED){
 				APP_LOG(0, 1, "> Payload content         1-byte temperature\r\n");
 			}
+			else if(PAYLOAD_TEMPERATURE && PAYLOAD_HUMIDITY && SENSOR_ENABLED){
+				APP_LOG(0, 1, "> Payload content         1-byte temperature + humidity\r\n");
+			}
+			else if(!PAYLOAD_TEMPERATURE && PAYLOAD_HUMIDITY && SENSOR_ENABLED){
+				APP_LOG(0, 1, "> Payload content         1-byte humidity\r\n");
+			}
+			else if(PAYLOAD_TEMPERATURE && !PAYLOAD_HUMIDITY && !SENSOR_ENABLED){
+				APP_LOG(0, 1, "> Payload content         1-byte simulated temperature\r\n");
+			}
+			else if(PAYLOAD_TEMPERATURE && PAYLOAD_HUMIDITY && !SENSOR_ENABLED){
+				APP_LOG(0, 1, "> Payload content         1-byte simulated temperature + humidity\r\n");
+			}
+			else if(!PAYLOAD_TEMPERATURE && PAYLOAD_HUMIDITY && !SENSOR_ENABLED){
+				APP_LOG(0, 1, "> Payload content         1-byte simulated humidity\r\n");
+			}
+
 			else if(PAYLOAD_HELLO == true){
 				APP_LOG(0, 1, "> Payload content:        String HELLO\r\n");
 			}
@@ -220,7 +243,9 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 				UTIL_TIMER_Stop(&TxTimer);
 				BSP_PB_DeInit(BUTTON_SW1);
 				APP_LOG_COLOR(RED);
-				APP_LOG(0, 1, "\tLoRaWAN application stops - Enter Raw LoRa Packet mode\r\n");
+				APP_LOG(0, 1, "\tLoRaWAN application stops\r\n");
+				APP_LOG_COLOR(BLUE);
+				APP_LOG(0, 1, "\r\n\r\nRaw LoRa Packet Application\r\n\r\n");
 				APP_LOG_COLOR(WHITE);
 			    APP_LOG(0, 1, "\r\nType the following command to send a Raw LoRa Packet\r\n");
 			    APP_LOG(0, 1, "> Command format : LORA=Frequency:Power:SF:Payload\r\n");
@@ -277,40 +302,100 @@ static void SendTxData(void)
 
   EnvSensors_Read(&sensor_data);
   sensor_data.stm32wl_temperature = (SYS_GetTemperatureLevel() >> 8);
-
+  sensor_data.temperature_simulated = simuTemperature();
+  sensor_data.humidity_simulated = simuHumidity();
 
   AppData.Port = APP_PORT;
 
-  if(ADMIN_SENSOR_ENABLED){
-	  AppData.Buffer[i++] = sensor_data.stts751_temperature_int8;
+  if(PAYLOAD_HELLO){
+  	  AppData.Buffer[i++] = 'H';
+  	  AppData.Buffer[i++] = 'E';
+  	  AppData.Buffer[i++] = 'L';
+  	  AppData.Buffer[i++] = 'L';
+  	  AppData.Buffer[i++] = 'O';
+  	  AppData.BufferSize = i;
+  }
+  else if(!CAYENNE_LPP){
+	  if(PAYLOAD_TEMPERATURE){
+		  if(SENSOR_ENABLED){
+			  AppData.Buffer[i++] = sensor_data.stts751_temperature_int8;
+		  }
+		  else{
+			  AppData.Buffer[i++] = sensor_data.temperature_simulated;
+		  }
+	  }
+	  if(PAYLOAD_HUMIDITY){
+		  if(SENSOR_ENABLED){
+			  AppData.Buffer[i++] = sensor_data.hts221_humidity_int8;
+		  }
+		  else{
+			  AppData.Buffer[i++] = sensor_data.humidity_simulated;
+		  }
+	  }
 	  AppData.BufferSize = i;
   }
-  else if(PAYLOAD_TEMPERATURE)
-  {
-	  AppData.Buffer[i++] = simuTemperature();
-	  AppData.BufferSize = i;
+  else{	// CAYENNE
+	  CayenneLppReset();
+	  if(PAYLOAD_TEMPERATURE){
+		  if(SENSOR_ENABLED){
+			  CayenneLppAddTemperature(channel++, (int16_t)(sensor_data.hts221_temperature_float));
+		  }
+		  else{
+			  CayenneLppAddTemperature(channel++, sensor_data.temperature_simulated);
+		  }
+	  }
+
+	  if(PAYLOAD_HUMIDITY){
+		  if(SENSOR_ENABLED){
+			  CayenneLppAddRelativeHumidity(channel++, (int16_t)(sensor_data.hts221_humidity_float));
+		  }
+		  else{
+			  CayenneLppAddRelativeHumidity(channel++, (uint16_t)(sensor_data.humidity_simulated));
+		  }
+	  }
+	  CayenneLppCopy(AppData.Buffer);
+	  AppData.BufferSize = CayenneLppGetSize();
   }
-  else if(PAYLOAD_HELLO)
-  {
-	  AppData.Buffer[i++] = 'H';
-	  AppData.Buffer[i++] = 'E';
-	  AppData.Buffer[i++] = 'L';
-	  AppData.Buffer[i++] = 'L';
-	  AppData.Buffer[i++] = 'O';
-	  AppData.BufferSize = i;
-  }
-  else if(CAYENNE_LPP_)
-  {
-	CayenneLppReset();
-	//CayenneLppAddBarometricPressure(channel++, pressure);
-	CayenneLppAddTemperature(channel++, sensor_data.stts751_temperature_float);
-	CayenneLppAddRelativeHumidity(channel++, (uint16_t)(sensor_data.humidity_simulated));
-	//CayenneLppAddAnalogInput(channel++, GetBatteryLevel()*33/255);
-	//CayenneLppAddDigitalInput(channel++, GetBatteryLevel());
-	CayenneLppAddDigitalOutput(channel++, AppLedStateOn);
-	CayenneLppCopy(AppData.Buffer);
-	AppData.BufferSize = CayenneLppGetSize();
-  }
+
+
+//
+//
+//  if(CAYENNE_LPP  && !ADMIN_SENSOR_ENABLED){
+//	  CayenneLppReset();
+//	  CayenneLppAddTemperature(channel++, sensor_data.temperature_simulated);
+//	  CayenneLppAddRelativeHumidity(channel++, (uint16_t)(sensor_data.humidity_simulated));
+//	  CayenneLppAddDigitalOutput(channel++, AppLedStateOn);
+//	  CayenneLppCopy(AppData.Buffer);
+//	  AppData.BufferSize = CayenneLppGetSize();
+//  }
+//  else if(CAYENNE_LPP  && ADMIN_SENSOR_ENABLED){
+//	  CayenneLppReset();
+//	  CayenneLppAddTemperature(channel++, (int16_t)(sensor_data.hts221_temperature_float));
+//	  CayenneLppAddRelativeHumidity(channel++, (int16_t)(sensor_data.hts221_humidity_float));
+//	  CayenneLppAddDigitalOutput(channel++, AppLedStateOn);
+//	  CayenneLppCopy(AppData.Buffer);
+//	  AppData.BufferSize = CayenneLppGetSize();
+//  }
+//  else if(PAYLOAD_TEMPERATURE && !ADMIN_SENSOR_ENABLED)
+//  {
+//	  AppData.Buffer[i++] = sensor_data.temperature_simulated;
+//	  AppData.BufferSize = i;
+//  }
+//  else if(PAYLOAD_TEMPERATURE && ADMIN_SENSOR_ENABLED)
+//  {
+//	  AppData.Buffer[i++] = sensor_data.stts751_temperature_int8;
+//	  AppData.BufferSize = i;
+//  }
+//  else if(PAYLOAD_HELLO)
+//  {
+//	  AppData.Buffer[i++] = 'H';
+//	  AppData.Buffer[i++] = 'E';
+//	  AppData.Buffer[i++] = 'L';
+//	  AppData.Buffer[i++] = 'L';
+//	  AppData.Buffer[i++] = 'O';
+//	  AppData.BufferSize = i;
+//  }
+//
 
 
   if (LORAMAC_HANDLER_SUCCESS == LmHandlerSend(&AppData, LORAWAN_DEFAULT_CONFIRMED_MSG_STATE, &nextTxIn, false))
@@ -334,6 +419,17 @@ uint8_t simuTemperature(void){
 
 	temp = (countUP == 1)? temp + 1 : temp - 1;
 	return temp;
+}
+
+uint8_t simuHumidity(void){
+	static uint8_t humid = 50, countUP = 0;
+
+	if ( (humid == 50) || (humid == 60)){
+		countUP = (countUP + 1)%2;
+	}
+
+	humid = (countUP == 1)? humid + 1 : humid - 1;
+	return humid;
 }
 
 
