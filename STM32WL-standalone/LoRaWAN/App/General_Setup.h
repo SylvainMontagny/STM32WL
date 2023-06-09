@@ -173,7 +173,7 @@
 #define ADMIN_LOW_POWER					!LOW_POWER				// 0 (Low Power enabled) / 1 (Low Power disabled)
 
 // Sensors
-#define ADMIN_SENSOR_ENABLED			true					// 0 (No sensors) / 1 (Sensors Board IKS01A3)
+#define ADMIN_SENSOR_ENABLED			false					// 0 (No sensors) / 1 (Sensors Board IKS01A3)
 
 
 /* Device LOGs ----------------------------------------------------------------*/
