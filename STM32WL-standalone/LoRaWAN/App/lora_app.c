@@ -94,6 +94,11 @@ void LoRaWAN_Init(void)
     APP_LOG(0, 1, "###### Savoie Mont Blanc University ####\r\n");
     APP_LOG(0, 1, " \r\n");
 
+    // Check board program
+	/*APP_LOG_COLOR(GREEN);
+	APP_LOG(0, 1, "\r\n    Your LoRaWAN device is ready\r\n\r\n");
+	while(1);*/
+
     BSP_LED_Init(LED_BLUE);
 	BSP_LED_Init(LED_GREEN);
 	BSP_LED_Init(LED_RED);
