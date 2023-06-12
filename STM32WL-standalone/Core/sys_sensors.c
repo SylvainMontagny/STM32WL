@@ -89,7 +89,7 @@ int32_t  EnvSensors_Init(void)
 		stts751_temp_data_rate_set(&dev_ctx, STTS751_TEMP_ODR_1Hz);
 		stts751_resolution_set(&dev_ctx, STTS751_11bit);
 	}
-
+	APP_LOG_COLOR(RESET_COLOR);
 
 	/***** HTS221 - Temperature - Humidity  ****/
 	hts221_whoamI = 0;
@@ -120,6 +120,7 @@ int32_t  EnvSensors_Init(void)
 		/* Device power on */
 		hts221_power_on_set(&dev_ctx, PROPERTY_ENABLE);
 	}
+	APP_LOG_COLOR(RESET_COLOR);
 
 #endif
 	return 0;

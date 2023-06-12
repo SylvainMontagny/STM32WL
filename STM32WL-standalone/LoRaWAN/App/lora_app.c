@@ -95,9 +95,9 @@ void LoRaWAN_Init(void)
     APP_LOG(0, 1, " \r\n");
 
     // Check board program
-	/*APP_LOG_COLOR(GREEN);
-	APP_LOG(0, 1, "\r\n    Your LoRaWAN device is ready\r\n\r\n");
-	while(1);*/
+	// APP_LOG_COLOR(GREEN);
+	// APP_LOG(0, 1, "\r\n    Your LoRaWAN device is ready\r\n\r\n");
+	// while(1);
 
     BSP_LED_Init(LED_BLUE);
 	BSP_LED_Init(LED_GREEN);
@@ -223,7 +223,7 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 		if ( strcmp(rxBuff , "t") == 0){
 
 			APP_LOG_COLOR(GREEN);
-			APP_LOG(0, 1, "\tTransmition required the by user\r\n");
+			APP_LOG(0, 1, "\tTransmition required by the user\r\n");
 			UTIL_SEQ_SetTask((1 << CFG_SEQ_Task_LoRaSendOnTxTimerOrButtonEvent), CFG_SEQ_Prio_0);
 			if (SEND_BY_PUSH_BUTTON == false){
 				UTIL_TIMER_Start(&TxTimer);
