@@ -15,8 +15,7 @@
 #define LORA_PREAMBLE_LENGTH          8
 #define TX_TIMEOUT_VALUE              3000
 
-//EDIT Anthony
-#define PARAM_LORA_ERROR 			      -1
+#define PARAM_LORA_ERROR 			      0
 #define PARAM_LORA_OK					  1
 
 
@@ -26,12 +25,18 @@ void LoRa_OnTxTimeout(void);
 void LoRa_OnRxTimeout(void);
 void LoRa_OnRxError(void);
 void LoRa_Send(void);
-// Edit Anthony
+
 uint8_t PrepareLoRaFrame(const char* param);
 int8_t SendLoRaFrame(const char* buff_payload);
+
 int hex_to_int(char c);
 int hex_to_ascii(char c, char d);
 int8_t function_hexToString(const char* st, char* payload);
+
+int8_t isBase64(char c);
+int is_valid_base64(const char* base64_buffer);
+int get_base64_value(char c);
+uint8_t function_base64ToString(const char* base64_buffer, char* payload);
 
 
 typedef struct

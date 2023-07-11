@@ -23,13 +23,14 @@
 uint8_t simuTemperature(void);
 uint8_t simuHumidity(void);
 static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error);
-#define RX_BUFF_SIZE 60
+#define RX_BUFF_SIZE 250
 
 static uint8_t rxBuff[RX_BUFF_SIZE];
 uint8_t isRxConfirmed;
 uint32_t LoRaMode = 0;
 uint8_t size_txBUFFER = 0;
 uint8_t txBUFFER[100];
+uint8_t isTriggered = 0;
 
 typedef enum TxEventType_e
 {
@@ -261,6 +262,12 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 				APP_LOG(0, 1, "\r\n - You already entered the Raw LoRa Packet mode\r\n - To send a LoRa command please use this format: LORA=Frequency:Power:SF:Payload\r\n");
 			}
 		}
+		else if(isTriggered == 1)
+		{
+			PrepareLoRaFrame("ERROR");
+			isTriggered = 0;
+			index = 0;
+		}
 		else if (LoRaMode == 1){
 			PrepareLoRaFrame(rxBuff);
 		}
@@ -274,6 +281,7 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 	else{
 		rxBuff[index++] = *PData;
 		if ( index == RX_BUFF_SIZE ){
+			isTriggered = 1;
 			index = 0;
 		}
 	}
