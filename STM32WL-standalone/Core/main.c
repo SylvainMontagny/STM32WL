@@ -2,6 +2,8 @@
 #include "main.h"
 #include "app_lorawan.h"
 #include "sys_app.h"
+#include "i2c.h"
+#include "sys_sensors.h"
 
 void SystemClock_Config(void);
 

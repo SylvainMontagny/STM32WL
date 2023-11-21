@@ -8,21 +8,21 @@
 #include "hts221_reg.h"
 
 #include "i2c.h"
+#if SENSOR_ENABLED == 1
+	static stts751_id_t stts751_whoamI;
+	static int16_t stts751_raw_temperature;
 
-static stts751_id_t stts751_whoamI;
-static int16_t stts751_raw_temperature;
+	static uint8_t hts221_whoamI;
+	static int16_t hts221_raw_humidity;
+	static int16_t hts221_raw_temperature;
+	static hts221_lin_t lin_hum;
+	static hts221_lin_t lin_temp;
 
-static uint8_t hts221_whoamI;
-static int16_t hts221_raw_humidity;
-static int16_t hts221_raw_temperature;
-static hts221_lin_t lin_hum;
-static hts221_lin_t lin_temp;
-
-static uint8_t tx_buffer[100];	// Only useful if we need to log the sensor value
+	static uint8_t tx_buffer[100];	// Only useful if we need to log the sensor value
 
 
-stmdev_ctx_t dev_ctx; // Not used but to comply with ST library
-
+	stmdev_ctx_t dev_ctx; // Not used but to comply with ST library
+#endif
 
 int32_t  EnvSensors_Read(sensor_t *sensor_data)
 {
