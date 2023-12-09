@@ -6,14 +6,17 @@ This standalone project is a single-core application inspired by ST "End-Node" e
 
 :heavy_check_mark: A single file is used to configure the application behavior and setup all LoRaWAN settings (Root Keys or Sessions Keys).
 
-:heavy_check_mark: This file is : **/LoRaWAN/config_application.h**.
+:heavy_check_mark: This file is **/LoRaWAN/config_application.h**.
 
 :heavy_check_mark: This project works on a **NUCLEO-WL55JC1 board**.
 
 :heavy_check_mark: The user payload is a simulated temperature and humidity sensor. But this application can provide real temperature and humidity value if you plug the **IKS01A3 board**. To switch between simulated value and real value, set the **ADMIN_SENSOR_ENABLED** to **true** in the **LoRaWAN/App/General_Setup.h** file.
 
 ## 1.2. Running the application
-:warning: The only file to modify in order to run this project is : **/LoRaWAN/config_application.h**. See details in the next chapter.
+
+:warning: The only file to modify in order to run this project is **/LoRaWAN/config_application.h**. See details in the next chapter.
+
+
 | #define           	| Possible values      	|  Behavior                                                    	|
 |----------------------	|--------------------	|---------------------------------------------------------------|
 | ACTIVATION_MODE      	| ABP or OTAA        	|  Selection of Activation Method                              	|
@@ -40,6 +43,8 @@ This standalone project is a single-core application inspired by ST "End-Node" e
  
  
 ### 1.2.3. Application configuration
+:warning: There must be no space in the project path. 
+
 :one: **STM32CubeIDE installation**
 * STM32CubeIDE and board's drivers can be downloaded from ST's website
 * To open the project, double click on the file **STM32WL-standalone\.project**.
