@@ -1,8 +1,20 @@
+- [1. This LoRaWAN Application](#1-this-lorawan-application)
+  - [1.1. Presentation](#11-presentation)
+  - [1.2. Running the application](#12-running-the-application)
+    - [1.2.1. Board test](#121-board-test)
+    - [1.2.3. Application configuration](#123-application-configuration)
+    - [1.2.4. Possible action during excecution](#124-possible-action-during-excecution)
+- [2. LoRaWAN Application layer Advanced features](#2-lorawan-application-layer-advanced-features)
+  - [2.1. Clock Synchronization](#21-clock-synchronization)
+  - [2.2. Multicast](#22-multicast)
+  - [2.3. Fragmentation](#23-fragmentation)
+- [3. Want to learn more about LoRaWAN ?](#3-want-to-learn-more-about-lorawan-)
 
 
-# 1. LoRaWAN Application
+
+# 1. This LoRaWAN Application
 ## 1.1. Presentation
-This standalone project is a single-core application inspired by ST "End-Node" example (see STM32Cube MCU Package for STM32WL series). The source code has been mofified with STM32CubeIDE. 
+This standalone project is a single-core application including a **1.0.3 LoRaWAN stack**. This project is inspired from ST "End-Node" example (see STM32Cube MCU Package for STM32WL series). The  STM32CubeIDE. 
 
 :heavy_check_mark: A single file is used to configure the application behavior and setup all LoRaWAN settings (Root Keys or Sessions Keys).
 
