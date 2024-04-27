@@ -7,39 +7,41 @@ VENDOR_ROOT = ./bsp/
 ###############################################################################
 
 # Project specific
-TARGET = main.elf
+TARGET = STM32WL-standalone
 ASM_DIR = Startup/
-INC_DIR = Inc/
 
 # Toolchain
 CC = $(TOOLCHAIN_ROOT)arm-none-eabi-gcc
 
 # Project sources
-SRC_FILES  = $(wildcard STM32WLxx_HAL_Driver/Src/*.c)
+SRC_FILES  = $(wildcard Core/*.c)
 SRC_FILES += $(wildcard Drivers/BSP/STM32WLxx_Nucleo/*.c)
+SRC_FILES += $(wildcard Drivers/Sensors/*.c)
+SRC_FILES += $(wildcard Drivers/STM32WLxx_HAL_Driver/Src/*.c)
+SRC_FILES += $(wildcard Drivers/Utilities/*.c)
+SRC_FILES += $(wildcard LoRaWAN/*/*.c)
 SRC_FILES += $(wildcard Middlewares/LoRaWAN/*.c) $(wildcard Middlewares/LoRaWAN/*/*.c)
 SRC_FILES += $(wildcard Middlewares/SubGHz_Phy/*.c)
-SRC_FILES += $(wildcard LoRaWAN/*/*.c)
-SRC_FILES += $(wildcard Utilities/*.c)
-SRC_FILES += $(wildcard Core/*.c)
 
 ASM_FILES = $(wildcard $(ASM_DIR)*.s)
 LD_SCRIPT = STM32WL55JCIX_FLASH.ld
 
 # Project includes
-INCLUDES  = -I$(INC_DIR)
-INCLUDES += -ILoRaWAN/Target
-INCLUDES += -ILoRaWAN/App
-INCLUDES += -ISTM32WLxx_HAL_Driver/Inc/
-INCLUDES += -ISTM32WLxx_HAL_Driver/Inc/Legacy
-INCLUDES += -IDrivers/BSP/STM32WLxx_Nucleo
 INCLUDES += -IDrivers/CMSIS/Include
-INCLUDES += -IDrivers/CMSIS/ST/STM32WLxx/Include/
-INCLUDES += -IMiddlewares/LoRaWAN
+INCLUDES += -IDrivers/BSP/STM32WLxx_Nucleo
+INCLUDES += -ILoRaWAN/Target
 INCLUDES += -IMiddlewares/LoRaWAN/Packages
-INCLUDES += -IMiddlewares/LoRaWAN/Region
-INCLUDES += -IMiddlewares/LoRaWAN/Utilities
+INCLUDES += -IMiddlewares/LoRaWAN
 INCLUDES += -IMiddlewares/SubGHz_Phy
+INCLUDES += -IDrivers/CMSIS/ST/STM32WLxx/Include/
+INCLUDES += -ILoRaWAN/App
+INCLUDES += -IMiddlewares/LoRaWAN/Utilities
+INCLUDES += -IMiddlewares/LoRaWAN/Region
+INCLUDES += -IDrivers/STM32WLxx_HAL_Driver/Inc
+INCLUDES += -IDrivers/Inc
+INCLUDES += -IDrivers/Utilities
+INCLUDES += -IDrivers/Sensors
+
 INCLUDES += -IUtilities
 
 # Compiler Flags
@@ -63,7 +65,7 @@ ALL_OBJS = $(ASM_OBJS) $(CXX_OBJS)
 
 .PHONY: clean
 
-all: $(TARGET)
+all: $(TARGET).elf $(TARGET).bin 
 
 # Compile
 $(CXX_OBJS): %.o: %.c
@@ -79,10 +81,10 @@ $(ALL_OBJS):
 
 # Clean
 clean:
-	@rm -f $(ALL_OBJS) $(TARGET)
+	@rm -f $(ALL_OBJS) $(TARGET).elf  $(TARGET).bin
     
 
-STM32WL-standalone.bin: $(ALL_OBJS)
-	arm-none-eabi-objcopy  -O binary $(TARGET) "STM32WL-standalone.bin"
+%.bin: $(ALL_OBJS)
+	arm-none-eabi-objcopy  -O binary $(TARGET).elf "STM32WL-standalone.bin"
 	@echo 'Finished building: $@'
 	@echo ' '
