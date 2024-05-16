@@ -16,6 +16,7 @@ typedef struct
 
   int8_t temperature_simulated;
   int8_t humidity_simulated;
+  int8_t setpoint;
 
 } sensor_t;
 
