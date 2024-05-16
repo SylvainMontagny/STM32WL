@@ -104,27 +104,12 @@
 	#endif
 #endif
 
-//#if (PAYLOAD_TEMPERATURE == true)
-//	#if (PAYLOAD_HELLO == true) || (CAYENNE_LPP_ == true)
-//		#error "PAYLOAD_HELLO or CAYENNE_LPP_ can't be enable when PAYLOAD_TEMPERATURE is enable in your config_application.h file"
-//	#endif
-//#elif (PAYLOAD_HELLO == true)
-//	#if (PAYLOAD_TEMPERATURE == true) || (CAYENNE_LPP_ == true)
-//		#error "PAYLOAD_TEMPERATURE or CAYENNE_LPP_ can't be enable when PAYLOAD_HELLO is enable in your config_application.h file"
-//	#endif
-//#elif (CAYENNE_LPP_ == true)
-//	#if (PAYLOAD_TEMPERATURE == true) || (PAYLOAD_HELLO == true)
-//		#error "PAYLOAD_TEMPERATURE or PAYLOAD_HELLO can't be enable when CAYENNE_LPP_ is enable in your config_application.h file"
-//	#endif
-//#elif (PAYLOAD_HELLO == false) && (PAYLOAD_HELLO == false) && (CAYENNE_LPP_ == false)
-//		#error "PAYLOAD_TEMPERATURE or PAYLOAD_HELLO or CAYENNE_LPP_ must be selected for the payload in your config_application.h file"
-//#endif
-
-
 
 #if (LOW_POWER != true) && (LOW_POWER != false)
 	#error "LOW_POWER must be either true of false in your config_application.h file"
 #endif
+
+
 
 
 /* LoRaWAN Activation Mode - Class---------------------------------------------*/
@@ -163,18 +148,14 @@
 #define ADMIN_TxDutyCycleTime					FRAME_DELAY						// in ms - lora_app.h
 #define ADMIN_TX_CONFIRMED_TYPE					CONFIRMED						// possible values: LORAMAC_HANDLER_UNCONFIRMED_MSG / LORAMAC_HANDLER_CONFIRMED_MSG - lora_app.h
 
-// Uplink Profile
-#define ADMIN_USER_APP_PORT				APP_PORT					//  lora_app.h
-#define ADMIN_CAYENNE					CAYENNE_LPP_			// 0 or 1. If defined, cayenne LPP is enable - lora_app.h
-#define ADMIN_PAYLOAD_TEMPERATURE		PAYLOAD_TEMPERATURE		// 1 (send various temperature) / 0 (none) - General_Setup.h
-#define ADMIN_PAYLOAD_HELLO				PAYLOAD_HELLO			// 1 (send 0x010203 static) / 0 (none) // CAYENNE must be set to 1 - lora_app.h
 
 // Power
 #define ADMIN_LOW_POWER					!LOW_POWER				// 0 (Low Power enabled) / 1 (Low Power disabled)
 
 // Sensors
 #define ADMIN_SENSOR_ENABLED			false					// 0 (No sensors) / 1 (Sensors Board IKS01A3)
-
+#define MLR003_SIMU						false
+#define MLR003_APP_PORT					30
 
 /* Device LOGs ----------------------------------------------------------------*/
 #define ADMIN_VERBOSE					VLEVEL_L				// possible values: VLEVEL_H / VLEVEL_M / VLEVEL_L - Utilities-Conf.h
