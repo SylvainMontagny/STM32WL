@@ -31,6 +31,8 @@ uint32_t LoRaMode = 0;
 uint8_t size_txBUFFER = 0;
 uint8_t txBUFFER[100];
 uint8_t isTriggered = 0;
+sensor_t sensor_data = { 0,0,0,0,0,0,0,0,0,19};
+
 
 typedef enum TxEventType_e
 {
@@ -166,13 +168,15 @@ void LoRaWAN_Init(void)
 			else if(!PAYLOAD_TEMPERATURE && PAYLOAD_HUMIDITY && !SENSOR_ENABLED){
 				APP_LOG(0, 1, "> Payload content         1-byte simulated humidity\r\n");
 			}
-
 			else if(PAYLOAD_HELLO == true){
 				APP_LOG(0, 1, "> Payload content:        String HELLO\r\n");
 			}
 			else if(CAYENNE_LPP == true){
 				APP_LOG(0, 1, "> Payload content:        CayenneLPP, sensors\r\n");
-			   }
+			}
+			else if(MLR003_SIMU == true){
+				APP_LOG(0, 1, "> Payload content:        1-byte setpoint + 1 byte temperature\r\n");
+			}
 			//APP_LOG(0, 1, "> Low Power:              %s",(LOW_POWER == true) ? "ON \r\n" : "OFF \r\n");
 			APP_LOG(0, 1, "\r\n");
 		   APP_LOG_COLOR(BLUE);
@@ -307,8 +311,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 static void SendTxData(void)
 {
-  //uint16_t pressure = 0;
-  sensor_t sensor_data;
   UTIL_TIMER_Time_t nextTxIn = 0;
   uint32_t i = 0;
   uint8_t channel = 0;
@@ -345,6 +347,10 @@ static void SendTxData(void)
 			  AppData.Buffer[i++] = sensor_data.humidity_simulated;
 		  }
 	  }
+	  if(MLR003_SIMU){
+		  AppData.Buffer[i++] = sensor_data.setpoint;
+		  AppData.Buffer[i++] = sensor_data.temperature_simulated;
+	  }
 	  AppData.BufferSize = i;
   }
   else{	// CAYENNE
@@ -369,46 +375,6 @@ static void SendTxData(void)
 	  CayenneLppCopy(AppData.Buffer);
 	  AppData.BufferSize = CayenneLppGetSize();
   }
-
-
-//
-//
-//  if(CAYENNE_LPP  && !ADMIN_SENSOR_ENABLED){
-//	  CayenneLppReset();
-//	  CayenneLppAddTemperature(channel++, sensor_data.temperature_simulated);
-//	  CayenneLppAddRelativeHumidity(channel++, (uint16_t)(sensor_data.humidity_simulated));
-//	  CayenneLppAddDigitalOutput(channel++, AppLedStateOn);
-//	  CayenneLppCopy(AppData.Buffer);
-//	  AppData.BufferSize = CayenneLppGetSize();
-//  }
-//  else if(CAYENNE_LPP  && ADMIN_SENSOR_ENABLED){
-//	  CayenneLppReset();
-//	  CayenneLppAddTemperature(channel++, (int16_t)(sensor_data.hts221_temperature_float));
-//	  CayenneLppAddRelativeHumidity(channel++, (int16_t)(sensor_data.hts221_humidity_float));
-//	  CayenneLppAddDigitalOutput(channel++, AppLedStateOn);
-//	  CayenneLppCopy(AppData.Buffer);
-//	  AppData.BufferSize = CayenneLppGetSize();
-//  }
-//  else if(PAYLOAD_TEMPERATURE && !ADMIN_SENSOR_ENABLED)
-//  {
-//	  AppData.Buffer[i++] = sensor_data.temperature_simulated;
-//	  AppData.BufferSize = i;
-//  }
-//  else if(PAYLOAD_TEMPERATURE && ADMIN_SENSOR_ENABLED)
-//  {
-//	  AppData.Buffer[i++] = sensor_data.stts751_temperature_int8;
-//	  AppData.BufferSize = i;
-//  }
-//  else if(PAYLOAD_HELLO)
-//  {
-//	  AppData.Buffer[i++] = 'H';
-//	  AppData.Buffer[i++] = 'E';
-//	  AppData.Buffer[i++] = 'L';
-//	  AppData.Buffer[i++] = 'L';
-//	  AppData.Buffer[i++] = 'O';
-//	  AppData.BufferSize = i;
-//  }
-//
 
 
   if (LORAMAC_HANDLER_SUCCESS == LmHandlerSend(&AppData, LORAWAN_DEFAULT_CONFIRMED_MSG_STATE, &nextTxIn, false))
@@ -457,41 +423,26 @@ static void OnTxData(LmHandlerTxParams_t *params)
     		  BSP_LED_On(LED_GREEN) ;
 			  UTIL_TIMER_Start(&TxLedTimer);
 
-			 /* if (CONFIRMED == true){
-				  APP_LOG_COLOR(GREEN);
-				  APP_LOG(0, 1, " ACK Received \r\n");
-				  APP_LOG_COLOR(RESET_COLOR);
-			  }*/
-
 			  APP_LOG(0, 1, "- Payload     ");
 
 			  if(AppData.BufferSize>0)
 			  {
-
-				  for(int i=0;i<size_txBUFFER;i++){
-					  APP_LOG(0, 1, "%02X ", txBUFFER[i]);
+				  if(MLR003_SIMU){
+					  APP_LOG(0, 1, "Setpoint : %u °C | temperature : %u °C", txBUFFER[0], txBUFFER[1]);
 				  }
-				  APP_LOG(0, 1, "(hex)  |  ");
+				  else{
+					  for(int i=0;i<size_txBUFFER;i++){
+						  APP_LOG(0, 1, "%02X ", txBUFFER[i]);
+					  }
+					  APP_LOG(0, 1, "(hex)  |  ");
 
-				  for(int i=0;i<size_txBUFFER;i++){
-					  APP_LOG(0, 1, "%03u ", txBUFFER[i]);
+					  for(int i=0;i<size_txBUFFER;i++){
+						  APP_LOG(0, 1, "%03u ", txBUFFER[i]);
+					  }
+					  APP_LOG(0, 1, "(dec)");
 				  }
-				  APP_LOG(0, 1, "(dec)");
 			  }
 
-			  /*
-			  if(AppData.BufferSize>0)
-			  {
-				  for(int i=0;i<AppData.BufferSize;i++){
-					  APP_LOG(0, 1, "%02X ", AppData.Buffer[i]);
-				  }
-				  APP_LOG(0, 1, "(hex)  |  ");
-
-				  for(int i=0;i<AppData.BufferSize;i++){
-				  	APP_LOG(0, 1, "%03u ", AppData.Buffer[i]);
-				  }
-				 	APP_LOG(0, 1, "(dec)");
-			  }*/
 
 			  APP_LOG(TS_OFF, VLEVEL_L, "\r\n");
 			  APP_LOG(TS_OFF, VLEVEL_L, "- Port        %d \r\n",params->AppData.Port);
@@ -506,19 +457,10 @@ static void OnTxData(LmHandlerTxParams_t *params)
 				  case 1 : APP_LOG(TS_OFF, VLEVEL_L, " (SF11)\r\n");break;
 				  case 0 : APP_LOG(TS_OFF, VLEVEL_L, " (SF12)\r\n");break;
 				 }
-			  //APP_LOG(TS_OFF, VLEVEL_L, "- TX Power:   %d\r\n",params->TxPower);
+
     	}
     	else{
-    		//APP_LOG_COLOR(GREEN);
-    		//APP_LOG(TS_OFF, VLEVEL_L, "  \r\nMAC COMMAND SENT (no data)\r\n");
     		APP_LOG(TS_OFF, VLEVEL_L, "- Fcnt        %d \r\n",params->UplinkCounter);
-    		//APP_LOG(TS_OFF, VLEVEL_L, "- Port        %d \r\n",params->AppData.Port);
-    		//APP_LOG_COLOR(RESET_COLOR);
-    		// A MAC Command has been transmitted
-    		// This is to fix the LOG issue when the first frame is sent in ABP. It seems that the Device wants to send a frame with port=0
-    		// /!\ When using ABP on TTN, the FCnt = 2 is MAC command, index, a frame is sent with the following Frame Payload = 0703070307030703070308
-    		// 07 is a new Channel Req Mac command. 03 Means that it had been accepted.
-    		// 08 is a RXTimingSetupReq Mac command. (No payload for the response).
     	}
     }
   }
@@ -600,6 +542,16 @@ static const char *slotStrings[] = { "1", "2", "C", "C Multicast", "B Ping-Slot"
 		  }
 		  APP_LOG_COLOR(RESET_COLOR);
 		}
+		break;
+
+	  case MLR003_APP_PORT:
+		  if (appData->BufferSize == 1)
+				{
+				  APP_LOG_COLOR(GREEN);
+				  sensor_data.setpoint = appData->Buffer[0];
+				  APP_LOG(TS_OFF, VLEVEL_L, "New setpoint is set to %d °C\r\n", sensor_data.setpoint);
+				  APP_LOG_COLOR(RESET_COLOR);
+				}
 		break;
 
 	  default:  break;

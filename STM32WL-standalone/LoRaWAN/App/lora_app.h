@@ -12,10 +12,10 @@ extern "C" {
 
 /* LoraWAN application configuration (Mw is configured by lorawan_conf.h) */
 #define ACTIVE_REGION                               LORAMAC_REGION_EU868
-#define CAYENNE_LPP									ADMIN_CAYENNE														// see General_Setup.h
+#define CAYENNE_LPP									CAYENNE_LPP_														// see General_Setup.h
 //#define APP_PERSO									ADMIN_APP_PERSO														// see General_Setup.h
 #define APP_TX_DUTYCYCLE                            ADMIN_TxDutyCycleTime												// see General_Setup.h
-#define LORAWAN_USER_APP_PORT                       ADMIN_USER_APP_PORT
+#define LORAWAN_USER_APP_PORT                       APP_PORT
 #define LORAWAN_SWITCH_CLASS_PORT                   3
 #define LORAWAN_DEFAULT_CLASS                       ADMIN_DEFAULT_CLASS													// see General_Setup.h
 #define LORAWAN_DEFAULT_CONFIRMED_MSG_STATE         ADMIN_TX_CONFIRMED_TYPE												// see General_Setup.h
