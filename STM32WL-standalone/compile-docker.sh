@@ -1,4 +1,5 @@
 #!/bin/bash
+# This container needs to be run from the STM32WL/STM32WL-standalone folder
 
-sudo docker run --rm -v "$PWD/":/workspace crosscompiler-arm 
+sudo docker run --rm -v "$PWD/":/workspace montagny/arm-compiler 
 
