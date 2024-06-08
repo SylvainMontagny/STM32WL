@@ -45,7 +45,7 @@ INCLUDES += -IDrivers/Sensors
 INCLUDES += -IUtilities
 
 # Compiler Flags
-CFLAGS  = -g3 -O0 -Wall -std=gnu11 
+CFLAGS  = -g3 -O0 -w -std=gnu11 
 CFLAGS += -mcpu=cortex-m4 -mthumb -mfloat-abi=soft
 CFLAGS += -DCORE_CM4 -DSTM32WL55xx -DUSE_HAL_DRIVER -DDEBUG
 CFLAGS += $(INCLUDES)
