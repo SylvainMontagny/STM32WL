@@ -40,7 +40,7 @@ This standalone project is a single-core application including a **1.0.3 LoRaWAN
 |                      	|                    	|                                                              	|
 | SEND_BY_PUSH_BUTTON  	| true or false      	|  Sending method (Time or Push Button)                        	|
 | FRAME_DELAY          	| Time in ms         	|  Time between 2 frames (Minimum 7000)                        	|
-| PAYLOAD_HELLO        	| true or false      	|  Sends the string HELLO : 48 45 4C 4C 4F (hex)               	|
+| PAYLOAD_1234        	| true or false      	|  Sends 0x01 0x02 0x03 0x04               	|
 | PAYLOAD_TEMPERATURE  	| true or false      	|  Sends a temperature between 20 and 25 degrees     			|
 | PAYLOAD_HUMIDITY  	| true or false      	|  Sends a humidity (%) between 0 and 100		     			|
 | CAYENNE_LPP_         	| true or false      	|  Enable all sensors and use the CAYENNE LPP format (if true) 	|
@@ -72,7 +72,7 @@ The configuration of the project is done with the file /LoRaWAN/config_applicati
 
 :three: **Configuration of the application payload:**
 This payloads can be:
-* HELLO String (if PAYLOAD_HELLO is true)
+* 0x01 0x02 0x03 0x04 (if PAYLOAD_1234 is true)
 * 1 byte temperature (if PAYLOAD_TEMPERATURE is true)
 * 1 byte humidity (if PAYLOAD_HUMIDITY is true)
 Temperature and Humidity payload can be combined in the same frame (2 bytes) if both PAYLOAD_TEMPERATURE and PAYLOAD_HUMIDITY are true.

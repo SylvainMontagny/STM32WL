@@ -39,77 +39,13 @@
                        	   	   	   	   	   	   	   	   	   	   	   	   	   	   	   	   	   	   	   	   	   	   	 |
  SEND_BY_PUSH_BUTTON |   true or false    |    # Sending method (Time or Push Button)                            |
  FRAME_DELAY         |    Time in ms      |    # Time between 2 frames (Minimum 7000)                            |
- PAYLOAD_HELLO       |  true or false     |    # Sends the string HELLO : 48 45 4C 4C 4F (hex)                   |
+ PAYLOAD_1234        |  true or false     |    # Sends 0x01 0x02 0x03 0x04                   |
  PAYLOAD_TEMPERATURE |  true or false     |    # Sends a simulated temperature between 20 and 25 degrees         |
  CAYENNE_LPP_        |  true or false     |    # Enable all sensors and use the CAYENNE LPP format (if true)     |
  LOW_POWER           |  true or false     |    # Enable Low Power mode between two frames (if true)              |
 ---------------------------------------------------------------------------------------------------------------*/
 
 #include "../config_application.h"
-
-#if (ACTIVATION_MODE != OTAA) && (ACTIVATION_MODE != ABP)
-	#error "ACTIVATION_MODE must be either OTAA or APB in your config_application.h file"
-#endif
-
-#if (CLASS != CLASS_A) &&  (CLASS != CLASS_C)
-	#error "CLASS must be either CLASS_A or CLASS_C in your config_application.h file"
-#endif
-
-#if (SEND_BY_PUSH_BUTTON != true) &&  (CLASS != false)
-	#error "SEND_BY_PUSH_BUTTON must be either true of false in your config_application.h file"
-#endif
-
-#if FRAME_DELAY < 8000
-	#error "FRAME_DELAY must be greater than 8000 ms in your config_application.h file"
-#endif
-
-#if (SPREADING_FACTOR == 12)
-#define ADMIN_DR	DR_0
-
-#elif (SPREADING_FACTOR == 11)
-#define ADMIN_DR	DR_1
-
-#elif (SPREADING_FACTOR == 10)
-#define ADMIN_DR	DR_2
-
-#elif (SPREADING_FACTOR == 9)
-#define ADMIN_DR	DR_3
-
-#elif (SPREADING_FACTOR == 8)
-#define ADMIN_DR	DR_4
-
-#elif (SPREADING_FACTOR == 7)
-#define ADMIN_DR	DR_5
-
-#else
-	#error "Wrong SPREADING_FACTOR definition in your config_application.h file"
-#endif
-
-#if (ADAPTIVE_DR != true) && (ADAPTIVE_DR != false)
-	#error "ADAPTIVE_DR must be either true of false in your config_application.h file"
-#endif
-
-#if (CONFIRMED != true) && (CONFIRMED != false)
-	#error "CONFIRMED must be either true of false in your config_application.h file"
-#endif
-
-#if (APP_PORT < 1) || (APP_PORT > 255)
-	#error "PORT must be between 1 and 255 in your config_application.h file"
-#endif
-
-
-#if(PAYLOAD_HELLO)
-	#if (PAYLOAD_TEMPERATURE || PAYLOAD_HUMIDITY || CAYENNE_LPP_)
-		#error "PAYLOAD_TEMPERATURE or PAYLOAD_HUMIDITY or CAYENNE_LPP_ can't be enable when PAYLOAD_HELLO is enable in your config_application.h file"
-	#endif
-#endif
-
-
-#if (LOW_POWER != true) && (LOW_POWER != false)
-	#error "LOW_POWER must be either true of false in your config_application.h file"
-#endif
-
-
 
 
 /* LoRaWAN Activation Mode - Class---------------------------------------------*/
@@ -187,6 +123,79 @@
 #define BOLDMAGENTA 		"\033[1m\033[35m"      /* Bold Magenta */
 #define BOLDCYAN    		"\033[1m\033[36m"      /* Bold Cyan */
 #define BOLDWHITE   		"\033[1m\033[37m"      /* Bold White */
+
+
+
+#if (ACTIVATION_MODE != OTAA) && (ACTIVATION_MODE != ABP)
+	#error "ACTIVATION_MODE must be either OTAA or APB in your config_application.h file"
+#endif
+
+#if (CLASS != CLASS_A) &&  (CLASS != CLASS_C)
+	#error "CLASS must be either CLASS_A or CLASS_C in your config_application.h file"
+#endif
+
+#if (SEND_BY_PUSH_BUTTON != true) &&  (CLASS != false)
+	#error "SEND_BY_PUSH_BUTTON must be either true of false in your config_application.h file"
+#endif
+
+#if FRAME_DELAY < 8000
+	#error "FRAME_DELAY must be greater than 8000 ms in your config_application.h file"
+#endif
+
+#if (SPREADING_FACTOR == 12)
+#define ADMIN_DR	DR_0
+
+#elif (SPREADING_FACTOR == 11)
+#define ADMIN_DR	DR_1
+
+#elif (SPREADING_FACTOR == 10)
+#define ADMIN_DR	DR_2
+
+#elif (SPREADING_FACTOR == 9)
+#define ADMIN_DR	DR_3
+
+#elif (SPREADING_FACTOR == 8)
+#define ADMIN_DR	DR_4
+
+#elif (SPREADING_FACTOR == 7)
+#define ADMIN_DR	DR_5
+
+#else
+	#error "Wrong SPREADING_FACTOR definition in your config_application.h file"
+#endif
+
+#if (ADAPTIVE_DR != true) && (ADAPTIVE_DR != false)
+	#error "ADAPTIVE_DR must be either true of false in your config_application.h file"
+#endif
+
+#if (CONFIRMED != true) && (CONFIRMED != false)
+	#error "CONFIRMED must be either true of false in your config_application.h file"
+#endif
+
+#if (APP_PORT < 1) || (APP_PORT > 255)
+	#error "PORT must be between 1 and 255 in your config_application.h file"
+#endif
+
+
+#if(PAYLOAD_1234)
+	#if (PAYLOAD_TEMPERATURE || PAYLOAD_HUMIDITY || CAYENNE_LPP_)
+		#error "PAYLOAD_TEMPERATURE or PAYLOAD_HUMIDITY or CAYENNE_LPP_ can't be enable when PAYLOAD_1234 is enable in your config_application.h file"
+	#endif
+#endif
+
+#if(MLR003_SIMU)
+	#if (PAYLOAD_1234 || PAYLOAD_TEMPERATURE || PAYLOAD_HUMIDITY || CAYENNE_LPP_)
+		#error "PAYLOAD_1234 or PAYLOAD_TEMPERATURE or PAYLOAD_HUMIDITY or CAYENNE_LPP_ can't be enable when MLR003_SIMU is enable in your config_application.h file"
+
+	#endif
+#endif
+
+
+#if (LOW_POWER != true) && (LOW_POWER != false)
+	#error "LOW_POWER must be either true of false in your config_application.h file"
+#endif
+
+
 
 #endif /* APPLICATION_USER_LORAWAN_GENERAL_SETUP_H_ */
 

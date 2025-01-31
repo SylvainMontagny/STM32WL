@@ -7,9 +7,9 @@
 
 #define SEND_BY_PUSH_BUTTON 		false
 #define FRAME_DELAY         		10000
-#define PAYLOAD_HELLO				true
+#define PAYLOAD_1234				true
 #define PAYLOAD_TEMPERATURE    		false
-#define PAYLOAD_HUMIDITY   		false
+#define PAYLOAD_HUMIDITY   			false
 #define CAYENNE_LPP_         		false
 #define LOW_POWER           		false
 
