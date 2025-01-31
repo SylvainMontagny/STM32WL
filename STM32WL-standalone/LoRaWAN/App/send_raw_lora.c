@@ -29,7 +29,7 @@ uint8_t PrepareLoRaFrame(const char* param){
 	}
 	else{
 		APP_LOG(0,1,"\r\n -- ERROR - Wrong Format -- \r\n");
-		APP_LOG(0,1,"\r\n Example: LORA=868100000:14:7:48454C4C4F \r\n");
+		APP_LOG(0,1,"\r\n Example: LORA=868100000:14:7:01020304 \r\n");
 		return PARAM_LORA_ERROR;
 	}
 
@@ -41,7 +41,7 @@ uint8_t PrepareLoRaFrame(const char* param){
 							&sf))
 	{
 		APP_LOG(0,1,"\r\n\r\n -- ERROR - Wrong Format -- \r\n");
-		APP_LOG(0,1,"\r\n Example: LORA=868100000:14:7:48454C4C4F \r\n");
+		APP_LOG(0,1,"\r\n Example: LORA=868100000:14:7:01020304 \r\n");
 		return PARAM_LORA_ERROR;
 	}
 

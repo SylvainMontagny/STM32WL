@@ -119,7 +119,7 @@ void LoRaWAN_Init(void)
 		APP_LOG_COLOR(WHITE);
 		APP_LOG(0, 1, "Type the following command to send a Raw LoRa Packet\r\n");
 		APP_LOG(0, 1, "> Command format : LORA=Frequency:Power:SF:Payload\r\n");
-		APP_LOG(0, 1, "> Example :        LORA=868100000:14:7:48454C4C4F \r\n\r\n");
+		APP_LOG(0, 1, "> Example :        LORA=868100000:14:7:01020304 \r\n\r\n");
 	}
 
 	/***** LoRaWAN Standalone Application  ***********/
@@ -259,7 +259,7 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 				APP_LOG_COLOR(WHITE);
 				APP_LOG(0, 1, "\r\nType the following command to send a Raw LoRa Packet\r\n");
 				APP_LOG(0, 1, "> Command format : LORA=Frequency:Power:SF:Payload\r\n");
-				APP_LOG(0, 1, "> Example :        LORA=868100000:14:7:48454C4C4F \r\n");
+				APP_LOG(0, 1, "> Example :        LORA=868100000:14:7:01020304 \r\n");
 			}
 			else{
 				APP_LOG_COLOR(RED);
