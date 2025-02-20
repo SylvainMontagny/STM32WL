@@ -18,6 +18,7 @@
 #include "sys_sensors.h"
 #include "radio.h"
 #include "send_raw_lora.h"
+#include "stdlib.h"
 
 #include  "General_Setup.h"
 uint8_t simuTemperature(void);
@@ -31,7 +32,7 @@ uint32_t LoRaMode = 0;
 uint8_t size_txBUFFER = 0;
 uint8_t txBUFFER[100];
 uint8_t isTriggered = 0;
-sensor_t sensor_data = { 0,0,0,0,0,0,0,0,0,19};
+sensor_t sensor_data = { 0,0,0,0,0,0,0,0,0,50}; // last byte is temperature setpoint in Q1
 
 
 typedef enum TxEventType_e
@@ -392,15 +393,33 @@ static void SendTxData(void)
 	}
 }
 
-
 uint8_t simuTemperature(void){
-	static uint8_t temp = 20, countUP = 0;
+	static uint8_t temp=20, countUP = 0;
+	static int8_t temp_valve = 40; // temp in Q7.1, so 40 = 20°C
+	float error = 0;
 
-	if ( (temp == 20) || (temp == 25)){
-		countUP = (countUP + 1)%2;
+	if(MLR003_SIMU){
+		/* Case thermostatic valve simulated.
+		 * Temperature sould reach the setpoint given by the user by adding at each function call
+		 * half of the difference between the actual temperature and the setpoint.
+		 * Variables are in Q7.1, so 41 = 20.5°C, from -128 to 127 => -64°C to 63.5°C*/
+		error = ((float) (sensor_data.setpoint - temp_valve))/2;
+
+		if (abs(error)<1.0 && error != 0){					// Correct the error rounding
+			if (sensor_data.setpoint > temp_valve) error = 1.0;
+			else error = -1.0;
+		}
+
+		temp_valve += error;
+	}
+	else{
+		if ( (temp == 20) || (temp == 25)){
+			countUP = (countUP + 1)%2;
+		}
+
+		temp = (countUP == 1)? temp + 1 : temp - 1;
 	}
 
-	temp = (countUP == 1)? temp + 1 : temp - 1;
 	return temp;
 }
 
@@ -432,7 +451,7 @@ static void OnTxData(LmHandlerTxParams_t *params)
 				if(AppData.BufferSize>0)
 				{
 					if(MLR003_SIMU){
-						APP_LOG(0, 1, "Setpoint : %u °C | temperature : %u °C", txBUFFER[0], txBUFFER[1]);
+						APP_LOG(0, 1, "Setpoint : %.1f °C | temperature : %.1f °C", ((float) txBUFFER[0])/2, ((float) txBUFFER[1])/2);
 					}
 					else{
 						for(int i=0;i<size_txBUFFER;i++){
@@ -553,7 +572,7 @@ static void OnRxData(LmHandlerAppData_t *appData, LmHandlerRxParams_t *params)
 			{
 				APP_LOG_COLOR(GREEN);
 				sensor_data.setpoint = appData->Buffer[0];
-				APP_LOG(TS_OFF, VLEVEL_L, "New setpoint is set to %d °C\r\n", sensor_data.setpoint);
+				APP_LOG(TS_OFF, VLEVEL_L, "New setpoint is set to %.1f °C\r\n", (float) sensor_data.setpoint/2);
 				APP_LOG_COLOR(RESET_COLOR);
 			}
 			break;

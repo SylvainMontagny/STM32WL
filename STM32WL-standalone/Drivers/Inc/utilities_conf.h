@@ -146,7 +146,7 @@ extern "C" {
 
 #define UTIL_ADV_TRACE_FIFO_SIZE                   (1024U)                               /*!< default trace fifo size */
 #define UTIL_ADV_TRACE_MEMSET8( dest, value, size) UTIL_MEM_set_8((dest),(value),(size)) /*!< memset utilities interface to trace feature */
-#define UTIL_ADV_TRACE_VSNPRINTF(...)              tiny_vsnprintf_like(__VA_ARGS__)      /*!< vsnprintf utilities interface to trace feature */
+#define UTIL_ADV_TRACE_VSNPRINTF(...)              vsnprintf(__VA_ARGS__)      			 /*!< vsnprintf utilities interface to trace feature */
 
 /* USER CODE BEGIN EM */
 
