@@ -90,8 +90,10 @@
 
 // Sensors
 #define ADMIN_SENSOR_ENABLED			false					// 0 (No sensors) / 1 (Sensors Board IKS01A3)
-#define USMB_VALVE						    true
+#define USMB_VALVE						    false
 #define VALVE_APP_PORT					  30
+#define ATIM_TAHQ_1               true
+#define ATIM_TAHQ_1_port          31
 
 /* Device LOGs ----------------------------------------------------------------*/
 #define ADMIN_VERBOSE					VLEVEL_L				// possible values: VLEVEL_H / VLEVEL_M / VLEVEL_L - Utilities-Conf.h
@@ -184,8 +186,15 @@
 #endif
 
 #if(USMB_VALVE)
-	#if (PAYLOAD_1234 || PAYLOAD_TEMPERATURE || PAYLOAD_HUMIDITY || CAYENNE_LPP_)
-		#error "PAYLOAD_1234 or PAYLOAD_TEMPERATURE or PAYLOAD_HUMIDITY or CAYENNE_LPP_ can't be enable when USMB_VALVE is enable in your config_application.h file"
+	#if (PAYLOAD_1234 || PAYLOAD_TEMPERATURE || PAYLOAD_HUMIDITY || CAYENNE_LPP_ || ATIM_TAHQ_1)
+		#error "PAYLOAD_1234 or PAYLOAD_TEMPERATURE or PAYLOAD_HUMIDITY or CAYENNE_LPP_ or ATIM_TAHQ_1 can't be enable when USMB_VALVE is enable in your config_application.h file"
+
+	#endif
+#endif
+
+#if(ATIM_TAHQ_1)
+	#if (PAYLOAD_1234 || PAYLOAD_TEMPERATURE || PAYLOAD_HUMIDITY || CAYENNE_LPP_ || USMB_VALVE)
+		#error "PAYLOAD_1234 or PAYLOAD_TEMPERATURE or PAYLOAD_HUMIDITY or CAYENNE_LPP_ or USMB_VALVE can't be enable when ATIM_TAHQ_1 is enable in your config_application.h file"
 
 	#endif
 #endif

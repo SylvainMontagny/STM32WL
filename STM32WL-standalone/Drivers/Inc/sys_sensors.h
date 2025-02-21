@@ -2,6 +2,26 @@
 #ifndef __SENSORS_H__
 #define __SENSORS_H__
 
+
+typedef struct
+{
+  int8_t header1;
+  int8_t header2;
+  int8_t header3;
+  int8_t header4;
+  int16_t sensor_status;
+  int16_t temperature;      /* ! in °C * 100 */
+  int16_t humidity;
+  int16_t air_quality;
+  int8_t end1;
+  int8_t end2;
+  int8_t end3;
+  int8_t end4;
+  int8_t end5;
+  
+} atim_payload_t;
+
+
 typedef struct
 {
   float stts751_temperature_float;      /*!< in degC */
@@ -17,6 +37,8 @@ typedef struct
   int8_t temperature_simulated;
   int8_t humidity_simulated;
   int8_t setpoint;
+
+  atim_payload_t atim_tahq_1;
 
 } sensor_t;
 
