@@ -175,7 +175,7 @@ void LoRaWAN_Init(void)
 		else if(CAYENNE_LPP == true){
 			APP_LOG(0, 1, "> Payload content:        CayenneLPP, sensors\r\n");
 		}
-		else if(MLR003_SIMU == true){
+		else if(USMB_VALVE == true){
 			APP_LOG(0, 1, "> Payload content:        1-byte setpoint + 1 byte temperature\r\n");
 		}
 		//APP_LOG(0, 1, "> Low Power:              %s",(LOW_POWER == true) ? "ON \r\n" : "OFF \r\n");
@@ -352,7 +352,7 @@ static void SendTxData(void)
 				AppData.Buffer[i++] = sensor_data.humidity_simulated;
 			}
 		}
-		if(MLR003_SIMU){
+		if(USMB_VALVE){
 			AppData.Buffer[i++] = sensor_data.setpoint;
 			AppData.Buffer[i++] = sensor_data.temperature_simulated;
 		}
@@ -398,7 +398,7 @@ uint8_t simuTemperature(void){
 	static int8_t temp_valve = 40; // temp in Q7.1, so 40 = 20°C
 	float error = 0;
 
-	if(MLR003_SIMU){
+	if(USMB_VALVE){
 		/* Case thermostatic valve simulated.
 		 * Temperature sould reach the setpoint given by the user by adding at each function call
 		 * half of the difference between the actual temperature and the setpoint.
@@ -411,6 +411,7 @@ uint8_t simuTemperature(void){
 		}
 
 		temp_valve += error;
+		return temp_valve;
 	}
 	else{
 		if ( (temp == 20) || (temp == 25)){
@@ -418,9 +419,8 @@ uint8_t simuTemperature(void){
 		}
 
 		temp = (countUP == 1)? temp + 1 : temp - 1;
+		return temp;
 	}
-
-	return temp;
 }
 
 uint8_t simuHumidity(void){
@@ -450,7 +450,7 @@ static void OnTxData(LmHandlerTxParams_t *params)
 
 				if(AppData.BufferSize>0)
 				{
-					if(MLR003_SIMU){
+					if(USMB_VALVE){
 						APP_LOG(0, 1, "Setpoint : %.1f °C | temperature : %.1f °C", ((float) txBUFFER[0])/2, ((float) txBUFFER[1])/2);
 					}
 					else{
@@ -567,7 +567,7 @@ static void OnRxData(LmHandlerAppData_t *appData, LmHandlerRxParams_t *params)
 			}
 			break;
 
-		case MLR003_APP_PORT:
+		case VALVE_APP_PORT:
 			if (appData->BufferSize == 1)
 			{
 				APP_LOG_COLOR(GREEN);

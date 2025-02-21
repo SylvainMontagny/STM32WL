@@ -90,8 +90,8 @@
 
 // Sensors
 #define ADMIN_SENSOR_ENABLED			false					// 0 (No sensors) / 1 (Sensors Board IKS01A3)
-#define MLR003_SIMU						false
-#define MLR003_APP_PORT					30
+#define USMB_VALVE						    true
+#define VALVE_APP_PORT					  30
 
 /* Device LOGs ----------------------------------------------------------------*/
 #define ADMIN_VERBOSE					VLEVEL_L				// possible values: VLEVEL_H / VLEVEL_M / VLEVEL_L - Utilities-Conf.h
@@ -183,9 +183,9 @@
 	#endif
 #endif
 
-#if(MLR003_SIMU)
+#if(USMB_VALVE)
 	#if (PAYLOAD_1234 || PAYLOAD_TEMPERATURE || PAYLOAD_HUMIDITY || CAYENNE_LPP_)
-		#error "PAYLOAD_1234 or PAYLOAD_TEMPERATURE or PAYLOAD_HUMIDITY or CAYENNE_LPP_ can't be enable when MLR003_SIMU is enable in your config_application.h file"
+		#error "PAYLOAD_1234 or PAYLOAD_TEMPERATURE or PAYLOAD_HUMIDITY or CAYENNE_LPP_ can't be enable when USMB_VALVE is enable in your config_application.h file"
 
 	#endif
 #endif
