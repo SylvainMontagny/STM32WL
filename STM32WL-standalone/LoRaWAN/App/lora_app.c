@@ -146,7 +146,7 @@ void LoRaWAN_Init(void)
 		APP_LOG(0, 1, "> Spreading Factor        %d \r\n", SPREADING_FACTOR);
 		APP_LOG(0, 1, "> Adaptive Data Rate      %s", (ADAPTIVE_DR == true) ? "ON \r\n" : "OFF \r\n");
 		APP_LOG(0, 1, "> Uplink Frame            %s",(CONFIRMED == true) ? "Confirmed\r\n" : "Unconfirmed\r\n");
-		APP_LOG(0, 1, "> App Port number         %d \r\n", APP_PORT);
+		APP_LOG(0, 1, "> App Port number         %d \r\n", (!WATTECO_TEMPO)? APP_PORT: WATTECO_TEMPO_PORT);
 
 		if(CAYENNE_LPP && SENSOR_ENABLED){
 			APP_LOG(0, 1, "> Payload content:        CayenneLPP, sensors\r\n");
