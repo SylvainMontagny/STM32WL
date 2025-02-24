@@ -24,6 +24,8 @@
 uint8_t simuTemperature(void);
 uint8_t simuHumidity(void);
 atim_payload_t simuAtim(void);
+tct_payload_t simuTct(void);
+watteco_payload_t simuWatteco(void);
 static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error);
 #define RX_BUFF_SIZE 250
 
@@ -171,16 +173,22 @@ void LoRaWAN_Init(void)
 			APP_LOG(0, 1, "> Payload content         1-byte simulated humidity\r\n");
 		}
 		else if(PAYLOAD_1234 == true){
-			APP_LOG(0, 1, "> Payload content:        0x01 0x02 0x03 0x04\r\n");
+			APP_LOG(0, 1, "> Payload content  		 0x01 0x02 0x03 0x04\r\n");
 		}
 		else if(CAYENNE_LPP == true){
-			APP_LOG(0, 1, "> Payload content:        CayenneLPP, sensors\r\n");
+			APP_LOG(0, 1, "> Payload content         CayenneLPP, sensors\r\n");
 		}
 		else if(USMB_VALVE == true){
-			APP_LOG(0, 1, "> Payload content:        1 byte setpoint + 1 byte temperature\r\n");
+			APP_LOG(0, 1, "> Payload content         1 byte setpoint + 1 byte temperature\r\n");
 		}
-		else if(ATIM_TAHQ_1 == true){
-			APP_LOG(0, 1, "> Payload content:        17 bytes ATIM_TAHQ_1 simulated payload\r\n");
+		else if(ATIM_TAHQ == true){
+			APP_LOG(0, 1, "> Payload content         17 bytes ATIM_TAHQ simulated payload\r\n");
+		}
+		else if(WATTECO_TEMPO == true){
+			APP_LOG(0, 1, "> Payload content         32 bytes WATTECO_TEMP'O fixed simulated payload\r\n");
+		}
+		else if(TCT_EGREEN == true){
+			APP_LOG(0, 1, "> Payload content         10 bytes TCT_EGREEN simulated payload\r\n");
 		}
 		//APP_LOG(0, 1, "> Low Power:              %s",(LOW_POWER == true) ? "ON \r\n" : "OFF \r\n");
 		APP_LOG(0, 1, "\r\n");
@@ -324,9 +332,12 @@ static void SendTxData(void)
 	sensor_data.stm32wl_temperature = (SYS_GetTemperatureLevel() >> 8);
 	sensor_data.temperature_simulated = simuTemperature();
 	sensor_data.humidity_simulated = simuHumidity();
-	sensor_data.atim_tahq_1 = simuAtim();
+	sensor_data.atim_tahq = simuAtim();
+	sensor_data.watteco_tempo = simuWatteco();
+	sensor_data.tct_egreen = simuTct();
 
-	AppData.Port = APP_PORT;
+	if (WATTECO_TEMPO) AppData.Port = WATTECO_TEMPO_PORT;
+	else AppData.Port = APP_PORT;
 
 	if(PAYLOAD_1234){
 		AppData.Buffer[i++] = 0x01;
@@ -361,25 +372,44 @@ static void SendTxData(void)
 			AppData.Buffer[i++] = sensor_data.setpoint;
 			AppData.Buffer[i++] = sensor_data.temperature_simulated;
 		}
-		if(ATIM_TAHQ_1){
+		else if(ATIM_TAHQ){
 			/* Fill the buffer with each useful bytes */
-			AppData.Buffer[i++] = sensor_data.atim_tahq_1.header1;
-			AppData.Buffer[i++] = sensor_data.atim_tahq_1.header2;
-			AppData.Buffer[i++] = sensor_data.atim_tahq_1.header3;
-			AppData.Buffer[i++] = sensor_data.atim_tahq_1.header4;
-			AppData.Buffer[i++] = sensor_data.atim_tahq_1.sensor_status>>8;
-			AppData.Buffer[i++] = sensor_data.atim_tahq_1.sensor_status;
-			AppData.Buffer[i++] = sensor_data.atim_tahq_1.temperature>>8;
-			AppData.Buffer[i++] = sensor_data.atim_tahq_1.temperature;
-			AppData.Buffer[i++] = sensor_data.atim_tahq_1.humidity>>8;
-			AppData.Buffer[i++] = sensor_data.atim_tahq_1.humidity;
-			AppData.Buffer[i++] = sensor_data.atim_tahq_1.air_quality>>8;
-			AppData.Buffer[i++] = sensor_data.atim_tahq_1.air_quality;
-			AppData.Buffer[i++] = sensor_data.atim_tahq_1.end1;
-			AppData.Buffer[i++] = sensor_data.atim_tahq_1.end2;
-			AppData.Buffer[i++] = sensor_data.atim_tahq_1.end3;
-			AppData.Buffer[i++] = sensor_data.atim_tahq_1.end4;
-			AppData.Buffer[i++] = sensor_data.atim_tahq_1.end5;
+			AppData.Buffer[i++] = sensor_data.atim_tahq.header1;
+			AppData.Buffer[i++] = sensor_data.atim_tahq.header2;
+			AppData.Buffer[i++] = sensor_data.atim_tahq.header3;
+			AppData.Buffer[i++] = sensor_data.atim_tahq.header4;
+			AppData.Buffer[i++] = sensor_data.atim_tahq.sensor_status>>8;
+			AppData.Buffer[i++] = sensor_data.atim_tahq.sensor_status;
+			AppData.Buffer[i++] = sensor_data.atim_tahq.temperature>>8;
+			AppData.Buffer[i++] = sensor_data.atim_tahq.temperature;
+			AppData.Buffer[i++] = sensor_data.atim_tahq.humidity>>8;
+			AppData.Buffer[i++] = sensor_data.atim_tahq.humidity;
+			AppData.Buffer[i++] = sensor_data.atim_tahq.air_quality>>8;
+			AppData.Buffer[i++] = sensor_data.atim_tahq.air_quality;
+			AppData.Buffer[i++] = sensor_data.atim_tahq.end1;
+			AppData.Buffer[i++] = sensor_data.atim_tahq.end2;
+			AppData.Buffer[i++] = sensor_data.atim_tahq.end3;
+			AppData.Buffer[i++] = sensor_data.atim_tahq.end4;
+			AppData.Buffer[i++] = sensor_data.atim_tahq.end5;
+		}
+		else if(WATTECO_TEMPO){
+			/* Fill the buffer with each useful bytes */
+			for (uint16_t w_index = 0/* Watteco index to build the frame */; w_index < 256; w_index += 8){
+				AppData.Buffer[i++] = sensor_data.watteco_tempo.data[w_index/64]>>(56-(w_index%64));
+			}
+		} 
+		else if(TCT_EGREEN){
+			/* Fill the buffer with each useful bytes */
+			AppData.Buffer[i++] = sensor_data.tct_egreen.type;
+			AppData.Buffer[i++] = sensor_data.tct_egreen.data_type1;
+			AppData.Buffer[i++] = sensor_data.tct_egreen.temperature>>8;
+			AppData.Buffer[i++] = sensor_data.tct_egreen.temperature;
+			AppData.Buffer[i++] = sensor_data.tct_egreen.data_type2;
+			AppData.Buffer[i++] = sensor_data.tct_egreen.courant>>8;
+			AppData.Buffer[i++] = sensor_data.tct_egreen.courant;
+			AppData.Buffer[i++] = sensor_data.tct_egreen.data_type3;
+			AppData.Buffer[i++] = sensor_data.tct_egreen.voltage>>8;
+			AppData.Buffer[i++] = sensor_data.tct_egreen.voltage;
 		}
 		AppData.BufferSize = i;
 	}
@@ -459,16 +489,43 @@ uint8_t simuHumidity(void){
 	return humid;
 }
 
+/**
+ * ATIM TAHQ simulated function payload 
+ * @return atim payload with changing temperature
+ */
 atim_payload_t simuAtim(void){
 	static atim_payload_t payload = {0xE0, 0x67, 0xB8, 0x3C, 0x0D08, 0x07C7, 0x0912, 0xC20C, 0x00, 0x84, 0x0D, 0x05, 0x18}; /* Random real atim_tahq payload */
 	static uint8_t countUP = 0;
 
-	payload.temperature = (countUP==0)? 0x07C7: 0x07FA; /* temperature in centidegree C */
+	payload.temperature = (countUP==0)? 0x07C7: 0x07FA; /* Temperature in centidegree cC */
 	countUP = (countUP + 1) % 2;
 
 	return payload;
 }
 
+/**
+ * TCT EGREEN simulated function payload 
+ * @return tct payload with changing courant and voltage
+ */
+tct_payload_t simuTct(void){
+	static tct_payload_t payload = {0xa0, 0x08, 0x088f, 0x0b, 0x0071, 0x0a, 0x11bf};
+	static uint8_t countUP = 0;
+
+	// Let's have a constant power P = UI
+	payload.courant = (countUP==0)? 0x0071: 0x006b; /* Courant in centiampere cA */
+	payload.voltage = (countUP==0)? 0x11bf: 0x12be; /* Voltage in mV */
+	countUP = (countUP + 1) % 2;
+
+	return payload;
+}
+
+/**
+ * Watteco temp'o simulated function payload 
+ * @return fixed payload
+ */
+watteco_payload_t simuWatteco(void){
+	return (watteco_payload_t) {0x2205805533c90160, 0xb49f200903084056, 0x00b202901580ac00, 0x6491aa4e954aa512};
+}
 
 static void OnTxData(LmHandlerTxParams_t *params)
 {
@@ -488,8 +545,17 @@ static void OnTxData(LmHandlerTxParams_t *params)
 					if(USMB_VALVE){
 						APP_LOG(0, 1, "Setpoint: %.1f °C | Temperature: %.1f °C", ((float) txBUFFER[0])/2, ((float) txBUFFER[1])/2);
 					}
-					else if(ATIM_TAHQ_1){
+					else if(ATIM_TAHQ){
 						APP_LOG(0, 1, "Temperature: %.2f °C", ((float) (txBUFFER[6]<<8) + (float) txBUFFER[7])/100.0);
+					}
+					else if(WATTECO_TEMPO){ // Simply print the buffer
+						for(int i=0;i<size_txBUFFER;i++){
+							APP_LOG(0, 1, "%02X ", txBUFFER[i]);
+						}
+					}
+					else if(TCT_EGREEN){
+						APP_LOG(0, 1, "Courant: %.2f A | Voltage: %03u mV", ((float) (txBUFFER[5]<<8) + (float) txBUFFER[6])/100.0, 
+																			(txBUFFER[8]<<8) + txBUFFER[9]);
 					}
 					else{
 						for(int i=0;i<size_txBUFFER;i++){

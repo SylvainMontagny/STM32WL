@@ -21,6 +21,28 @@ typedef struct
   
 } atim_payload_t;
 
+typedef struct 
+{
+  /* Simple structure because watteco payload almost impossible to decode by hand */
+  int64_t data[4];
+
+} watteco_payload_t;
+
+
+typedef struct 
+{
+  /* data */
+  int8_t type;
+  int8_t data_type1;
+  int16_t temperature;  /* ! in °C * 100 */
+  int8_t data_type2;
+  int16_t courant;      /* ! in A * 100 */
+  int8_t data_type3;
+  int16_t voltage;      /* in mV */
+
+} tct_payload_t;
+
+
 
 typedef struct
 {
@@ -38,7 +60,9 @@ typedef struct
   int8_t humidity_simulated;
   int8_t setpoint;
 
-  atim_payload_t atim_tahq_1;
+  atim_payload_t atim_tahq;
+  watteco_payload_t watteco_tempo;
+  tct_payload_t tct_egreen;
 
 } sensor_t;
 
