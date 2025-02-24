@@ -89,13 +89,13 @@
 #define ADMIN_LOW_POWER					!LOW_POWER				// 0 (Low Power enabled) / 1 (Low Power disabled)
 
 // Sensors
-#define ADMIN_SENSOR_ENABLED			false					// 0 (No sensors) / 1 (Sensors Board IKS01A3)
-#define USMB_VALVE						    false
-#define VALVE_APP_PORT					  30
-#define ATIM_TAHQ                 true		// Temperature
-#define WATTECO_TEMPO             false		// Raw payload
-#define WATTECO_TEMPO_PORT		  125		// Default port for payload decoder
-#define TCT_EGREEN				  false		// Courant, voltage (and eventually temperature)
+#define ADMIN_SENSOR_ENABLED		false		// 0 (No sensors) / 1 (Sensors Board IKS01A3)
+#define USMB_VALVE					false
+#define VALVE_APP_PORT			  	30			// Default port for downlink configuration
+#define ATIM_TAHQ                 	false		// Temperature
+#define WATTECO_TEMPO             	false		// Raw payload
+#define WATTECO_TEMPO_PORT		  	125			// Default port for payload decoder
+#define TCT_EGREEN				  	false		// Courant, voltage (and eventually temperature)
 
 /* Device LOGs ----------------------------------------------------------------*/
 #define ADMIN_VERBOSE					VLEVEL_L				// possible values: VLEVEL_H / VLEVEL_M / VLEVEL_L - Utilities-Conf.h
