@@ -158,7 +158,7 @@ void LoRaWAN_Init(void)
 			APP_LOG(0, 1, "> Payload content         1-byte temperature\r\n");
 		}
 		else if(PAYLOAD_TEMPERATURE && PAYLOAD_HUMIDITY && SENSOR_ENABLED){
-			APP_LOG(0, 1, "> Payload content         1-byte temperature + humidity\r\n");
+			APP_LOG(0, 1, "> Payload content         1-byte temperature + 1-byte humidity\r\n");
 		}
 		else if(!PAYLOAD_TEMPERATURE && PAYLOAD_HUMIDITY && SENSOR_ENABLED){
 			APP_LOG(0, 1, "> Payload content         1-byte humidity\r\n");
@@ -167,28 +167,28 @@ void LoRaWAN_Init(void)
 			APP_LOG(0, 1, "> Payload content         1-byte simulated temperature\r\n");
 		}
 		else if(PAYLOAD_TEMPERATURE && PAYLOAD_HUMIDITY && !SENSOR_ENABLED){
-			APP_LOG(0, 1, "> Payload content         1-byte simulated temperature + humidity\r\n");
+			APP_LOG(0, 1, "> Payload content         1-byte simulated temperature + 1-byte simulated humidity\r\n");
 		}
 		else if(!PAYLOAD_TEMPERATURE && PAYLOAD_HUMIDITY && !SENSOR_ENABLED){
 			APP_LOG(0, 1, "> Payload content         1-byte simulated humidity\r\n");
 		}
 		else if(PAYLOAD_1234 == true){
-			APP_LOG(0, 1, "> Payload content  		 0x01 0x02 0x03 0x04\r\n");
+			APP_LOG(0, 1, "> Payload content         0x01 0x02 0x03 0x04\r\n");
 		}
 		else if(CAYENNE_LPP == true){
 			APP_LOG(0, 1, "> Payload content         CayenneLPP, sensors\r\n");
 		}
 		else if(USMB_VALVE == true){
-			APP_LOG(0, 1, "> Payload content         1 byte setpoint + 1 byte temperature\r\n");
+			APP_LOG(0, 1, "> Payload content         1 byte setpoint + 1 byte temperature of USMB_VALVE\r\n");
 		}
-		else if(ATIM_TAHQ == true){
-			APP_LOG(0, 1, "> Payload content         17 bytes ATIM_TAHQ simulated payload\r\n");
+		else if(ATIM_THAQ == true){
+			APP_LOG(0, 1, "> Payload content         17 bytes of ATIM_THAQ simulated payload\r\n");
 		}
 		else if(WATTECO_TEMPO == true){
-			APP_LOG(0, 1, "> Payload content         32 bytes WATTECO_TEMP'O fixed simulated payload\r\n");
+			APP_LOG(0, 1, "> Payload content         32 bytes of WATTECO_TEMP'O fixed simulated payload\r\n");
 		}
 		else if(TCT_EGREEN == true){
-			APP_LOG(0, 1, "> Payload content         10 bytes TCT_EGREEN simulated payload\r\n");
+			APP_LOG(0, 1, "> Payload content         10 bytes of TCT_EGREEN simulated payload\r\n");
 		}
 		//APP_LOG(0, 1, "> Low Power:              %s",(LOW_POWER == true) ? "ON \r\n" : "OFF \r\n");
 		APP_LOG(0, 1, "\r\n");
@@ -332,7 +332,7 @@ static void SendTxData(void)
 	sensor_data.stm32wl_temperature = (SYS_GetTemperatureLevel() >> 8);
 	sensor_data.temperature_simulated = simuTemperature();
 	sensor_data.humidity_simulated = simuHumidity();
-	sensor_data.atim_tahq = simuAtim();
+	sensor_data.atim_thaq = simuAtim();
 	sensor_data.watteco_tempo = simuWatteco();
 	sensor_data.tct_egreen = simuTct();
 
@@ -372,25 +372,25 @@ static void SendTxData(void)
 			AppData.Buffer[i++] = sensor_data.setpoint;
 			AppData.Buffer[i++] = sensor_data.temperature_simulated;
 		}
-		else if(ATIM_TAHQ){
+		else if(ATIM_THAQ){
 			/* Fill the buffer with each useful bytes */
-			AppData.Buffer[i++] = sensor_data.atim_tahq.header1;
-			AppData.Buffer[i++] = sensor_data.atim_tahq.header2;
-			AppData.Buffer[i++] = sensor_data.atim_tahq.header3;
-			AppData.Buffer[i++] = sensor_data.atim_tahq.header4;
-			AppData.Buffer[i++] = sensor_data.atim_tahq.sensor_status>>8;
-			AppData.Buffer[i++] = sensor_data.atim_tahq.sensor_status;
-			AppData.Buffer[i++] = sensor_data.atim_tahq.temperature>>8;
-			AppData.Buffer[i++] = sensor_data.atim_tahq.temperature;
-			AppData.Buffer[i++] = sensor_data.atim_tahq.humidity>>8;
-			AppData.Buffer[i++] = sensor_data.atim_tahq.humidity;
-			AppData.Buffer[i++] = sensor_data.atim_tahq.air_quality>>8;
-			AppData.Buffer[i++] = sensor_data.atim_tahq.air_quality;
-			AppData.Buffer[i++] = sensor_data.atim_tahq.end1;
-			AppData.Buffer[i++] = sensor_data.atim_tahq.end2;
-			AppData.Buffer[i++] = sensor_data.atim_tahq.end3;
-			AppData.Buffer[i++] = sensor_data.atim_tahq.end4;
-			AppData.Buffer[i++] = sensor_data.atim_tahq.end5;
+			AppData.Buffer[i++] = sensor_data.atim_thaq.header1;
+			AppData.Buffer[i++] = sensor_data.atim_thaq.header2;
+			AppData.Buffer[i++] = sensor_data.atim_thaq.header3;
+			AppData.Buffer[i++] = sensor_data.atim_thaq.header4;
+			AppData.Buffer[i++] = sensor_data.atim_thaq.sensor_status>>8;
+			AppData.Buffer[i++] = sensor_data.atim_thaq.sensor_status;
+			AppData.Buffer[i++] = sensor_data.atim_thaq.temperature>>8;
+			AppData.Buffer[i++] = sensor_data.atim_thaq.temperature;
+			AppData.Buffer[i++] = sensor_data.atim_thaq.humidity>>8;
+			AppData.Buffer[i++] = sensor_data.atim_thaq.humidity;
+			AppData.Buffer[i++] = sensor_data.atim_thaq.air_quality>>8;
+			AppData.Buffer[i++] = sensor_data.atim_thaq.air_quality;
+			AppData.Buffer[i++] = sensor_data.atim_thaq.end1;
+			AppData.Buffer[i++] = sensor_data.atim_thaq.end2;
+			AppData.Buffer[i++] = sensor_data.atim_thaq.end3;
+			AppData.Buffer[i++] = sensor_data.atim_thaq.end4;
+			AppData.Buffer[i++] = sensor_data.atim_thaq.end5;
 		}
 		else if(WATTECO_TEMPO){
 			/* Fill the buffer with each useful bytes */
@@ -494,7 +494,7 @@ uint8_t simuHumidity(void){
  * @return atim payload with changing temperature
  */
 atim_payload_t simuAtim(void){
-	static atim_payload_t payload = {0xE0, 0x67, 0xB8, 0x3C, 0x0D08, 0x07C7, 0x0912, 0xC20C, 0x00, 0x84, 0x0D, 0x05, 0x18}; /* Random real atim_tahq payload */
+	static atim_payload_t payload = {0xE0, 0x67, 0xB8, 0x3C, 0x0D08, 0x07C7, 0x0912, 0xC20C, 0x00, 0x84, 0x0D, 0x05, 0x18}; /* Random real atim_thaq payload */
 	static uint8_t countUP = 0;
 
 	payload.temperature = (countUP==0)? 0x07C7: 0x07FA; /* Temperature in centidegree cC */
@@ -545,7 +545,7 @@ static void OnTxData(LmHandlerTxParams_t *params)
 					if(USMB_VALVE){
 						APP_LOG(0, 1, "Setpoint: %.1f °C | Temperature: %.1f °C", ((float) txBUFFER[0])/2, ((float) txBUFFER[1])/2);
 					}
-					else if(ATIM_TAHQ){
+					else if(ATIM_THAQ){
 						APP_LOG(0, 1, "Temperature: %.2f °C", ((float) (txBUFFER[6]<<8) + (float) txBUFFER[7])/100.0);
 					}
 					else if(WATTECO_TEMPO){ // Simply print the buffer

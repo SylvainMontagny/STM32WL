@@ -60,7 +60,7 @@ typedef struct
   int8_t humidity_simulated;
   int8_t setpoint;
 
-  atim_payload_t atim_tahq;
+  atim_payload_t atim_thaq;
   watteco_payload_t watteco_tempo;
   tct_payload_t tct_egreen;
 
