@@ -92,10 +92,10 @@
 #define ADMIN_SENSOR_ENABLED		false		// 0 (No sensors) / 1 (Sensors Board IKS01A3)
 #define USMB_VALVE					false
 #define VALVE_APP_PORT			  	30			// Default port for downlink configuration
-#define ATIM_TAHQ                 	false		// Temperature
+#define ATIM_THAQ                 	false		// Temperature
 #define WATTECO_TEMPO             	false		// Raw payload
 #define WATTECO_TEMPO_PORT		  	125			// Default port for payload decoder
-#define TCT_EGREEN				  	false		// Courant, voltage (and eventually temperature)
+#define TCT_EGREEN				  	false 		// Courant, voltage (and eventually temperature)
 
 /* Device LOGs ----------------------------------------------------------------*/
 #define ADMIN_VERBOSE					VLEVEL_L				// possible values: VLEVEL_H / VLEVEL_M / VLEVEL_L - Utilities-Conf.h
@@ -188,29 +188,29 @@
 #endif
 
 #if(USMB_VALVE)
-	#if (PAYLOAD_1234 || PAYLOAD_TEMPERATURE || PAYLOAD_HUMIDITY || CAYENNE_LPP_ || ATIM_TAHQ || WATTECO_TEMPO || TCT_EGREEN)
-		#error "PAYLOAD_1234 or PAYLOAD_TEMPERATURE or PAYLOAD_HUMIDITY or CAYENNE_LPP_ or ATIM_TAHQ or WATTECO_TEMPO or TCT_EGREEN can't be enable when USMB_VALVE is enable in your config_application.h file"
+	#if (PAYLOAD_1234 || PAYLOAD_TEMPERATURE || PAYLOAD_HUMIDITY || CAYENNE_LPP_ || ATIM_THAQ || WATTECO_TEMPO || TCT_EGREEN)
+		#error "PAYLOAD_1234 or PAYLOAD_TEMPERATURE or PAYLOAD_HUMIDITY or CAYENNE_LPP_ or ATIM_THAQ or WATTECO_TEMPO or TCT_EGREEN can't be enable when USMB_VALVE is enable in your config_application.h file"
 
 	#endif
 #endif
 
-#if(ATIM_TAHQ)
+#if(ATIM_THAQ)
 	#if (PAYLOAD_1234 || PAYLOAD_TEMPERATURE || PAYLOAD_HUMIDITY || CAYENNE_LPP_ || USMB_VALVE || WATTECO_TEMPO || TCT_EGREEN)
-		#error "PAYLOAD_1234 or PAYLOAD_TEMPERATURE or PAYLOAD_HUMIDITY or CAYENNE_LPP_ or USMB_VALVE or WATTECO_TEMPO or TCT_EGREEN can't be enable when ATIM_TAHQ is enable in your config_application.h file"
+		#error "PAYLOAD_1234 or PAYLOAD_TEMPERATURE or PAYLOAD_HUMIDITY or CAYENNE_LPP_ or USMB_VALVE or WATTECO_TEMPO or TCT_EGREEN can't be enable when ATIM_THAQ is enable in your config_application.h file"
 
 	#endif
 #endif
 
 #if(WATTECO_TEMPO)
-	#if (PAYLOAD_1234 || PAYLOAD_TEMPERATURE || PAYLOAD_HUMIDITY || CAYENNE_LPP_ || USMB_VALVE || ATIM_TAHQ || TCT_EGREEN)
-		#error "PAYLOAD_1234 or PAYLOAD_TEMPERATURE or PAYLOAD_HUMIDITY or CAYENNE_LPP_ or USMB_VALVE or ATIM_TAHQ or TCT_EGREEN can't be enable when WATTECO_TEMPO is enable in your config_application.h file"
+	#if (PAYLOAD_1234 || PAYLOAD_TEMPERATURE || PAYLOAD_HUMIDITY || CAYENNE_LPP_ || USMB_VALVE || ATIM_THAQ || TCT_EGREEN)
+		#error "PAYLOAD_1234 or PAYLOAD_TEMPERATURE or PAYLOAD_HUMIDITY or CAYENNE_LPP_ or USMB_VALVE or ATIM_THAQ or TCT_EGREEN can't be enable when WATTECO_TEMPO is enable in your config_application.h file"
 
 	#endif
 #endif
 
 #if(TCT_EGREEN)
-	#if (PAYLOAD_1234 || PAYLOAD_TEMPERATURE || PAYLOAD_HUMIDITY || CAYENNE_LPP_ || USMB_VALVE || ATIM_TAHQ || WATTECO_TEMPO)
-		#error "PAYLOAD_1234 or PAYLOAD_TEMPERATURE or PAYLOAD_HUMIDITY or CAYENNE_LPP_ or USMB_VALVE or ATIM_TAHQ or WATTECO_TEMPO can't be enable when TCT_EGREEN is enable in your config_application.h file"
+	#if (PAYLOAD_1234 || PAYLOAD_TEMPERATURE || PAYLOAD_HUMIDITY || CAYENNE_LPP_ || USMB_VALVE || ATIM_THAQ || WATTECO_TEMPO)
+		#error "PAYLOAD_1234 or PAYLOAD_TEMPERATURE or PAYLOAD_HUMIDITY or CAYENNE_LPP_ or USMB_VALVE or ATIM_THAQ or WATTECO_TEMPO can't be enable when TCT_EGREEN is enable in your config_application.h file"
 
 	#endif
 #endif
