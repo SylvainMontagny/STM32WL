@@ -8,14 +8,22 @@
  */
 
 #include "lcd_printf.h"
+#include <string.h>
 
 int8_t buf_start, buf_end;
-static line_t lcd_log_buffer[BUF_LEN]; // Buffer of lines
+static line_t lcd_log_buffer[BUF_LEN]; 			// Buffer of lines
+static line_t prev_lcd_log_buffer[BUF_LEN];		// Previous printed lines
 
 void LCD_Buffer_Init(void)
 {
 	buf_start = -1;
 	buf_end = -1;
+	char empty_str[LINE_SIZE] = "";
+	for (uint8_t l = 0; l < BUF_LEN; l++){
+		strcpy(prev_lcd_log_buffer[l].line, empty_str);
+		strcpy(lcd_log_buffer[l].line, empty_str);
+		lcd_log_buffer[l].color = DEFAULT_BACKGROUND;
+	}
 }
 
 /**
@@ -25,7 +33,12 @@ void lcd_print_buf(void)
 {
 	for (uint8_t nbline = 0; nbline < BUF_LEN; nbline ++) {
 		uint8_t line = (nbline+buf_start) % BUF_LEN;
+		// Remove old line
+		ST7789_WriteString(10, LINE_HEIGHT/2 + LINE_HEIGHT*nbline, prev_lcd_log_buffer[(line-1)%BUF_LEN].line, FONT, DEFAULT_BACKGROUND, DEFAULT_BACKGROUND);
+		// Write new line
 		ST7789_WriteString(10, LINE_HEIGHT/2 + LINE_HEIGHT*nbline, lcd_log_buffer[line].line, FONT, lcd_log_buffer[line].color, DEFAULT_BACKGROUND);
+		// Save new line
+		strcpy(prev_lcd_log_buffer[line].line, lcd_log_buffer[line].line);
 
 		if (line == buf_end) nbline = BUF_LEN;
 	}
