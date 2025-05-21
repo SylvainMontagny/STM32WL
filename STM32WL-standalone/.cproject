@@ -70,6 +70,7 @@
 									<listOptionValue builtIn="false" value="../Middlewares/LoRaWAN/Region"/>
 									<listOptionValue builtIn="false" value="../Drivers/STM32WLxx_HAL_Driver/Inc"/>
 									<listOptionValue builtIn="false" value="../Drivers/Inc"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/STM32WL-standalone/Drivers/ST7789}&quot;"/>
 									<listOptionValue builtIn="false" value="../Drivers/Utilities"/>
 									<listOptionValue builtIn="false" value="../Drivers/Sensors"/>
 								</option>

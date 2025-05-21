@@ -19,6 +19,7 @@
 #include "radio.h"
 #include "send_raw_lora.h"
 #include "stdlib.h"
+#include "lcd_printf.h" /* To print logs on the LCD screen */
 
 #include  "General_Setup.h"
 uint8_t simuTemperature(void);
@@ -37,13 +38,11 @@ uint8_t txBUFFER[100];
 uint8_t isTriggered = 0;
 sensor_t sensor_data = { 0,0,0,0,0,0,0,0,0,50}; // last byte is temperature setpoint in Q7.1
 
-
 typedef enum TxEventType_e
 {
 	TX_ON_TIMER,
 	TX_ON_EVENT
 } TxEventType_t;
-
 
 static void SendTxData(void);
 static void OnTxTimerEvent(void *context);
@@ -55,6 +54,8 @@ static void OnMacProcessNotify(void);
 static void OnTxTimerLedEvent(void *context);
 static void OnRxTimerLedEvent(void *context);
 static void OnJoinTimerLedEvent(void *context);
+
+static void MX_BP_IT_Init(void);
 
 static ActivationType_t ActivationType = LORAWAN_DEFAULT_ACTIVATION_TYPE;
 
@@ -90,6 +91,8 @@ static UTIL_TIMER_Object_t JoinLedTimer;
 
 void LoRaWAN_Init(void)
 {
+	MX_BP_IT_Init();
+
 	// Starts the RX USART2 process by interrupt
 	UTIL_ADV_TRACE_StartRxProcess(byteReception);
 
@@ -313,6 +316,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	case  BUTTON_SW1_PIN:
 		UTIL_SEQ_SetTask((1 << CFG_SEQ_Task_LoRaSendOnTxTimerOrButtonEvent), CFG_SEQ_Prio_0);
 		break;
+	//PROJECT BUTTON LCD
+	case  GPIO_PIN_9:
+		UTIL_SEQ_SetTask((1 << CFG_SEQ_Task_LoRaSendOnTxTimerOrButtonEvent), CFG_SEQ_Prio_0);
+		break;
+	//PROJECT BUTTON LCD END
 	case  BUTTON_SW2_PIN:
 		break;
 	case  BUTTON_SW3_PIN:
@@ -780,3 +788,25 @@ static void OnJoinTimerLedEvent(void *context)
 	BSP_LED_Toggle(LED_RED) ;
 }
 
+/**
+  * @brief Iterruption button Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_BP_IT_Init(void)
+{
+	//PROJECT BUTTON LCD
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	 /*Configure GPIO pin : PA9 */
+	 GPIO_InitStruct.Pin = GPIO_PIN_9;
+	 GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+	 GPIO_InitStruct.Pull = GPIO_NOPULL;
+	 HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+	 /* EXTI interrupt init*/
+	 HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+	 HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
+	//PROJECT BUTTON LCD END
+}
