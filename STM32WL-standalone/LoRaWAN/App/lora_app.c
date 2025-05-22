@@ -57,6 +57,8 @@ static void OnJoinTimerLedEvent(void *context);
 
 static void MX_BP_IT_Init(void);
 
+static void while_loop(void);
+
 static ActivationType_t ActivationType = LORAWAN_DEFAULT_ACTIVATION_TYPE;
 
 static LmHandlerCallbacks_t LmHandlerCallbacks =
@@ -347,15 +349,25 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 //PROJECT BUTTON LCD
 void EXTI9_5_IRQHandler(void)
 {
-//	if (EXTI->PR1 & EXTI_PR1_PIF8 == EXTI_PR1_PIF8) {
-//		// Pin 8 is IT source
-//		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
-//
-//	}
-//	else if (EXTI->PR1 & EXTI_PR1_PIF9 == EXTI_PR1_PIF9) {
-//		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_9);
-//	}
-	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_9);
+	lcd_printf(LCD_BLACK, "PR: %x", EXTI->PR1);
+	lcd_printf(LCD_BLACK, "Mask 8:%x", EXTI_PR1_PIF8);
+	lcd_printf(LCD_BLACK, "  %x", EXTI->PR1 & EXTI_PR1_PIF8);
+	lcd_printf(LCD_BLACK, "Mask 9:%x", EXTI_PR1_PIF9);
+	lcd_printf(LCD_BLACK, "  %x", EXTI->PR1 & EXTI_PR1_PIF9);
+	if (EXTI->PR1 & EXTI_PR1_PIF8 == EXTI_PR1_PIF8){
+		lcd_printf(LCD_BLACK, "true");
+	}
+
+	if (EXTI->PR1 & EXTI_PR1_PIF8 == EXTI_PR1_PIF8) {
+		// Pin 8 is IT source
+		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
+
+	}
+	else if (EXTI->PR1 & EXTI_PR1_PIF9 == EXTI_PR1_PIF9) {
+		// Pin 9 is IT source
+		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_9);
+	}
+	else __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_8 | GPIO_PIN_9);
 
 	UTIL_SEQ_SetTask((1 << CFG_SEQ_Task_DisplayOnLCD), CFG_SEQ_Prio_LCD);
 }

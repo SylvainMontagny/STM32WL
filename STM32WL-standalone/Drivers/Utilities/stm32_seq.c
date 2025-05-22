@@ -21,6 +21,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32_seq.h"
 #include "utilities_conf.h"
+#include "utilities_def.h"
 
 /** @addtogroup SEQUENCER
   * @{
@@ -99,8 +100,10 @@ typedef struct
 /**
  * @brief default value of priority number.
  */
-#ifndef UTIL_SEQ_CONF_PRIO_NBR 
-  #define UTIL_SEQ_CONF_PRIO_NBR  (2)
+#ifndef UTIL_SEQ_CONF_PRIO_NBR
+  // Edit Sacha
+  #define UTIL_SEQ_CONF_PRIO_NBR  (CFG_SEQ_Prio_NBR)
+  //end
 #endif
 
 /**
