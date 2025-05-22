@@ -349,21 +349,16 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 //PROJECT BUTTON LCD
 void EXTI9_5_IRQHandler(void)
 {
-	lcd_printf(LCD_BLACK, "PR: %x", EXTI->PR1);
-	lcd_printf(LCD_BLACK, "Mask 8:%x", EXTI_PR1_PIF8);
-	lcd_printf(LCD_BLACK, "  %x", EXTI->PR1 & EXTI_PR1_PIF8);
-	lcd_printf(LCD_BLACK, "Mask 9:%x", EXTI_PR1_PIF9);
-	lcd_printf(LCD_BLACK, "  %x", EXTI->PR1 & EXTI_PR1_PIF9);
 	if (EXTI->PR1 & EXTI_PR1_PIF8 == EXTI_PR1_PIF8){
 		lcd_printf(LCD_BLACK, "true");
 	}
 
-	if (EXTI->PR1 & EXTI_PR1_PIF8 == EXTI_PR1_PIF8) {
+	if ((EXTI->PR1 & EXTI_PR1_PIF8) == EXTI_PR1_PIF8) {
 		// Pin 8 is IT source
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
 
 	}
-	else if (EXTI->PR1 & EXTI_PR1_PIF9 == EXTI_PR1_PIF9) {
+	else if ((EXTI->PR1 & EXTI_PR1_PIF9) == EXTI_PR1_PIF9) {
 		// Pin 9 is IT source
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_9);
 	}
