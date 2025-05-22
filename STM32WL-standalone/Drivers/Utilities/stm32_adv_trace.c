@@ -21,6 +21,7 @@
 #include "stm32_adv_trace.h"
 #include "stdarg.h"
 #include "stdio.h"
+#include "lcd_printf.h"
 
 /** @addtogroup ADV_TRACE
  * @{
@@ -202,6 +203,8 @@ UTIL_ADV_TRACE_Status_t UTIL_ADV_TRACE_StartRxProcess(void (*UserCallback)(uint8
 #if defined(UTIL_ADV_TRACE_CONDITIONNAL)
 UTIL_ADV_TRACE_Status_t UTIL_ADV_TRACE_COND_FSend(uint32_t VerboseLevel, uint32_t Region, uint32_t TimeStampState, const char *strFormat, ...)
 {
+//	lcd_printf(LCD_BLACK, strFormat);
+//	lcd_print_buf();
   va_list vaArgs;
 #if defined(UTIL_ADV_TRACE_UNCHUNK_MODE)
   uint8_t buf[UTIL_ADV_TRACE_TMP_MAX_TIMESTMAP_SIZE];

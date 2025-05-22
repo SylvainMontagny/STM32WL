@@ -19,7 +19,6 @@ int main(void)
 	HAL_Init();
 	SystemClock_Config();
 	MX_I2C2_Init();
-	LCD_Buffer_Init();
 	MX_LoRaWAN_Init();
 
 	/*Initialize the Sensors */
@@ -29,6 +28,7 @@ int main(void)
 	MX_GPIO_Init();
 	MX_SPI1_Init();
 	ST7789_Init();
+	LCD_Buffer_Init();
 
 	// LCD test
 	ST7789_Fill_Color(LCD_WHITE);
@@ -39,14 +39,18 @@ int main(void)
 	lcd_printf(LCD_BLACK, "HELLO");
 	lcd_printf(LCD_RED, "World");
 	lcd_printf(LCD_BLUE, "!");
-
-	lcd_print_buf();
-
-	for(uint8_t i = 0; i < 40; i++){
-		lcd_printf(LCD_BLACK, "%d", i);
-		HAL_Delay(333);
-		lcd_print_buf();
-	}
+//	lcd_printf(LCD_GREEN, "Tick frequency:");
+//	lcd_printf(LCD_GREEN, "%d", HAL_GetTickFreq());
+//	lcd_printf(LCD_GREEN, "iiiiiiiiiiiiiiiiiiii");
+//	lcd_printf(LCD_GREEN, "wwwwwwwwwwwwwwwwwwww");
+//
+//	lcd_print_buf();
+//
+//	for(uint16_t i = 0; i < 40; i++){
+//		lcd_printf(i << 4, "%d", i);
+//		HAL_Delay(333);
+//		lcd_print_buf();
+//	}
 
 	while (1)
 	{
@@ -119,7 +123,7 @@ void MX_SPI1_Init(void)
   hspi1.Init.CLKPolarity = SPI_POLARITY_HIGH;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;

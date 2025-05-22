@@ -206,6 +206,7 @@ void LoRaWAN_Init(void)
 
 		UTIL_SEQ_RegTask((1 << CFG_SEQ_Task_LmHandlerProcess), UTIL_SEQ_RFU, LmHandlerProcess);
 		UTIL_SEQ_RegTask((1 << CFG_SEQ_Task_LoRaSendOnTxTimerOrButtonEvent), UTIL_SEQ_RFU, SendTxData);
+		UTIL_SEQ_RegTask((1 << CFG_SEQ_Task_DisplayOnLCD), UTIL_SEQ_RFU, lcd_print_buf);
 
 		LoraInfo_Init();
 
@@ -308,6 +309,16 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 	APP_LOG_COLOR(RESET_COLOR);
 }
 
+void CENTER_Pressed_Button(void){
+	APP_LOG(0, 1, "Center button pressed!\r\n");
+	lcd_printf(LCD_BLUE, "Center button pressed!");
+}
+
+void DOWN_Pressed_Button(void){
+	APP_LOG(0, 1, "Down button pressed!\r\n");
+	ST7789_Fill_Color(DEFAULT_BACKGROUND);
+	lcd_printf(LCD_BLUE, "Down button pressed!");
+}
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
@@ -318,9 +329,12 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		break;
 	//PROJECT BUTTON LCD
 	case  GPIO_PIN_9:
+		CENTER_Pressed_Button();
 		UTIL_SEQ_SetTask((1 << CFG_SEQ_Task_LoRaSendOnTxTimerOrButtonEvent), CFG_SEQ_Prio_0);
 		break;
 	//PROJECT BUTTON LCD END
+	case  GPIO_PIN_8:
+		DOWN_Pressed_Button();
 	case  BUTTON_SW2_PIN:
 		break;
 	case  BUTTON_SW3_PIN:
@@ -329,6 +343,23 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		break;
 	}
 }
+
+//PROJECT BUTTON LCD
+void EXTI9_5_IRQHandler(void)
+{
+//	if (EXTI->PR1 & EXTI_PR1_PIF8 == EXTI_PR1_PIF8) {
+//		// Pin 8 is IT source
+//		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
+//
+//	}
+//	else if (EXTI->PR1 & EXTI_PR1_PIF9 == EXTI_PR1_PIF9) {
+//		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_9);
+//	}
+	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_9);
+
+	UTIL_SEQ_SetTask((1 << CFG_SEQ_Task_DisplayOnLCD), CFG_SEQ_Prio_LCD);
+}
+//PROJECT BUTTON LCD END
 
 static void SendTxData(void)
 {
@@ -547,6 +578,8 @@ static void OnTxData(LmHandlerTxParams_t *params)
 				UTIL_TIMER_Start(&TxLedTimer);
 
 				APP_LOG(0, 1, "- Payload     ");
+				lcd_printf(LCD_RED, "______________________________________");
+				lcd_printf(LCD_RED, "Payload");
 
 				if(AppData.BufferSize>0)
 				{
@@ -575,6 +608,7 @@ static void OnTxData(LmHandlerTxParams_t *params)
 							APP_LOG(0, 1, "%03u ", txBUFFER[i]);
 						}
 						APP_LOG(0, 1, "(dec)");
+						lcd_printf(LCD_BLACK, "  01 02 03 04 (dec)");
 					}
 				}
 
@@ -583,6 +617,8 @@ static void OnTxData(LmHandlerTxParams_t *params)
 				APP_LOG(TS_OFF, VLEVEL_L, "- Port        %d \r\n",params->AppData.Port);
 				APP_LOG(TS_OFF, VLEVEL_L, "- Fcnt        %d \r\n",params->UplinkCounter);
 				APP_LOG(TS_OFF, VLEVEL_L, "- Data Rate   %d",params->Datarate);
+				lcd_printf(LCD_RED, "Data Rate");
+				lcd_printf(LCD_BLACK, "  %d", params->Datarate);
 				switch(params->Datarate)
 				{
 				case 5 : APP_LOG(TS_OFF, VLEVEL_L, " (SF7)\r\n");break;
@@ -599,6 +635,8 @@ static void OnTxData(LmHandlerTxParams_t *params)
 			}
 		}
 	}
+	// Print on LCD screen
+	UTIL_SEQ_SetTask((1 << CFG_SEQ_Task_DisplayOnLCD), CFG_SEQ_Prio_LCD);
 }
 
 
@@ -798,15 +836,26 @@ static void MX_BP_IT_Init(void)
 	//PROJECT BUTTON LCD
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
 	__HAL_RCC_GPIOA_CLK_ENABLE();
-	 /*Configure GPIO pin : PA9 */
+	 /*Configure GPIO pin : PA9, Center button */
 	 GPIO_InitStruct.Pin = GPIO_PIN_9;
 	 GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
 	 GPIO_InitStruct.Pull = GPIO_NOPULL;
 	 HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 	 /* EXTI interrupt init*/
-	 HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+	 HAL_NVIC_SetPriority(EXTI9_5_IRQn, 1, 1);
 	 HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
 	//PROJECT BUTTON LCD END
+
+	 __HAL_RCC_GPIOB_CLK_ENABLE();
+	 /*Configure GPIO pin : PA8, Down button */
+	 GPIO_InitStruct.Pin = GPIO_PIN_8;
+	 GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+	 GPIO_InitStruct.Pull = GPIO_NOPULL;
+	 HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+	 /* EXTI interrupt init*/
+	 HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+	 HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 }

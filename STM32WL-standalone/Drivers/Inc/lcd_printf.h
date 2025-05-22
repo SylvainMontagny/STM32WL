@@ -12,12 +12,12 @@
 #include "st7789.h"
 #include <stdio.h>
 #include <stdarg.h>
-//#include "sys_app.h"
+#include "sys_app.h"
 
 #define DEFAULT_BACKGROUND LCD_WHITE
 /* Choose font size */
-//#define SMALL_FONT
-#define MEDIUM_FONT
+#define SMALL_FONT
+//#define MEDIUM_FONT
 //#define LARGE_FONT
 
 #ifdef SMALL_FONT

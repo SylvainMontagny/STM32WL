@@ -11,13 +11,19 @@
 #include <string.h>
 
 int8_t buf_start, buf_end;
+int8_t prev_buf_start, prev_buf_end;
 static line_t lcd_log_buffer[BUF_LEN]; 			// Buffer of lines
 static line_t prev_lcd_log_buffer[BUF_LEN];		// Previous printed lines
 
 void LCD_Buffer_Init(void)
 {
+	// Init buffer's pointers
 	buf_start = -1;
 	buf_end = -1;
+	prev_buf_start = 0;
+	prev_buf_end = 0;
+
+	// Init buffers with empty values
 	char empty_str[LINE_SIZE] = "";
 	for (uint8_t l = 0; l < BUF_LEN; l++){
 		strcpy(prev_lcd_log_buffer[l].line, empty_str);
@@ -32,16 +38,22 @@ void LCD_Buffer_Init(void)
 void lcd_print_buf(void)
 {
 	for (uint8_t nbline = 0; nbline < BUF_LEN; nbline ++) {
-		uint8_t line = (nbline+buf_start) % BUF_LEN;
+		int8_t line = (nbline+buf_start) % BUF_LEN;
+		int8_t prev_line = (nbline+prev_buf_start) % BUF_LEN;
+		int16_t x = 10;
+		int32_t y = LINE_HEIGHT/2 + LINE_HEIGHT*nbline;
 		// Remove old line
-		ST7789_WriteString(10, LINE_HEIGHT/2 + LINE_HEIGHT*nbline, prev_lcd_log_buffer[(line-1)%BUF_LEN].line, FONT, DEFAULT_BACKGROUND, DEFAULT_BACKGROUND);
+		ST7789_WriteString(x, y, prev_lcd_log_buffer[(prev_line)%BUF_LEN].line, FONT, DEFAULT_BACKGROUND, DEFAULT_BACKGROUND);
 		// Write new line
-		ST7789_WriteString(10, LINE_HEIGHT/2 + LINE_HEIGHT*nbline, lcd_log_buffer[line].line, FONT, lcd_log_buffer[line].color, DEFAULT_BACKGROUND);
-		// Save new line
-		strcpy(prev_lcd_log_buffer[line].line, lcd_log_buffer[line].line);
+		ST7789_WriteString(x, y, lcd_log_buffer[line].line, FONT, lcd_log_buffer[line].color, DEFAULT_BACKGROUND);
 
 		if (line == buf_end) nbline = BUF_LEN;
 	}
+
+	// Save new buffer to previous buffer
+	memcpy(prev_lcd_log_buffer, lcd_log_buffer, BUF_LEN*LINE_SIZE);
+	prev_buf_start = buf_start;
+	prev_buf_end = buf_end;
 }
 
 /**
@@ -62,7 +74,7 @@ void lcd_printf(uint16_t color, const char* format, ...)
 	lcd_log_buffer[buf_end].color = color;
 	va_list args;
 
-	// Initialiser les arguments variadiques
+	// Init variadiques arguments
 	va_start(args, format);
 	vsnprintf(lcd_log_buffer[buf_end].line, sizeof(lcd_log_buffer[buf_end].line), format, args); // Format string
 	va_end(args);

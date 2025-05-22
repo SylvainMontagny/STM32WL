@@ -34,6 +34,7 @@ typedef enum
 typedef enum
 {
   CFG_SEQ_Prio_0,
+  CFG_SEQ_Prio_LCD,
 
   CFG_SEQ_Prio_NBR,
 } CFG_SEQ_Prio_Id_t;
@@ -46,6 +47,7 @@ typedef enum
 {
   CFG_SEQ_Task_LmHandlerProcess,
   CFG_SEQ_Task_LoRaSendOnTxTimerOrButtonEvent,
+  CFG_SEQ_Task_DisplayOnLCD,
 
   CFG_SEQ_Task_NBR
 } CFG_SEQ_Task_Id_t;
