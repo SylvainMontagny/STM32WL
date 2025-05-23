@@ -28,7 +28,7 @@ void LCD_Buffer_Init(void)
 	for (uint8_t l = 0; l < BUF_LEN; l++){
 		strcpy(prev_lcd_log_buffer[l].line, empty_str);
 		strcpy(lcd_log_buffer[l].line, empty_str);
-		lcd_log_buffer[l].color = DEFAULT_BACKGROUND;
+		lcd_log_buffer[l].color = LCD_DEFAULT_BACKGROUND;
 	}
 }
 
@@ -37,15 +37,16 @@ void LCD_Buffer_Init(void)
  */
 void lcd_print_buf(void)
 {
+#ifdef LCD_DISPLAY
 	for (uint8_t nbline = 0; nbline < BUF_LEN; nbline ++) {
 		int8_t line = (nbline+buf_start) % BUF_LEN;
 		int8_t prev_line = (nbline+prev_buf_start) % BUF_LEN;
 		int16_t x = 10;
 		int32_t y = LINE_HEIGHT/2 + LINE_HEIGHT*nbline;
 		// Remove old line
-		ST7789_WriteString(x, y, prev_lcd_log_buffer[(prev_line)%BUF_LEN].line, FONT, DEFAULT_BACKGROUND, DEFAULT_BACKGROUND);
+		ST7789_WriteString(x, y, prev_lcd_log_buffer[(prev_line)%BUF_LEN].line, FONT, LCD_DEFAULT_BACKGROUND, LCD_DEFAULT_BACKGROUND);
 		// Write new line
-		ST7789_WriteString(x, y, lcd_log_buffer[line].line, FONT, lcd_log_buffer[line].color, DEFAULT_BACKGROUND);
+		ST7789_WriteString(x, y, lcd_log_buffer[line].line, FONT, lcd_log_buffer[line].color, LCD_DEFAULT_BACKGROUND);
 
 		if (line == buf_end) nbline = BUF_LEN;
 	}
@@ -54,6 +55,7 @@ void lcd_print_buf(void)
 	memcpy(prev_lcd_log_buffer, lcd_log_buffer, BUF_LEN*LINE_SIZE);
 	prev_buf_start = buf_start;
 	prev_buf_end = buf_end;
+#endif
 }
 
 /**

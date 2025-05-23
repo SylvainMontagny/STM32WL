@@ -184,7 +184,7 @@ extern SPI_HandleTypeDef ST7789_SPI_PORT;
 #define LCD_BLUE 		0xFFE0
 #define LCD_RED 		0x07FF
 #define LCD_MAGENTA 	0x07E0
-#define LCD_GREEN 		0xFFF8
+#define LCD_GREEN 		0xF81F
 #define LCD_CYAN 		0x8000
 #define LCD_YELLOW 		0x001F
 #define LCD_GRAY 		0x7BCF
@@ -202,7 +202,7 @@ extern SPI_HandleTypeDef ST7789_SPI_PORT;
 #define LCD_LGRAYBLUE 	0x59AE
 #define LCD_LBBLUE 		0xD4ED
 
-
+#define LCD_DGREEN		0xF8FF
 
 /* Control Registers and constant codes */
 #define ST7789_NOP     0x00

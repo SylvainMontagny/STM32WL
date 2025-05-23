@@ -7,8 +7,9 @@
 
 void MX_LoRaWAN_Init(void)
 {
-  SystemApp_Init();
-  LoRaWAN_Init();
+	/* Init already done in main.c */
+	SystemApp_Init();
+	LoRaWAN_Init();
 }
 
 void MX_LoRaWAN_Process(void)

@@ -53,6 +53,9 @@
 
 //edit sylvain
 #include "sys_app.h"
+//#ifndef INC_LCD_PRINTF_H_
+//	#include "lcd_printf.h"
+//#endif
 // fin edit
 
 #if (!defined (LORAWAN_KMS) || (LORAWAN_KMS == 0))
@@ -627,12 +630,14 @@ LmHandlerErrorStatus_t LmHandlerSend( LmHandlerAppData_t *appData, LmHandlerMsgT
         if( isTxConfirmed == LORAMAC_HANDLER_UNCONFIRMED_MSG )
         {
             mcpsReq.Type = MCPS_UNCONFIRMED;
-            // Edit sylvain
+            // Edit sylvain & Sacha
             if (mcpsReq.Req.Unconfirmed.fPort == 0){
-            	APP_LOG(TS_ON, VLEVEL_L, " Sending MAC Command\r\n");
+            	APP_LOG(TS_ON, VLEVEL_L, " Sending MAC Command.\r\n");
+            	//lcd_printf(LCD_DEFAULT_FONT_COLOR, "Sending MAC Command.");
             }
             else{
             	APP_LOG(TS_ON, VLEVEL_L, " Sending Unconfirmed Data Up.\r\n");
+            	//lcd_printf(LCD_DEFAULT_FONT_COLOR, "Sending Unconfirmed Data Up.");
 
             }
             // End Edit
@@ -642,8 +647,9 @@ LmHandlerErrorStatus_t LmHandlerSend( LmHandlerAppData_t *appData, LmHandlerMsgT
         {
             mcpsReq.Type = MCPS_CONFIRMED;
             mcpsReq.Req.Confirmed.NbTrials = 8;
-            // Edit sylvain
+            // Edit sylvain & Sacha
             APP_LOG(TS_ON, VLEVEL_L, " Sending Confirmed Data Up - First try\r\n");
+            //lcd_printf(LCD_DEFAULT_FONT_COLOR, "Sending Confirmed Data Up - 1");
             // End Edit
         }
     }

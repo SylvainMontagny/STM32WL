@@ -188,7 +188,7 @@ void ST7789_Init(void)
   	ST7789_WriteCommand (ST7789_DISPON);	//	Main screen turned on	
 
 	HAL_Delay(50);
-	ST7789_Fill_Color(LCD_BLACK);				//	Fill with Black.
+	ST7789_Fill_Color(LCD_WHITE);				//	Fill with Black.
 }
 
 /**

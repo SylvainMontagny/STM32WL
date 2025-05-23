@@ -14,7 +14,11 @@
 #include <stdarg.h>
 #include "sys_app.h"
 
-#define DEFAULT_BACKGROUND LCD_WHITE
+#define LCD_DISPLAY
+#define DISPLAY_NB_LINES
+
+#define LCD_DEFAULT_BACKGROUND LCD_WHITE
+#define LCD_DEFAULT_FONT_COLOR LCD_BLACK
 /* Choose font size */
 #define SMALL_FONT
 //#define MEDIUM_FONT
