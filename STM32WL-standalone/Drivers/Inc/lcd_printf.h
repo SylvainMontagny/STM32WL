@@ -13,9 +13,10 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include "sys_app.h"
+#include <stdlib.h>
 
-#define LCD_DISPLAY
-#define DISPLAY_NB_LINES
+#define LCD_DISPLAY			// Allow logs to be display on the LCD screen
+#define DISPLAY_NB_LINES	// Add line number to the logs
 
 #define LCD_DEFAULT_BACKGROUND LCD_WHITE
 #define LCD_DEFAULT_FONT_COLOR LCD_BLACK
@@ -27,13 +28,15 @@
 #ifdef SMALL_FONT
 	#define FONT Font_7x10
 	#define LINE_HEIGHT 12
+	#define LEFT_MARGIN 3
 	#define BUF_LEN 25
-	#define LINE_SIZE 32
+	#define LINE_SIZE 33 // Please consider 3 characters less when DISPLAY_NB_LINE is define
 #endif
 
 #ifdef MEDIUM_FONT
 	#define FONT Font_11x18
 	#define LINE_HEIGHT 20
+	#define LEFT_MARGIN 3
 	#define BUF_LEN 15
 	#define LINE_SIZE 20
 #endif
@@ -41,6 +44,7 @@
 #ifdef LARGE_FONT
 	#define FONT Font_16x26
 	#define LINE_HEIGHT 30
+	#define LEFT_MARGIN 3
 	#define BUF_LEN 11
 	#define LINE_SIZE 14
 #endif

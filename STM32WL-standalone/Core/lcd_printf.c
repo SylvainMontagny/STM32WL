@@ -14,6 +14,7 @@ int8_t buf_start, buf_end;
 int8_t prev_buf_start, prev_buf_end;
 static line_t lcd_log_buffer[BUF_LEN]; 			// Buffer of lines
 static line_t prev_lcd_log_buffer[BUF_LEN];		// Previous printed lines
+uint8_t line_nb;
 
 void LCD_Buffer_Init(void)
 {
@@ -22,6 +23,8 @@ void LCD_Buffer_Init(void)
 	buf_end = -1;
 	prev_buf_start = 0;
 	prev_buf_end = 0;
+
+	line_nb = 1;
 
 	// Init buffers with empty values
 	char empty_str[LINE_SIZE] = "";
@@ -41,7 +44,7 @@ void lcd_print_buf(void)
 	for (uint8_t nbline = 0; nbline < BUF_LEN; nbline ++) {
 		int8_t line = (nbline+buf_start) % BUF_LEN;
 		int8_t prev_line = (nbline+prev_buf_start) % BUF_LEN;
-		int16_t x = 10;
+		int16_t x = LEFT_MARGIN;
 		int32_t y = LINE_HEIGHT/2 + LINE_HEIGHT*nbline;
 		// Remove old line
 		ST7789_WriteString(x, y, prev_lcd_log_buffer[(prev_line)%BUF_LEN].line, FONT, LCD_DEFAULT_BACKGROUND, LCD_DEFAULT_BACKGROUND);
@@ -76,8 +79,26 @@ void lcd_printf(uint16_t color, const char* format, ...)
 	lcd_log_buffer[buf_end].color = color;
 	va_list args;
 
+	char str_line_nb[3]; // Max 3 characters: 2 digits and a space
+	size_t str_line_nb_len = 0;
+
+#ifdef DISPLAY_NB_LINES
+	str_line_nb_len = sizeof(str_line_nb);
+	char sline_nb[2];
+	itoa(line_nb, sline_nb, 10);
+	strcpy(str_line_nb, sline_nb);
+
+	if (line_nb < 0xA){
+		strcat(str_line_nb, " ");
+	}
+	strcat(str_line_nb, " ");
+
+	line_nb = (line_nb + 1) % 100;
+#endif // DISPLAY_NB_LINES
+
 	// Init variadiques arguments
+	strcpy(lcd_log_buffer[buf_end].line, str_line_nb);
 	va_start(args, format);
-	vsnprintf(lcd_log_buffer[buf_end].line, sizeof(lcd_log_buffer[buf_end].line), format, args); // Format string
+	vsnprintf(lcd_log_buffer[buf_end].line + str_line_nb_len, LINE_SIZE - str_line_nb_len, format, args); // Format string
 	va_end(args);
 }

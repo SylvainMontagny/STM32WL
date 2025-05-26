@@ -133,6 +133,9 @@ void LoRaWAN_Init(void)
 		APP_LOG(0, 1, "Type the following command to send a Raw LoRa Packet\r\n");
 		APP_LOG(0, 1, "> Command format : LORA=Frequency:Power:SF:Payload\r\n");
 		APP_LOG(0, 1, "> Example :        LORA=868100000:14:7:01020304 \r\n\r\n");
+
+		lcd_printf(LCD_BLUE, "Raw LoRa Packet Application");
+		lcd_printf(LCD_DEFAULT_FONT_COLOR, "Please refer to the console");
 	}
 
 	/***** LoRaWAN Standalone Application  ***********/
@@ -283,6 +286,7 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 
 			APP_LOG_COLOR(GREEN);
 			APP_LOG(0, 1, "\tTransmition required by the user\r\n");
+			lcd_printf(LCD_DEFAULT_FONT_COLOR, "Transmition required by user");
 			UTIL_SEQ_SetTask((1 << CFG_SEQ_Task_LoRaSendOnTxTimerOrButtonEvent), CFG_SEQ_Prio_0);
 			if (SEND_BY_PUSH_BUTTON == false){
 				UTIL_TIMER_Start(&TxTimer);
@@ -299,6 +303,12 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 			APP_LOG(0, 1, "\t- r \t\t Reset End-Device\r\n");
 			APP_LOG(0, 1, "\t- h \t\t Help\r\n");
 			APP_LOG(0, 1, "\t- lora \t\t Enter Raw LoRa Packet mode\r\n");
+
+			lcd_printf(LCD_DEFAULT_FONT_COLOR, "");
+			lcd_printf(LCD_DEFAULT_FONT_COLOR, "- t    Transmit new packet");
+			lcd_printf(LCD_DEFAULT_FONT_COLOR, "- r    Reset");
+			lcd_printf(LCD_DEFAULT_FONT_COLOR, "- h    Help");
+			lcd_printf(LCD_DEFAULT_FONT_COLOR, "- lora Enter Raw LoRa mode");
 		}
 
 		else if ( strcmp(rxBuff , "lora") == 0 ){
@@ -314,6 +324,11 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 				APP_LOG(0, 1, "\r\nType the following command to send a Raw LoRa Packet\r\n");
 				APP_LOG(0, 1, "> Command format : LORA=Frequency:Power:SF:Payload\r\n");
 				APP_LOG(0, 1, "> Example :        LORA=868100000:14:7:01020304 \r\n");
+
+				lcd_printf(LCD_RED, "LoRaWAN application stopped");
+				lcd_printf(LCD_DEFAULT_FONT_COLOR, "");
+				lcd_printf(LCD_DEFAULT_FONT_COLOR, "Raw LoRa Packet Application");
+				lcd_printf(LCD_DEFAULT_FONT_COLOR, "Please refer to the console");
 			}
 			else{
 				APP_LOG_COLOR(RED);
@@ -344,6 +359,7 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 		}
 	}
 	APP_LOG_COLOR(RESET_COLOR);
+	lcd_print_buf();
 }
 
 void CENTER_Pressed_Button(void){
