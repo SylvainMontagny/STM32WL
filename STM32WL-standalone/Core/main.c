@@ -49,7 +49,7 @@ int main(void)
 	lcd_printf(LCD_BLUE, "Device turned On");
 	lcd_printf(LCD_BLUE, "Init LoRaWAN Stack...");
 	lcd_printf(LCD_BLUE, "");
-	lcd_printf(LCD_BLUE, "123456789012345678901234567890123456789");
+//	lcd_printf(LCD_BLUE, "123456789012345678901234567890123456789");
 	lcd_print_buf();
 
 	LoRaWAN_Init();

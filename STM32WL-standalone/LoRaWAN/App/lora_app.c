@@ -136,6 +136,9 @@ void LoRaWAN_Init(void)
 
 		lcd_printf(LCD_BLUE, "Raw LoRa Packet Application");
 		lcd_printf(LCD_DEFAULT_FONT_COLOR, "Please refer to the console");
+
+		//lcd_printf(LCD_DEFAULT_FONT_COLOR, "LoRaWANInit Raw mode");
+		lcd_print_buf();
 	}
 
 	/***** LoRaWAN Standalone Application  ***********/
@@ -235,6 +238,7 @@ void LoRaWAN_Init(void)
 		APP_LOG_COLOR(BLUE);
 
 		// Display buffer on screen
+		//lcd_printf(LCD_DEFAULT_FONT_COLOR, "LoRaWAN Init");
 		lcd_print_buf();
 
 		UTIL_TIMER_Create(&TxLedTimer, 0xFFFFFFFFU, UTIL_TIMER_ONESHOT, OnTxTimerLedEvent, NULL);
@@ -269,7 +273,6 @@ void LoRaWAN_Init(void)
 		 */
 		LmHandlerJoin(ActivationType);
 	}
-
 }
 
 
@@ -359,6 +362,8 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 		}
 	}
 	APP_LOG_COLOR(RESET_COLOR);
+
+	//lcd_printf(LCD_DEFAULT_FONT_COLOR, "Byte reception");
 	lcd_print_buf();
 }
 
@@ -544,7 +549,6 @@ static void SendTxData(void)
 	{
 		APP_LOG(TS_ON, VLEVEL_L, "Next Tx in  : ~%d second(s)\r\n", (nextTxIn / 1000));
 	}
-	lcd_print_buf();
 }
 
 uint8_t simuTemperature(void){
@@ -554,7 +558,7 @@ uint8_t simuTemperature(void){
 
 	if(USMB_VALVE){
 		/* Case thermostatic valve simulated.
-		 * Temperature sould reach the setpoint given by the user by adding at each function call
+		 * Temperature should reach the setpoint given by the user by adding at each function call
 		 * half of the difference between the actual temperature and the setpoint.
 		 * Variables are in Q7.1, so 41 = 20.5°C, from -128 to 127 => -64°C to 63.5°C*/
 		error = ((float) (sensor_data.setpoint - temp_valve))/2;
@@ -596,7 +600,7 @@ atim_payload_t simuAtim(void){
 	static atim_payload_t payload = {0xE0, 0x67, 0xB8, 0x3C, 0x0D08, 0x07C7, 0x0912, 0xC20C, 0x00, 0x84, 0x0D, 0x05, 0x18}; /* Random real atim_thaq payload */
 	static uint8_t countUP = 0;
 
-	payload.temperature = (countUP==0)? 0x07C7: 0x07FA; /* Temperature in centidegree cC */
+	payload.temperature = (countUP==0)? 0x07C7: 0x07FA; /* Temperature in centi-degree cC */
 	countUP = (countUP + 1) % 2;
 
 	return payload;
@@ -604,14 +608,14 @@ atim_payload_t simuAtim(void){
 
 /**
  * TCT EGREEN simulated function payload 
- * @return tct payload with changing courant and voltage
+ * @return tct payload with changing currant and voltage
  */
 tct_payload_t simuTct(void){
 	static tct_payload_t payload = {0xa0, 0x08, 0x088f, 0x0b, 0x0071, 0x0a, 0x11bf};
 	static uint8_t countUP = 0;
 
 	// Let's have a constant power P = UI
-	payload.courant = (countUP==0)? 0x0071: 0x006b; /* Courant in centiampere cA */
+	payload.courant = (countUP==0)? 0x0071: 0x006b; /* Currant in centi-ampere cA */
 	payload.voltage = (countUP==0)? 0x11bf: 0x12be; /* Voltage in mV */
 	countUP = (countUP + 1) % 2;
 
@@ -658,9 +662,9 @@ static void OnTxData(LmHandlerTxParams_t *params)
 						lcd_printf(LCD_DEFAULT_FONT_COLOR, "WATTECO Temp'O buffer");
 					}
 					else if(TCT_EGREEN){
-						APP_LOG(0, 1, "Courant: %.2f A | Voltage: %03u mV", ((float) (txBUFFER[5]<<8) + (float) txBUFFER[6])/100.0, 
+						APP_LOG(0, 1, "Currant: %.2f A | Voltage: %03u mV", ((float) (txBUFFER[5]<<8) + (float) txBUFFER[6])/100.0,
 																			(txBUFFER[8]<<8) + txBUFFER[9]);
-						lcd_printf(LCD_DEFAULT_FONT_COLOR, "Cour: %.2f A | Volt: %03u mV", ((float) (txBUFFER[5]<<8) + (float) txBUFFER[6])/100.0,
+						lcd_printf(LCD_DEFAULT_FONT_COLOR, "Cur: %.2f A | Volt: %03u mV", ((float) (txBUFFER[5]<<8) + (float) txBUFFER[6])/100.0,
 								(txBUFFER[8]<<8) + txBUFFER[9]);
 					}
 					else{
@@ -699,22 +703,25 @@ static void OnTxData(LmHandlerTxParams_t *params)
 			else{
 				APP_LOG(TS_OFF, VLEVEL_L, "- Fcnt        %d \r\n",params->UplinkCounter);
 			}
+			// Print on LCD screen
+			//lcd_printf(LCD_DEFAULT_FONT_COLOR, "OnTxDATA");
+			lcd_print_buf();
 		}
 	}
-	// Print on LCD screen
-//	UTIL_SEQ_SetTask((1 << CFG_SEQ_Task_DisplayOnLCD), CFG_SEQ_Prio_LCD);
 }
 
 
 static void OnRxData(LmHandlerAppData_t *appData, LmHandlerRxParams_t *params)
 {
 	static const char *slotStrings[] = { "1", "2", "C", "C Multicast", "B Ping-Slot", "B Multicast Ping-Slot" };
+	u_int8_t is_join = 1;
 
 	if ((appData != NULL) || (params != NULL))
 	{
 		if( appData->Port == 0){
 			// if port==0, it is join accept or MAC command
 			//APP_LOG(TS_OFF, VLEVEL_L, "MAC Command RECEIVED\r\n");
+			is_join = 0;
 		}
 		else{
 			BSP_LED_On(LED_BLUE) ;
@@ -727,7 +734,7 @@ static void OnRxData(LmHandlerAppData_t *appData, LmHandlerRxParams_t *params)
 			}
 			else{
 				APP_LOG(TS_ON, VLEVEL_L, " Receiving Unconfirmed Data Down.\r\n");
-				lcd_printf(LCD_BLUE, "Receiving Unconfirmed Data Down.");
+				lcd_printf(LCD_BLUE, "Receiving Unconf Data Down");
 			}
 
 			APP_LOG_COLOR(BLUE);
@@ -815,8 +822,11 @@ static void OnRxData(LmHandlerAppData_t *appData, LmHandlerRxParams_t *params)
 			default:  break;
 		}
 
-		// Display logs on screen
-		lcd_print_buf();
+		if (!is_join) {
+			// Display logs on screen
+			//lcd_printf(LCD_DEFAULT_FONT_COLOR, "OnRxDATA");
+			lcd_print_buf();
+		}
 	}
 }
 static void OnJoinRequest(LmHandlerJoinParams_t *joinParams)
@@ -832,13 +842,12 @@ static void OnJoinRequest(LmHandlerJoinParams_t *joinParams)
 			if (joinParams->Mode == ACTIVATION_TYPE_ABP)
 			{
 				APP_LOG(TS_OFF, VLEVEL_L, "\r\n> ABP Activation mode\r\n");
-				lcd_printf(LCD_DGREEN, "");
 				lcd_printf(LCD_DGREEN, "ABP Activation Mode");
+				lcd_printf(LCD_DEFAULT_FONT_COLOR, "");
 			}
 			else
 			{
 				APP_LOG(TS_OFF, VLEVEL_L, "\r\n> JOINED = OTAA!\r\n");
-				lcd_printf(LCD_DGREEN, "");
 				lcd_printf(LCD_DGREEN, "> JOINED = OTAA");
 			}
 
@@ -849,7 +858,7 @@ static void OnJoinRequest(LmHandlerJoinParams_t *joinParams)
 			}
 			else{
 				APP_LOG(0, 1, "> Packets will be sent every %d ms OR on a Push Button event (B1) \r\n", ADMIN_TxDutyCycleTime);
-				lcd_printf(LCD_DGREEN, "> Packets every %d ms or PB", ADMIN_TxDutyCycleTime);
+				lcd_printf(LCD_DGREEN, "> Packets every %ds or PB", ADMIN_TxDutyCycleTime/1000);
 			}
 
 			APP_LOG_COLOR(RESET_COLOR);
@@ -873,19 +882,18 @@ static void OnJoinRequest(LmHandlerJoinParams_t *joinParams)
 			if(SEND_BY_PUSH_BUTTON == false){
 				SendTxData();
 			}
-
-			// Display logs on screen
-			//lcd_print_buf(); // Already donne on tx Data
 		}
 		else
 		{
 			APP_LOG_COLOR(RED);
 			APP_LOG(TS_OFF, VLEVEL_L, "\r\n> JOIN FAILED...\r\n");
-			lcd_printf(LCD_RED, "");
-			lcd_printf(LCD_RED, "> JOIN FAILED...");
 
+			lcd_printf(LCD_RED, "> JOIN FAILED...");
+			lcd_printf(LCD_DEFAULT_FONT_COLOR, "");
 			// Display logs on screen
+			//lcd_printf(LCD_DEFAULT_FONT_COLOR, "OnJoinRequest, failed");
 			lcd_print_buf();
+
 			LmHandlerJoin(ActivationType);
 			APP_LOG_COLOR(RESET_COLOR);
 			APP_LOG(0, 1, " \r\n");
@@ -925,7 +933,7 @@ static void OnJoinTimerLedEvent(void *context)
 }
 
 /**
-  * @brief Iterruption button Initialization Function
+  * @brief Interruption button Initialization Function
   * @param None
   * @retval None
   */
