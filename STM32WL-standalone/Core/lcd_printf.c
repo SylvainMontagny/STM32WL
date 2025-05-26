@@ -12,6 +12,7 @@
 
 int8_t buf_start, buf_end;
 int8_t prev_buf_start, prev_buf_end;
+char buffer_mutex;								// 0: available buffer, 1: buffer in use
 static line_t lcd_log_buffer[BUF_LEN]; 			// Buffer of lines
 static line_t prev_lcd_log_buffer[BUF_LEN];		// Previous printed lines
 uint8_t line_nb;
@@ -23,6 +24,8 @@ void LCD_Buffer_Init(void)
 	buf_end = -1;
 	prev_buf_start = 0;
 	prev_buf_end = 0;
+
+	buffer_mutex = 0;
 
 	line_nb = 1;
 
@@ -41,6 +44,8 @@ void LCD_Buffer_Init(void)
 void lcd_print_buf(void)
 {
 #ifdef LCD_DISPLAY
+	while (buffer_mutex != 0);
+	buffer_mutex = 1;
 	for (uint8_t nbline = 0; nbline < BUF_LEN; nbline ++) {
 		int8_t line = (nbline+buf_start) % BUF_LEN;
 		int8_t prev_line = (nbline+prev_buf_start) % BUF_LEN;
@@ -59,6 +64,7 @@ void lcd_print_buf(void)
 	prev_buf_start = buf_start;
 	prev_buf_end = buf_end;
 #endif
+	buffer_mutex = 0;
 }
 
 /**
@@ -67,6 +73,10 @@ void lcd_print_buf(void)
  */
 void lcd_printf(uint16_t color, const char* format, ...)
 {
+	// Probeer maar wacht niet op mutex, en naam het. Anders er is een deadlock
+	if (buffer_mutex != 0) return;
+	buffer_mutex = 1;
+
 	buf_end = (buf_end + 1) % BUF_LEN;
 	//APP_LOG(0, 1, "s=%d; e=%d \r\n", buf_start, buf_end);
 
@@ -101,4 +111,7 @@ void lcd_printf(uint16_t color, const char* format, ...)
 	va_start(args, format);
 	vsnprintf(lcd_log_buffer[buf_end].line + str_line_nb_len, LINE_SIZE - str_line_nb_len, format, args); // Format string
 	va_end(args);
+
+	// Verhoog/bevrijd mutex
+	buffer_mutex = 0;
 }
