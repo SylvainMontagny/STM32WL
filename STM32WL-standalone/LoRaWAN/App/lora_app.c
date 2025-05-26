@@ -106,9 +106,9 @@ void LoRaWAN_Init(void)
 	APP_LOG(0, 1, "###### Savoie Mont Blanc University ####\r\n");
 	APP_LOG(0, 1, " \r\n");
 
-	lcd_printf(LCD_DEFAULT_FONT_COLOR, "################################");
-	lcd_printf(LCD_DEFAULT_FONT_COLOR, "### LoRaWAN Training Session ###");
-	lcd_printf(LCD_DEFAULT_FONT_COLOR, "############# USMB #############");
+	lcd_printf(LCD_DEFAULT_FONT_COLOR, "##############################");
+	lcd_printf(LCD_DEFAULT_FONT_COLOR, "## LoRaWAN Training Session ##");
+	lcd_printf(LCD_DEFAULT_FONT_COLOR, "############# USMB ###########");
 
 	// Check board program
 	// APP_LOG_COLOR(GREEN);
@@ -171,7 +171,7 @@ void LoRaWAN_Init(void)
 		APP_LOG(0, 1, "> Uplink Frame            %s",(CONFIRMED == true) ? "Confirmed\r\n" : "Unconfirmed\r\n");
 		APP_LOG(0, 1, "> App Port number         %d \r\n", (!WATTECO_TEMPO)? APP_PORT: WATTECO_TEMPO_PORT);
 
-		lcd_printf(LCD_DEFAULT_FONT_COLOR, "Spreading Factor  %d ms", SPREADING_FACTOR);
+		lcd_printf(LCD_DEFAULT_FONT_COLOR, "Spreading Factor  %d", SPREADING_FACTOR);
 		lcd_printf(LCD_DEFAULT_FONT_COLOR, "ADR               %s", (ADAPTIVE_DR == true) ? "ON" : "OFF");
 		lcd_printf(LCD_DEFAULT_FONT_COLOR, "Uplink Frame      %s", (CONFIRMED == true) ? "Conf" : "Unconf");
 		lcd_printf(LCD_DEFAULT_FONT_COLOR, "App Port Number   %d", (!WATTECO_TEMPO)? APP_PORT: WATTECO_TEMPO_PORT);
@@ -642,7 +642,15 @@ static void OnTxData(LmHandlerTxParams_t *params)
 				UTIL_TIMER_Start(&TxLedTimer);
 
 				APP_LOG(0, 1, "- Payload     ");
-				lcd_printf(LCD_RED, "______________________________________");
+				// Add Timestamp
+				char timestamp[20];
+				uint16_t * size;
+				TimestampNow((uint8_t *) timestamp, size);
+				char stimestamp[32];
+				strcpy(stimestamp, "_");
+				strcat(stimestamp, timestamp+2);
+				strcat(stimestamp, "______________________");
+				lcd_printf(LCD_RED, stimestamp);
 				lcd_printf(LCD_DEFAULT_FONT_COLOR, "Payload");
 
 				if(AppData.BufferSize>0)
@@ -714,7 +722,7 @@ static void OnTxData(LmHandlerTxParams_t *params)
 static void OnRxData(LmHandlerAppData_t *appData, LmHandlerRxParams_t *params)
 {
 	static const char *slotStrings[] = { "1", "2", "C", "C Multicast", "B Ping-Slot", "B Multicast Ping-Slot" };
-	u_int8_t is_join = 1;
+	char is_join = 1;
 
 	if ((appData != NULL) || (params != NULL))
 	{
@@ -822,7 +830,7 @@ static void OnRxData(LmHandlerAppData_t *appData, LmHandlerRxParams_t *params)
 			default:  break;
 		}
 
-		if (!is_join) {
+		if (is_join != 0) {
 			// Display logs on screen
 			//lcd_printf(LCD_DEFAULT_FONT_COLOR, "OnRxDATA");
 			lcd_print_buf();
@@ -862,6 +870,7 @@ static void OnJoinRequest(LmHandlerJoinParams_t *joinParams)
 			}
 
 			APP_LOG_COLOR(RESET_COLOR);
+			lcd_printf(LCD_DEFAULT_FONT_COLOR, "");
 
 			/* Create TIMER for sending next Tx Frame  */
 			// if (EventType == TX_ON_TIMER)
@@ -878,6 +887,10 @@ static void OnJoinRequest(LmHandlerJoinParams_t *joinParams)
 				UTIL_TIMER_Start(&TxTimer);
 			}
 
+			// Display logs on screen
+			//lcd_printf(LCD_DEFAULT_FONT_COLOR, "OnJoinRequest, Success");
+			lcd_print_buf();
+
 			// Send a first frame just after the Join (When using timer event to send packets)
 			if(SEND_BY_PUSH_BUTTON == false){
 				SendTxData();
@@ -890,6 +903,7 @@ static void OnJoinRequest(LmHandlerJoinParams_t *joinParams)
 
 			lcd_printf(LCD_RED, "> JOIN FAILED...");
 			lcd_printf(LCD_DEFAULT_FONT_COLOR, "");
+
 			// Display logs on screen
 			//lcd_printf(LCD_DEFAULT_FONT_COLOR, "OnJoinRequest, failed");
 			lcd_print_buf();

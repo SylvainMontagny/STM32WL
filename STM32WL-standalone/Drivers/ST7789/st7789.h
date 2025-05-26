@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    st7789.h
   * @author  Someone, modified by Sacha
-  * @brief   Header file of LCD GFX01M2 module.
+  * @brief   Header file for LCD GFX01M2 module.
   ******************************************************************************/
 
 #ifndef __ST7789_H
@@ -28,7 +28,7 @@ extern SPI_HandleTypeDef ST7789_SPI_PORT;
 #define ST7789_DC_PIN   GPIO_PIN_10 //ST7789_DC_Pin
 
 #ifndef CFG_NO_CS
-#define ST7789_CS_PORT   GPIOC // ST7789_CS_GPIO_Port
+#define ST7789_CS_PORT 	GPIOC // ST7789_CS_GPIO_Port
 #define ST7789_CS_PIN   GPIO_PIN_2 // ST7789_CS_Pin
 #endif
 

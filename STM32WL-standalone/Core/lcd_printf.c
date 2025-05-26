@@ -8,7 +8,6 @@
  */
 
 #include "lcd_printf.h"
-#include <string.h>
 
 int8_t buf_start, buf_end;
 int8_t prev_buf_start, prev_buf_end;

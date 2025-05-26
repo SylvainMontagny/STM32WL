@@ -8,7 +8,8 @@
 #ifndef INC_LCD_PRINTF_H_
 #define INC_LCD_PRINTF_H_
 
-#include "main.h"
+//#include "main.h"
+#include <string.h>
 #include "st7789.h"
 #include <stdio.h>
 #include <stdarg.h>
@@ -28,10 +29,14 @@
 #ifdef SMALL_FONT
 	#define FONT Font_7x10
 	#define LINE_HEIGHT 12
+#ifdef DISPLAY_NB_LINES
 	#define LEFT_MARGIN 3
+#else
+	#define LEFT_MARGIN 10
+#endif /* DISPLAY_NB_LINES */
 	#define BUF_LEN 25
-	#define LINE_SIZE 33 // Please consider 3 characters less when DISPLAY_NB_LINE is define
-#endif
+	#define LINE_SIZE 34 // Please consider 3 characters less when DISPLAY_NB_LINE is define and 1 less for the final character (end of line)
+#endif /* SMALL_FONT */
 
 #ifdef MEDIUM_FONT
 	#define FONT Font_11x18
@@ -39,7 +44,7 @@
 	#define LEFT_MARGIN 3
 	#define BUF_LEN 15
 	#define LINE_SIZE 20
-#endif
+#endif /* MEDIUM_FONT */
 
 #ifdef LARGE_FONT
 	#define FONT Font_16x26
@@ -47,7 +52,7 @@
 	#define LEFT_MARGIN 3
 	#define BUF_LEN 11
 	#define LINE_SIZE 14
-#endif
+#endif /* LARGE_FONT */
 
 
 void LCD_Buffer_Init(void);
