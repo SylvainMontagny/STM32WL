@@ -203,7 +203,7 @@ void LoRaWAN_Init(void)
 			lcd_printf(LCD_DEFAULT_FONT_COLOR, "Payload content   si Hum");
 		}
 		else if(PAYLOAD_1234 == true){
-			APP_LOG(0, 1, "> Payload content  		 0x01 0x02 0x03 0x04\r\n");
+			APP_LOG(0, 1, "> Payload content         0x01 0x02 0x03 0x04\r\n");
 			lcd_printf(LCD_DEFAULT_FONT_COLOR, "Payload content   1234");
 		}
 		else if(CAYENNE_LPP == true){
@@ -823,7 +823,7 @@ static void OnJoinRequest(LmHandlerJoinParams_t *joinParams)
 			{
 				APP_LOG(TS_OFF, VLEVEL_L, "\r\n> JOINED = OTAA!\r\n");
 				lcd_printf(LCD_DGREEN, "");
-				lcd_printf(LCD_DGREEN, "JOINED = OTAA");
+				lcd_printf(LCD_DGREEN, "> JOINED = OTAA");
 			}
 
 
