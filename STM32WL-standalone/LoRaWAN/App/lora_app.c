@@ -370,7 +370,7 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 void CENTER_Pressed_Button(void){
 	APP_LOG(0, 1, "Center button pressed!\r\n");
 	//lcd_printf(LCD_BLUE, "Center button pressed!");
-	lcd_printf(LCD_BLUE, "Forced transmition");
+	lcd_printf(LCD_BLUE, "Forced transmission");
 }
 
 void DOWN_Pressed_Button(void){
@@ -539,6 +539,7 @@ static void SendTxData(void)
 		AppData.BufferSize = CayenneLppGetSize();
 	}
 
+	LoRaMacTxInfo_t txInfo;
 
 	if (LORAMAC_HANDLER_SUCCESS == LmHandlerSend(&AppData, LORAWAN_DEFAULT_CONFIRMED_MSG_STATE, &nextTxIn, false))
 	{
@@ -641,8 +642,7 @@ static void OnTxData(LmHandlerTxParams_t *params)
 				BSP_LED_On(LED_GREEN) ;
 				UTIL_TIMER_Start(&TxLedTimer);
 
-				APP_LOG(0, 1, "- Payload     ");
-				// Add Timestamp
+				// Print Timestamp
 				char timestamp[20];
 				uint16_t * size;
 				TimestampNow((uint8_t *) timestamp, size);
@@ -650,8 +650,12 @@ static void OnTxData(LmHandlerTxParams_t *params)
 				strcpy(stimestamp, "_");
 				strcat(stimestamp, timestamp+2);
 				strcat(stimestamp, "______________________");
+				lcd_printf(LCD_DEFAULT_FONT_COLOR, "");
 				lcd_printf(LCD_RED, stimestamp);
 				lcd_printf(LCD_DEFAULT_FONT_COLOR, "Payload");
+
+				APP_LOG(0, 1, "- Payload     ");
+
 
 				if(AppData.BufferSize>0)
 				{

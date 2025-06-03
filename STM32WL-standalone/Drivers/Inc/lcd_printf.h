@@ -34,7 +34,7 @@
 #else
 	#define LEFT_MARGIN 10
 #endif /* DISPLAY_NB_LINES */
-	#define BUF_LEN 25
+	#define BUF_LEN 26 // Default 26
 	#define LINE_SIZE 34 // Please consider 3 characters less when DISPLAY_NB_LINE is define and 1 less for the final character (end of line)
 #endif /* SMALL_FONT */
 

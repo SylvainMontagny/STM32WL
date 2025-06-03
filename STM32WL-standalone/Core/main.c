@@ -48,7 +48,7 @@ int main(void)
 //	lcd_print_buf();
 	lcd_printf(LCD_BLUE, "Device turned On");
 	lcd_printf(LCD_BLUE, "Init LoRaWAN Stack...");
-	lcd_printf(LCD_BLUE, "");
+//	lcd_printf(LCD_BLUE, "----–––––—————");
 //	lcd_printf(LCD_BLUE, "123456789012345678901234567890123456789");
 	lcd_print_buf();
 
@@ -125,7 +125,7 @@ void MX_SPI1_Init(void)
   hspi1.Init.CLKPolarity = SPI_POLARITY_HIGH;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;

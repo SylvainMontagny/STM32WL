@@ -45,25 +45,37 @@ void lcd_print_buf(void)
 #ifdef LCD_DISPLAY
 	while (buffer_mutex != 0);
 	buffer_mutex = 1;
+
+	APP_LOG_COLOR(RED);
+	APP_LOG(TS_OFF, VLEVEL_L, "\r\nPrint buffer on LCD screen\r\n");
+
+
 	for (uint8_t nbline = 0; nbline < BUF_LEN; nbline ++) {
 		int8_t line = (nbline+buf_start) % BUF_LEN;
 		int8_t prev_line = (nbline+prev_buf_start) % BUF_LEN;
 		int16_t x = LEFT_MARGIN;
 		int32_t y = LINE_HEIGHT/2 + LINE_HEIGHT*nbline;
 		// Remove old line
+		APP_LOG(TS_OFF, VLEVEL_L, prev_lcd_log_buffer[(prev_line)%BUF_LEN].line);
+		APP_LOG(TS_OFF, VLEVEL_L, "\r\n");
 		ST7789_WriteString(x, y, prev_lcd_log_buffer[(prev_line)%BUF_LEN].line, FONT, LCD_DEFAULT_BACKGROUND, LCD_DEFAULT_BACKGROUND);
 		// Write new line
+		APP_LOG(TS_OFF, VLEVEL_L, lcd_log_buffer[line].line);
+		APP_LOG(TS_OFF, VLEVEL_L, "\r\n\n");
 		ST7789_WriteString(x, y, lcd_log_buffer[line].line, FONT, lcd_log_buffer[line].color, LCD_DEFAULT_BACKGROUND);
 
 		if (line == buf_end) nbline = BUF_LEN;
 	}
 
+	APP_LOG(TS_OFF, VLEVEL_L, "\r\n");
+	APP_LOG_COLOR(RESET_COLOR);
+
 	// Save new buffer to previous buffer
-	memcpy(prev_lcd_log_buffer, lcd_log_buffer, BUF_LEN*LINE_SIZE);
+	memcpy(prev_lcd_log_buffer, lcd_log_buffer, BUF_LEN*sizeof(line_t));
 	prev_buf_start = buf_start;
 	prev_buf_end = buf_end;
-#endif
 	buffer_mutex = 0;
+#endif
 }
 
 /**
@@ -72,6 +84,7 @@ void lcd_print_buf(void)
  */
 void lcd_printf(uint16_t color, const char* format, ...)
 {
+#ifdef LCD_DISPLAY
 	// Probeer maar wacht niet op mutex, en naam het. Anders er is een deadlock
 	if (buffer_mutex != 0) return;
 	buffer_mutex = 1;
@@ -93,9 +106,7 @@ void lcd_printf(uint16_t color, const char* format, ...)
 
 #ifdef DISPLAY_NB_LINES
 	str_line_nb_len = sizeof(str_line_nb);
-	char sline_nb[2];
-	itoa(line_nb, sline_nb, 10);
-	strcpy(str_line_nb, sline_nb);
+	itoa(line_nb, str_line_nb, 10);
 
 	if (line_nb < 0xA){
 		strcat(str_line_nb, " ");
@@ -113,4 +124,6 @@ void lcd_printf(uint16_t color, const char* format, ...)
 
 	// Verhoog/bevrijd mutex
 	buffer_mutex = 0;
+#endif
+	return;
 }
