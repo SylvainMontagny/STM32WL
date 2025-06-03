@@ -289,7 +289,7 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 
 			APP_LOG_COLOR(GREEN);
 			APP_LOG(0, 1, "\tTransmition required by the user\r\n");
-			lcd_printf(LCD_DEFAULT_FONT_COLOR, "Transmition required by user");
+			lcd_printf(LCD_DEFAULT_FONT_COLOR, "Transmission required by user");
 			UTIL_SEQ_SetTask((1 << CFG_SEQ_Task_LoRaSendOnTxTimerOrButtonEvent), CFG_SEQ_Prio_0);
 			if (SEND_BY_PUSH_BUTTON == false){
 				UTIL_TIMER_Start(&TxTimer);
@@ -368,15 +368,21 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 }
 
 void CENTER_Pressed_Button(void){
-	APP_LOG(0, 1, "Center button pressed!\r\n");
-	//lcd_printf(LCD_BLUE, "Center button pressed!");
+	//APP_LOG(0, 1, "Center button pressed!\r\n");
+	APP_LOG(0, 1, "Forced transmission by user\r\n");
 	lcd_printf(LCD_BLUE, "Forced transmission");
 }
 
 void DOWN_Pressed_Button(void){
-	APP_LOG(0, 1, "Down button pressed!\r\n");
+	//APP_LOG(0, 1, "Down button pressed!\r\n");
+	APP_LOG(0, 1, "Clear LCD screen\r\n");
 	ST7789_Fill_Color(LCD_DEFAULT_BACKGROUND);
-	//lcd_printf(LCD_BLUE, "Down button pressed!");
+}
+
+void LEFT_Pressed_Button(void){
+	// Reset device
+	APP_LOG(0, 1, "Reset Forced by user\r\n");
+	NVIC_SystemReset();
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
@@ -385,6 +391,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	{
 	case  BUTTON_SW1_PIN:
 		UTIL_SEQ_SetTask((1 << CFG_SEQ_Task_LoRaSendOnTxTimerOrButtonEvent), CFG_SEQ_Prio_0);
+		break;
+	case GPIO_PIN_4:
+		LEFT_Pressed_Button();
 		break;
 	//PROJECT BUTTON LCD
 	case  GPIO_PIN_9:
@@ -406,10 +415,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 //PROJECT BUTTON LCD
 void EXTI9_5_IRQHandler(void)
 {
-	if (EXTI->PR1 & EXTI_PR1_PIF8 == EXTI_PR1_PIF8){
-		lcd_printf(LCD_BLACK, "true");
-	}
-
 	if ((EXTI->PR1 & EXTI_PR1_PIF8) == EXTI_PR1_PIF8) {
 		// Pin 8 is IT source
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
@@ -424,6 +429,12 @@ void EXTI9_5_IRQHandler(void)
 	UTIL_SEQ_SetTask((1 << CFG_SEQ_Task_DisplayOnLCD), CFG_SEQ_Prio_LCD);
 }
 //PROJECT BUTTON LCD END
+
+void EXTI4_IRQHandler(void)
+{
+	// st7789 left button pressed
+	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
+}
 
 static void SendTxData(void)
 {
@@ -649,7 +660,7 @@ static void OnTxData(LmHandlerTxParams_t *params)
 				char stimestamp[32];
 				strcpy(stimestamp, "_");
 				strcat(stimestamp, timestamp+2);
-				strcat(stimestamp, "______________________");
+				strcat(stimestamp, "_____________________");
 				lcd_printf(LCD_DEFAULT_FONT_COLOR, "");
 				lcd_printf(LCD_RED, stimestamp);
 				lcd_printf(LCD_DEFAULT_FONT_COLOR, "Payload");
@@ -957,29 +968,32 @@ static void OnJoinTimerLedEvent(void *context)
   */
 static void MX_BP_IT_Init(void)
 {
-	//PROJECT BUTTON LCD
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
 	__HAL_RCC_GPIOA_CLK_ENABLE();
-	 /*Configure GPIO pin : PA9, Center button */
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+
+	 /*Configure GPIO pin: PA9, Center button */
 	 GPIO_InitStruct.Pin = GPIO_PIN_9;
 	 GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
 	 GPIO_InitStruct.Pull = GPIO_NOPULL;
 	 HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-	 /* EXTI interrupt init*/
-	 HAL_NVIC_SetPriority(EXTI9_5_IRQn, 1, 1);
-	 HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+	 /*Configure GPIO pin: PA4, Left button */
+	 GPIO_InitStruct.Pin = GPIO_PIN_4;
+	 GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+	 GPIO_InitStruct.Pull = GPIO_NOPULL;
+	 HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-	//PROJECT BUTTON LCD END
-
-	 __HAL_RCC_GPIOB_CLK_ENABLE();
-	 /*Configure GPIO pin : PA8, Down button */
+	 /*Configure GPIO pin: PA8, Down button */
 	 GPIO_InitStruct.Pin = GPIO_PIN_8;
 	 GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
 	 GPIO_InitStruct.Pull = GPIO_NOPULL;
 	 HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 	 /* EXTI interrupt init*/
-	 HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+	 HAL_NVIC_SetPriority(EXTI9_5_IRQn, 1, 1);
 	 HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
+	 HAL_NVIC_SetPriority(EXTI4_IRQn, 0, 0);
+	 HAL_NVIC_EnableIRQ(EXTI4_IRQn);
 }
