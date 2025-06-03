@@ -50,17 +50,31 @@ void lcd_print_buf(void)
 	while (buffer_mutex != 0);
 	buffer_mutex = 1;
 
+	int8_t line;
+	int8_t prev_line;
+	int16_t x = LEFT_MARGIN;
+	int32_t y = -LINE_HEIGHT/2;
+	int16_t diff_prev_new_line_len;
+	char suffix[LINE_SIZE];
+	char line_to_print[LINE_SIZE];
+
 	for (uint8_t nbline = 0; nbline < BUF_LEN; nbline ++) {
-		int8_t line = (nbline+buf_start) % BUF_LEN;
-		int8_t prev_line = (nbline+prev_buf_start) % BUF_LEN;
-		int16_t x = LEFT_MARGIN;
-		int32_t y = LINE_HEIGHT/2 + LINE_HEIGHT*nbline;
-		if (strlen(prev_lcd_log_buffer[(prev_line)%BUF_LEN].line) > strlen(lcd_log_buffer[line].line)) {
-			// Remove old line
-			ST7789_WriteString(x, y, prev_lcd_log_buffer[(prev_line)%BUF_LEN].line, FONT, LCD_DEFAULT_BACKGROUND, LCD_DEFAULT_BACKGROUND);
+		line = (nbline+buf_start) % BUF_LEN;
+		prev_line = (nbline+prev_buf_start) % BUF_LEN;
+		y += LINE_HEIGHT;
+		strcpy(suffix, "");
+		strcpy(line_to_print, lcd_log_buffer[line].line);
+
+		diff_prev_new_line_len = strlen(prev_lcd_log_buffer[(prev_line)%BUF_LEN].line) - strlen(lcd_log_buffer[line].line);
+
+		if (diff_prev_new_line_len > 0) {
+			for (int8_t ch = 0; ch < diff_prev_new_line_len; ch++){
+				strcat(suffix, " ");
+			}
 		}
+
 		// Write new line
-		ST7789_WriteString(x, y, lcd_log_buffer[line].line, FONT, lcd_log_buffer[line].color, LCD_DEFAULT_BACKGROUND);
+		ST7789_WriteString(x, y, strcat(line_to_print, suffix), FONT, lcd_log_buffer[line].color, LCD_DEFAULT_BACKGROUND);
 
 		if (line == buf_end) nbline = BUF_LEN;
 	}
