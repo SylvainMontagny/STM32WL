@@ -101,6 +101,8 @@
 #define ADMIN_VERBOSE					VLEVEL_L				// possible values: VLEVEL_H / VLEVEL_M / VLEVEL_L - Utilities-Conf.h
 #define ADMIN_KEY_EXTRACT				1						// possible values: 1 (display all keys), 0 (none) - lorawan_conf.h
 
+#define LCD_DISPLAY								// Allow logs to be display on the LCD screen
+#define DISPLAY_NB_LINES						// Add line number to the logs
 
 /* LoRaWAN Multicast ----------------------------------------------------------*/
 #define ADMIN_GEN_APP_KEY			    00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00 		// se-identity.h

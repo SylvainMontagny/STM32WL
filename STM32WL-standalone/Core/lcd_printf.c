@@ -4,7 +4,8 @@
  * @brief 	This file provides all the functions needed to
  * 			display logs on a GFX01M2 LCD screen with st7789
  * 			driver.
- * @author Sacha USMB
+ * @author 	Sacha USMB
+ * @Date 	apr 2025
  */
 
 #include "lcd_printf.h"

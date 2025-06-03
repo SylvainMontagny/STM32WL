@@ -1,8 +1,8 @@
-/*
+/**
  * lcd_printf.h
  *
  *  Created on: May 19, 2025
- *      Author: Sacha USMB
+ *  Author: Sacha USMB
  */
 
 #ifndef INC_LCD_PRINTF_H_
@@ -15,9 +15,11 @@
 #include <stdarg.h>
 #include "sys_app.h"
 #include <stdlib.h>
+#include "General_Setup.h"
 
-#define LCD_DISPLAY			// Allow logs to be display on the LCD screen
-#define DISPLAY_NB_LINES	// Add line number to the logs
+/* Defined in General_Steup.h */
+//#define LCD_DISPLAY			// Allow logs to be display on the LCD screen
+//#define DISPLAY_NB_LINES	// Add line number to the logs
 
 #define LCD_DEFAULT_BACKGROUND LCD_WHITE
 #define LCD_DEFAULT_FONT_COLOR LCD_BLACK
