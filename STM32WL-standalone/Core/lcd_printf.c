@@ -55,8 +55,10 @@ void lcd_print_buf(void)
 		int8_t prev_line = (nbline+prev_buf_start) % BUF_LEN;
 		int16_t x = LEFT_MARGIN;
 		int32_t y = LINE_HEIGHT/2 + LINE_HEIGHT*nbline;
-		// Remove old line
-		ST7789_WriteString(x, y, prev_lcd_log_buffer[(prev_line)%BUF_LEN].line, FONT, LCD_DEFAULT_BACKGROUND, LCD_DEFAULT_BACKGROUND);
+		if (strlen(prev_lcd_log_buffer[(prev_line)%BUF_LEN].line) > strlen(lcd_log_buffer[line].line)) {
+			// Remove old line
+			ST7789_WriteString(x, y, prev_lcd_log_buffer[(prev_line)%BUF_LEN].line, FONT, LCD_DEFAULT_BACKGROUND, LCD_DEFAULT_BACKGROUND);
+		}
 		// Write new line
 		ST7789_WriteString(x, y, lcd_log_buffer[line].line, FONT, lcd_log_buffer[line].color, LCD_DEFAULT_BACKGROUND);
 
