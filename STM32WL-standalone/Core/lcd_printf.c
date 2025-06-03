@@ -16,6 +16,9 @@ static line_t lcd_log_buffer[BUF_LEN]; 			// Buffer of lines
 static line_t prev_lcd_log_buffer[BUF_LEN];		// Previous printed lines
 uint8_t line_nb;
 
+/**
+ * @brief	Init LCD variables
+ */
 void LCD_Buffer_Init(void)
 {
 	// Init buffer's pointers
@@ -46,34 +49,24 @@ void lcd_print_buf(void)
 	while (buffer_mutex != 0);
 	buffer_mutex = 1;
 
-	APP_LOG_COLOR(RED);
-	APP_LOG(TS_OFF, VLEVEL_L, "\r\nPrint buffer on LCD screen\r\n");
-
-
 	for (uint8_t nbline = 0; nbline < BUF_LEN; nbline ++) {
 		int8_t line = (nbline+buf_start) % BUF_LEN;
 		int8_t prev_line = (nbline+prev_buf_start) % BUF_LEN;
 		int16_t x = LEFT_MARGIN;
 		int32_t y = LINE_HEIGHT/2 + LINE_HEIGHT*nbline;
 		// Remove old line
-		APP_LOG(TS_OFF, VLEVEL_L, prev_lcd_log_buffer[(prev_line)%BUF_LEN].line);
-		APP_LOG(TS_OFF, VLEVEL_L, "\r\n");
 		ST7789_WriteString(x, y, prev_lcd_log_buffer[(prev_line)%BUF_LEN].line, FONT, LCD_DEFAULT_BACKGROUND, LCD_DEFAULT_BACKGROUND);
 		// Write new line
-		APP_LOG(TS_OFF, VLEVEL_L, lcd_log_buffer[line].line);
-		APP_LOG(TS_OFF, VLEVEL_L, "\r\n\n");
 		ST7789_WriteString(x, y, lcd_log_buffer[line].line, FONT, lcd_log_buffer[line].color, LCD_DEFAULT_BACKGROUND);
 
 		if (line == buf_end) nbline = BUF_LEN;
 	}
 
-	APP_LOG(TS_OFF, VLEVEL_L, "\r\n");
-	APP_LOG_COLOR(RESET_COLOR);
-
 	// Save new buffer to previous buffer
 	memcpy(prev_lcd_log_buffer, lcd_log_buffer, BUF_LEN*sizeof(line_t));
 	prev_buf_start = buf_start;
 	prev_buf_end = buf_end;
+
 	buffer_mutex = 0;
 #endif
 }
@@ -90,7 +83,6 @@ void lcd_printf(uint16_t color, const char* format, ...)
 	buffer_mutex = 1;
 
 	buf_end = (buf_end + 1) % BUF_LEN;
-	//APP_LOG(0, 1, "s=%d; e=%d \r\n", buf_start, buf_end);
 
 	// Adjust start and end buffer pointers
 	if (buf_start == buf_end) {
