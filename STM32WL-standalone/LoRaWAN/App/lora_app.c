@@ -362,7 +362,8 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 		}
 		index = 0;
 
-		lcd_print_buf();
+		// Refresh screen
+		UTIL_SEQ_SetTask((1 << CFG_SEQ_Task_DisplayOnLCD), CFG_SEQ_Prio_LCD);
 	}
 	else{
 		rxBuff[index++] = *PData;

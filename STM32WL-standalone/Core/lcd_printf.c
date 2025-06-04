@@ -12,7 +12,9 @@
 
 int8_t buf_start, buf_end;
 int8_t prev_buf_start, prev_buf_end;
-char buffer_mutex;								// 0: available buffer, 1: buffer in use
+char buffer_mutex;								// 0: available buffer,
+												// 1: buffer in use by lcd_printf,
+												// 2: buffer in use by lcd_print_buf
 static line_t lcd_log_buffer[BUF_LEN]; 			// Buffer of lines
 static line_t prev_lcd_log_buffer[BUF_LEN];		// Previous printed lines
 uint8_t line_nb;
@@ -47,8 +49,8 @@ void LCD_Buffer_Init(void)
 void lcd_print_buf(void)
 {
 #ifdef LCD_DISPLAY
-	while (buffer_mutex != 0);
-	buffer_mutex = 1;
+	while (buffer_mutex == 1);
+	buffer_mutex = 2;
 
 	int8_t line;
 	int8_t prev_line;
