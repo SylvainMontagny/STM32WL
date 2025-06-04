@@ -328,7 +328,10 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 				APP_LOG(0, 1, "> Command format : LORA=Frequency:Power:SF:Payload\r\n");
 				APP_LOG(0, 1, "> Example :        LORA=868100000:14:7:01020304 \r\n");
 
+				lcd_printf(LCD_DEFAULT_FONT_COLOR, "");
+				lcd_printf(LCD_RED, "###############################");
 				lcd_printf(LCD_RED, "LoRaWAN application stopped");
+				lcd_printf(LCD_RED, "###############################");
 				lcd_printf(LCD_DEFAULT_FONT_COLOR, "");
 				lcd_printf(LCD_DEFAULT_FONT_COLOR, "Raw LoRa Packet Application");
 				lcd_printf(LCD_DEFAULT_FONT_COLOR, "Please refer to the console");
@@ -336,6 +339,9 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 			else{
 				APP_LOG_COLOR(RED);
 				APP_LOG(0, 1, "\r\n - You already entered the Raw LoRa Packet mode\r\n - To send a LoRa command please use this format: LORA=Frequency:Power:SF:Payload\r\n");
+				lcd_printf(LCD_DEFAULT_FONT_COLOR, "");
+				lcd_printf(LCD_DEFAULT_FONT_COLOR, "Already in Raw LoRa mode");
+				lcd_printf(LCD_DEFAULT_FONT_COLOR, "Please refer to the console");
 			}
 		}
 		else if(isTriggered == 1)
@@ -672,11 +678,11 @@ static void OnTxData(LmHandlerTxParams_t *params)
 				{
 					if(USMB_VALVE){
 						APP_LOG(0, 1, "Setpoint: %.1f °C | Temperature: %.1f °C", ((float) txBUFFER[0])/2, ((float) txBUFFER[1])/2);
-						lcd_printf(LCD_DEFAULT_FONT_COLOR, "SetP: %.1f °C | Temp: %.1f °C", ((float) txBUFFER[0])/2, ((float) txBUFFER[1])/2);
+						lcd_printf(LCD_DEFAULT_FONT_COLOR, "SetP: %.1f \x01""C | Temp: %.1f \x01""C", ((float) txBUFFER[0])/2, ((float) txBUFFER[1])/2);
 					}
 					else if(ATIM_THAQ){
 						APP_LOG(0, 1, "Temperature: %.2f °C", ((float) (txBUFFER[6]<<8) + (float) txBUFFER[7])/100.0);
-						lcd_printf(LCD_DEFAULT_FONT_COLOR, "Temperature: %.2f °C", ((float) (txBUFFER[6]<<8) + (float) txBUFFER[7])/100.0);
+						lcd_printf(LCD_DEFAULT_FONT_COLOR, "Temperature: %.2f \x01""C", ((float) (txBUFFER[6]<<8) + (float) txBUFFER[7])/100.0);
 					}
 					else if(WATTECO_TEMPO){ // Simply print the buffer
 						for(int i=0;i<size_txBUFFER;i++){
