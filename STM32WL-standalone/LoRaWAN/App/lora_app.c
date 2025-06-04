@@ -668,7 +668,11 @@ static void OnTxData(LmHandlerTxParams_t *params)
 				char stimestamp[32];
 				strcpy(stimestamp, "_");
 				strcat(stimestamp, timestamp+2);
-				strcat(stimestamp, "_____________________");
+#ifdef DISPLAY_NB_LINES
+				strcat(stimestamp, "______________");
+#else
+				strcat(stimestamp, "________________");
+#endif // DISPLAY_NB_LINE
 				lcd_printf(LCD_DEFAULT_FONT_COLOR, "");
 				lcd_printf(LCD_RED, stimestamp);
 				lcd_printf(LCD_DEFAULT_FONT_COLOR, "Payload");

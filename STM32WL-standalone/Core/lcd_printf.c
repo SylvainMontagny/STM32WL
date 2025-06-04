@@ -64,21 +64,26 @@ void lcd_print_buf(void)
 		line = (nbline+buf_start) % BUF_LEN;
 		prev_line = (nbline+prev_buf_start) % BUF_LEN;
 		y += LINE_HEIGHT;
-		strcpy(suffix, "");
-		strcpy(line_to_print, lcd_log_buffer[line].line);
 
-		diff_prev_new_line_len = strlen(prev_lcd_log_buffer[(prev_line)%BUF_LEN].line) - strlen(lcd_log_buffer[line].line);
-
-		if (diff_prev_new_line_len > 0) {
-			for (int8_t ch = 0; ch < diff_prev_new_line_len; ch++){
-				strcat(suffix, " ");
+		if ( strcmp(lcd_log_buffer[line].line , prev_lcd_log_buffer[(prev_line)%BUF_LEN].line) != 0 )
+		{
+			// If lines are different, print new line
+			strcpy(line_to_print, lcd_log_buffer[line].line);
+			// Handle suffix to only erase the end of line
+			strcpy(suffix, "");
+			diff_prev_new_line_len = strlen(prev_lcd_log_buffer[(prev_line)%BUF_LEN].line) - strlen(lcd_log_buffer[line].line);
+			if ( diff_prev_new_line_len > 0 )
+			{
+				for (int8_t ch = 0; ch < diff_prev_new_line_len; ch++)
+				{
+					strcat(suffix, " ");
+				}
 			}
+			// Write new line
+			ST7789_WriteString(x, y, strcat(line_to_print, suffix), FONT, lcd_log_buffer[line].color, LCD_DEFAULT_BACKGROUND);
 		}
 
-		// Write new line
-		ST7789_WriteString(x, y, strcat(line_to_print, suffix), FONT, lcd_log_buffer[line].color, LCD_DEFAULT_BACKGROUND);
-
-		if (line == buf_end) nbline = BUF_LEN;
+		if ( line == buf_end ) nbline = BUF_LEN;
 	}
 
 	// Save new buffer to previous buffer
