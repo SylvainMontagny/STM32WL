@@ -298,6 +298,8 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 		else if ( strcmp(rxBuff , "r") == 0){
 			APP_LOG_COLOR(GREEN);
 			APP_LOG(0, 1, "\tThe Device is resetting...\r\n");
+			lcd_printf(LCD_RED, "The Device is resetting...");
+			lcd_print_buf();
 			NVIC_SystemReset();
 		}
 		else if ( strcmp(rxBuff , "help") == 0 || strcmp(rxBuff , "h") == 0){
@@ -359,6 +361,8 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 			APP_LOG(0, 1, "\tUnknown command\r\n");
 		}
 		index = 0;
+
+		lcd_print_buf();
 	}
 	else{
 		rxBuff[index++] = *PData;
@@ -368,9 +372,6 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 		}
 	}
 	APP_LOG_COLOR(RESET_COLOR);
-
-	//lcd_printf(LCD_DEFAULT_FONT_COLOR, "Byte reception");
-	lcd_print_buf();
 }
 
 void CENTER_Pressed_Button(void){
