@@ -771,10 +771,10 @@ static void OnRxData(LmHandlerAppData_t *appData, LmHandlerRxParams_t *params)
 
 			if(appData->BufferSize>0)
 			{
-				char * payload = "- Payload   ";
+				char payload[LINE_SIZE] = "- Payload   ";
+				char val[16];
 				for(int i=0 ; i<appData->BufferSize ; i++){
 					APP_LOG(0, 1, "%02X ", appData->Buffer[i]);
-					char val[16];
 					itoa(appData->Buffer[i], val, 16);
 					strcat(payload, val);
 					strcat(payload, " ");
@@ -844,7 +844,7 @@ static void OnRxData(LmHandlerAppData_t *appData, LmHandlerRxParams_t *params)
 					sensor_data.setpoint = appData->Buffer[0];
 					APP_LOG(TS_OFF, VLEVEL_L, "New setpoint is set to %.1f °C\r\n", (float) sensor_data.setpoint/2);
 					APP_LOG_COLOR(RESET_COLOR);
-					lcd_printf(LCD_DGREEN, "New setpoint set to %.1f °C", (float) sensor_data.setpoint/2);
+					lcd_printf(LCD_DGREEN, "New setpoint set to %.1f \x01""C", (float) sensor_data.setpoint/2);
 				}
 				break;
 
