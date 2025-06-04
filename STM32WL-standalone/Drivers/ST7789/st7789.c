@@ -447,6 +447,11 @@ void ST7789_WriteChar(uint16_t x, uint16_t y, char ch, FontDef font, uint16_t co
 
 	for (i = 0; i < font.height; i++) {
 		b = font.data[(ch - 32) * font.height + i];
+		// Edit Sacha, add degree sign °
+		if (ch == '\x01'){
+			b = font.data[95 * font.height + i];
+		}
+		// End edit Sacha
 		for (j = 0; j < font.width; j++) {
 			if ((b << j) & 0x8000) {
 				uint8_t data[] = {color >> 8, color & 0xFF};
