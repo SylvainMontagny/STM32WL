@@ -17,6 +17,7 @@ extern SPI_HandleTypeDef ST7789_SPI_PORT;
 
 /* choose whether use DMA or not */
 //#define USE_DMA
+//#define USE_IT // Edit by Sacha
 
 /* If u need CS control, comment below*/
 //#define CFG_NO_CS

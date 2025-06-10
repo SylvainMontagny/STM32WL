@@ -50,7 +50,11 @@ static void ST7789_WriteData(uint8_t *buff, size_t buff_size)
 			else
 				HAL_SPI_Transmit(&ST7789_SPI_PORT, buff, chunk_size, HAL_MAX_DELAY);
 		#else
-			HAL_SPI_Transmit(&ST7789_SPI_PORT, buff, chunk_size, HAL_MAX_DELAY);
+			#ifdef USE_IT
+				HAL_SPI_Transmit_IT(&ST7789_SPI_PORT, buff, chunk_size);
+			#else
+				HAL_SPI_Transmit(&ST7789_SPI_PORT, buff, chunk_size, HAL_MAX_DELAY);
+			#endif
 		#endif
 		buff += chunk_size;
 		buff_size -= chunk_size;
