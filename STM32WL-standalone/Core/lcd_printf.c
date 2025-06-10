@@ -82,6 +82,15 @@ void lcd_print_buf(void)
 			// Write new line
 			ST7789_WriteString(x, y, strcat(line_to_print, suffix), FONT, lcd_log_buffer[line].color, LCD_DEFAULT_BACKGROUND);
 		}
+		else
+		{
+#ifndef DISPLAY_NB_LINES
+			// Avoid display issues after a screen refresh
+			// Otherwise, strings stored in prev_lcd_log_buffer and that remains the same after a new lcd_printf
+			// are not printed again after a screen refresh. This leads to missing lines.
+			ST7789_WriteString(x, y, lcd_log_buffer[line].line, FONT, lcd_log_buffer[line].color, LCD_DEFAULT_BACKGROUND);
+#endif
+		}
 
 		if ( line == buf_end ) nbline = BUF_LEN;
 	}
