@@ -21,8 +21,9 @@
 //#define LCD_DISPLAY			// Allow logs to be display on the LCD screen
 //#define DISPLAY_NB_LINES	// Add line number to the logs
 
-#define LCD_DEFAULT_BACKGROUND LCD_WHITE
-#define LCD_DEFAULT_FONT_COLOR LCD_BLACK
+#define LCD_DEFAULT_BACKGROUND 	LCD_WHITE
+#define LCD_DEFAULT_FONT_COLOR 	LCD_BLACK
+
 /* Choose font size */
 #define SMALL_FONT
 //#define MEDIUM_FONT
@@ -56,9 +57,9 @@
 	#define LINE_SIZE 14
 #endif /* LARGE_FONT */
 
-
 void LCD_Buffer_Init(void);
 void lcd_print_buf(void);
+void lcd_print_buf_complete(uint8_t);
 void lcd_printf(uint16_t, const char*, ...);
 
 typedef struct _line {

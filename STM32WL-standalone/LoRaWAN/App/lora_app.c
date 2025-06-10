@@ -383,8 +383,10 @@ void CENTER_Pressed_Button(void){
 
 void DOWN_Pressed_Button(void){
 	//APP_LOG(0, 1, "Down button pressed!\r\n");
-	APP_LOG(0, 1, "Clear LCD screen\r\n");
+	APP_LOG(0, 1, "\r\nClearing LCD screen...\r\n");
 	ST7789_Fill_Color(LCD_DEFAULT_BACKGROUND);
+	APP_LOG(0, 1, "Done\r\n");
+	lcd_print_buf_complete(0);
 }
 
 void LEFT_Pressed_Button(void){

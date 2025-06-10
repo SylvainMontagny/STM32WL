@@ -19,6 +19,8 @@ static line_t lcd_log_buffer[BUF_LEN]; 			// Buffer of lines
 static line_t prev_lcd_log_buffer[BUF_LEN];		// Previous printed lines
 uint8_t line_nb;
 
+void lcd_print_buf_complete(uint8_t);
+
 /**
  * @brief	Init LCD variables
  */
@@ -44,9 +46,16 @@ void LCD_Buffer_Init(void)
 }
 
 /**
- * @brief 	Print buffer values in the LCD screen
+ * @brief 	Print buffer values in the LCD screen by default
  */
-void lcd_print_buf(void)
+void lcd_print_buf(void){
+	lcd_print_buf_complete(1);
+}
+
+/**
+ * @brief 	Print buffer values in the LCD screen, adding an extra parameter
+ */
+void lcd_print_buf_complete(uint8_t is_screen_refresh)
 {
 #ifdef LCD_DISPLAY
 	while (buffer_mutex == 1);
@@ -65,7 +74,11 @@ void lcd_print_buf(void)
 		prev_line = (nbline+prev_buf_start) % BUF_LEN;
 		y += LINE_HEIGHT;
 
-		if ( strcmp(lcd_log_buffer[line].line , prev_lcd_log_buffer[(prev_line)%BUF_LEN].line) != 0 )
+		if (is_screen_refresh == 0)
+		{
+			ST7789_WriteString(x, y, lcd_log_buffer[line].line, FONT, lcd_log_buffer[line].color, LCD_DEFAULT_BACKGROUND);
+		}
+		else if ( strcmp(lcd_log_buffer[line].line , prev_lcd_log_buffer[(prev_line)%BUF_LEN].line) != 0 )
 		{
 			// If lines are different, print new line
 			strcpy(line_to_print, lcd_log_buffer[line].line);
