@@ -38,6 +38,9 @@ uint16_t GetTemperatureLevel(void);
 void GetUniqueId(uint8_t *id);
 uint32_t GetDevAddr(void);
 
+// Edit Sacha, originally static function
+void TimestampNow(uint8_t *buff, uint16_t *size);
+
 
 #ifdef __cplusplus
 }

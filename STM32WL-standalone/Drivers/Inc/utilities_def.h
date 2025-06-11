@@ -29,13 +29,15 @@ typedef enum
 
 /**
   * This is the list of priority required by the application
-  * Each Id shall be in the range 0..31
+  * Each Id shall be in the range 0..CFG_SEQ_Prio_NBR (<32)
   */
 typedef enum
 {
   CFG_SEQ_Prio_0,
+  CFG_SEQ_Prio_LCD,
+  CFG_SEQ_Prio_LOW,
 
-  CFG_SEQ_Prio_NBR,
+  CFG_SEQ_Prio_NBR
 } CFG_SEQ_Prio_Id_t;
 
 /**
@@ -46,6 +48,7 @@ typedef enum
 {
   CFG_SEQ_Task_LmHandlerProcess,
   CFG_SEQ_Task_LoRaSendOnTxTimerOrButtonEvent,
+  CFG_SEQ_Task_DisplayOnLCD,
 
   CFG_SEQ_Task_NBR
 } CFG_SEQ_Task_Id_t;

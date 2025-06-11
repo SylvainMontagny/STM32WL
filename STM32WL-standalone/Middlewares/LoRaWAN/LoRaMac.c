@@ -61,6 +61,7 @@
 
 // Edit sylvain
 #include "sys_app.h"
+//#include "lcd_printf.h"
 
 extern uint8_t isRxConfirmed;
 extern uint8_t txBUFFER[100];
@@ -3229,9 +3230,11 @@ static void AckTimeoutRetriesProcess( void )
     {
         MacCtx.AckTimeoutRetriesCounter++;
 
-        // Edit sylvain
+        // Edit sylvain & Sacha
         APP_LOG_COLOR(RED);
 		APP_LOG(TS_OFF, VLEVEL_L, " > No ACK Received > Retry %d\r\n" , MacCtx.AckTimeoutRetriesCounter);
+//		lcd_printf(LCD_RED, " > No ACK Received > Retry %d" , MacCtx.AckTimeoutRetriesCounter);
+//		lcd_print_buf();
 		APP_LOG_COLOR(RESET_COLOR);
 		// End Edit
 
@@ -3266,18 +3269,21 @@ static void AckTimeoutRetriesFinalize( void )
 
         MacCtx.NodeAckRequested = false;
         MacCtx.McpsConfirm.AckReceived = false;
-        // Edit sylvain
+        // Edit sylvain & Sacha
             APP_LOG_COLOR(RED);
        		APP_LOG(TS_OFF, VLEVEL_L, " > No ACK Received > End of transmission \r\n" );
+       		//lcd_printf(LCD_DGREEN, " > No ACK Received > End");
        		APP_LOG_COLOR(RESET_COLOR);
        		// End Edit
     }
-    	// Edit sylvain
+    	// Edit sylvain & Sacha
     else{
     	APP_LOG_COLOR(GREEN);
 		APP_LOG(TS_OFF, VLEVEL_L, " > ACK Received\r\n");
+		//lcd_printf(LCD_DGREEN, " > ACK Received");
 		APP_LOG_COLOR(RESET_COLOR);
     }
+    //lcd_print_buf();
 		// End Edit
     MacCtx.McpsConfirm.NbRetries = MacCtx.AckTimeoutRetriesCounter;
 }

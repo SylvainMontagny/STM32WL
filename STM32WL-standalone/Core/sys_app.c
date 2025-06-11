@@ -22,7 +22,7 @@ uint32_t isClockSynchronised = 0;
 
 #define LORAWAN_MAX_BAT   254
 
-static void TimestampNow(uint8_t *buff, uint16_t *size);
+void TimestampNow(uint8_t *buff, uint16_t *size);
 static void tiny_snprintf_like(char *buf, uint32_t maxsize, const char *strFormat, ...);
 
 void SystemApp_Init(void)
@@ -162,7 +162,7 @@ uint32_t GetDevAddr(void)
 
 
 
-static void TimestampNow(uint8_t *buff, uint16_t *size)
+void TimestampNow(uint8_t *buff, uint16_t *size)
 {
   // Edit Sylvain
   //!\\ BE CAREFUL - MAX_TS_SIZE (Core/sys_app.c) and  UTIL_ADV_TRACE_TMP_MAX_TIMESTMAP_SIZE (/Drivers/Inc/utilities_conf.h) have been increase to 30
