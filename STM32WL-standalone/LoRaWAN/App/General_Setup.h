@@ -70,39 +70,39 @@
 #define ADMIN_DEFAULT_DATA_RATE_IF_NOT_ADR			ADMIN_DR	// possible values: DR_0 / DR_1 / DR_2 / DR_3 / DR_4 / DR_5 - lora_app.h
 #define ADMIN_DEFAULT_DATA_RATE_IF_ADR				ADMIN_DR	// possible values: DR_0 / DR_1 / DR_2 / DR_3 / DR_4 / DR_5 - RegionEU868.h
 #define ADMIN_ADR_STATE								ADAPTIVE_DR	// possible values: LORAMAC_HANDLER_ADR_ON / LORAMAC_HANDLER_ADR_OFF
-#define ADMIN_RECEIVE_DELAY1		1000								// RegionCommon.h
-#define ADMIN_RX2_DR				DR_0								// possible values: DR_0 to DR_5 - RegionEU868.h
-#define ADMIN_ADR_ACK_LIMIT			8									// Default value=64. RegionCommon.h
-#define ADMIN_ADR_ACK_DELAY			4									// Default value=32. RegionCommon.h
-#define ADMIN_MAX_ACK_RETRIES		8									// Number of retries when using confirmed packet. Default value=8. LoRaMac.h
+#define ADMIN_RECEIVE_DELAY1		1000		// RegionCommon.h
+#define ADMIN_RX2_DR				DR_0		// possible values: DR_0 to DR_5 - RegionEU868.h
+#define ADMIN_ADR_ACK_LIMIT			8			// Default value=64. RegionCommon.h
+#define ADMIN_ADR_ACK_DELAY			4			// Default value=32. RegionCommon.h
+#define ADMIN_MAX_ACK_RETRIES		8			// Number of retries when using confirmed packet. Default value=8. LoRaMac.h
 
 /* LoRaWAN Application --------------------------------------------------------*/
-#define RAW_LORA_APP					false
+#define RAW_LORA_APP				false
 
 // Uplink Mode
-#define ADMIN_TX_TYPE							SEND_BY_PUSH_BUTTON				// possible values: 0 (by timer, every TxDutyCycleTime) / 1 (by button B3) - lora_app.c
-#define ADMIN_TxDutyCycleTime					FRAME_DELAY						// in ms - lora_app.h
-#define ADMIN_TX_CONFIRMED_TYPE					CONFIRMED						// possible values: LORAMAC_HANDLER_UNCONFIRMED_MSG / LORAMAC_HANDLER_CONFIRMED_MSG - lora_app.h
+#define ADMIN_TX_TYPE				SEND_BY_PUSH_BUTTON			// possible values: 0 (by timer, every TxDutyCycleTime) / 1 (by button B3) - lora_app.c
+#define ADMIN_TxDutyCycleTime		FRAME_DELAY					// in ms - lora_app.h
+#define ADMIN_TX_CONFIRMED_TYPE		CONFIRMED					// possible values: LORAMAC_HANDLER_UNCONFIRMED_MSG / LORAMAC_HANDLER_CONFIRMED_MSG - lora_app.h
 
 
 // Power
-#define ADMIN_LOW_POWER					!LOW_POWER				// 0 (Low Power enabled) / 1 (Low Power disabled)
+#define ADMIN_LOW_POWER				!LOW_POWER	// 0 (Low Power enabled) / 1 (Low Power disabled)
 
 // Sensors
 #define ADMIN_SENSOR_ENABLED		false		// 0 (No sensors) / 1 (Sensors Board IKS01A3)
-#define USMB_VALVE					false
-#define VALVE_APP_PORT			  	30			// Default port for downlink configuration
-#define ATIM_THAQ                 	false		// Temperature
-#define WATTECO_TEMPO             	false		// Raw payload
-#define WATTECO_TEMPO_PORT		  	125			// Default port for payload decoder
-#define TCT_EGREEN				  	false 		// Courant, voltage (and eventually temperature)
+#define USMB_VALVE          		false
+#define VALVE_APP_PORT      		30			// Default port for downlink configuration
+#define ATIM_THAQ           		false		// Temperature
+#define WATTECO_TEMPO       		false		// Raw payload
+#define WATTECO_TEMPO_PORT  		125			// Default port for payload decoder
+#define TCT_EGREEN          		false 		// Courant, voltage (and eventually temperature)
 
 /* Device LOGs ----------------------------------------------------------------*/
-#define ADMIN_VERBOSE					VLEVEL_L				// possible values: VLEVEL_H / VLEVEL_M / VLEVEL_L - Utilities-Conf.h
-#define ADMIN_KEY_EXTRACT				1						// possible values: 1 (display all keys), 0 (none) - lorawan_conf.h
+#define ADMIN_VERBOSE				VLEVEL_L	// possible values: VLEVEL_H / VLEVEL_M / VLEVEL_L - Utilities-Conf.h
+#define ADMIN_KEY_EXTRACT			1			// possible values: 1 (display all keys), 0 (none) - lorawan_conf.h
 
-#define LCD_DISPLAY								// Allow logs to be display on the LCD screen
-#define DISPLAY_NB_LINES						// Add line number to the logs
+//#define LCD_DISPLAY     						// Allow logs to be display on the LCD screen
+//#define DISPLAY_NB_LINES						// Add line number to the logs
 
 /* LoRaWAN Multicast ----------------------------------------------------------*/
 #define ADMIN_GEN_APP_KEY			    00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00 		// se-identity.h
