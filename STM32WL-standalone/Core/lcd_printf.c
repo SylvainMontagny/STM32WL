@@ -5,7 +5,7 @@
  * 			display logs on a GFX01M2 LCD screen with st7789
  * 			driver.
  * @author 	Sacha USMB
- * @Date 	apr 2025
+ * @Date 	May 2025
  */
 
 #include "lcd_printf.h"
@@ -15,6 +15,7 @@ int8_t prev_buf_start, prev_buf_end;
 char buffer_mutex;								// 0: available buffer,
 												// 1: buffer in use by lcd_printf,
 												// 2: buffer in use by lcd_print_buf
+
 static line_t lcd_log_buffer[BUF_LEN]; 			// Buffer of lines
 static line_t prev_lcd_log_buffer[BUF_LEN];		// Previous printed lines
 uint8_t line_nb;
@@ -46,7 +47,7 @@ void LCD_Buffer_Init(void)
 }
 
 /**
- * @brief 	Print buffer values in the LCD screen by default
+ * @brief 	Default buffer values print on the LCD screen
  */
 void lcd_print_buf(void){
 	lcd_print_buf_complete(1);
@@ -54,20 +55,21 @@ void lcd_print_buf(void){
 
 /**
  * @brief 	Print buffer values in the LCD screen, adding an extra parameter
+ * @param	is_screen_refresh: if equals to 0, the whole buffer will be print without any speed improvements
  */
 void lcd_print_buf_complete(uint8_t is_screen_refresh)
 {
 #ifdef LCD_DISPLAY
-	while (buffer_mutex == 1);
-	buffer_mutex = 2;
+	while (buffer_mutex == 1); 	// Waiting for lcd_printf() to release the mutex
+	buffer_mutex = 2;			// Take mutex
 
 	int8_t line;
 	int8_t prev_line;
 	int16_t x = LEFT_MARGIN;
 	int32_t y = -LINE_HEIGHT/2;
 	int16_t diff_prev_new_line_len;
-	char suffix[LINE_SIZE];
-	char line_to_print[LINE_SIZE];
+	char suffix[LINE_SIZE];				// Suffix to be cleared at the end of line
+	char line_to_print[LINE_SIZE];		// Full line to print
 
 	for (uint8_t nbline = 0; nbline < BUF_LEN; nbline ++) {
 		line = (nbline+buf_start) % BUF_LEN;
@@ -78,7 +80,7 @@ void lcd_print_buf_complete(uint8_t is_screen_refresh)
 		{
 			ST7789_WriteString(x, y, lcd_log_buffer[line].line, FONT, lcd_log_buffer[line].color, LCD_DEFAULT_BACKGROUND);
 		}
-		else if ( strcmp(lcd_log_buffer[line].line , prev_lcd_log_buffer[(prev_line)%BUF_LEN].line) != 0 )
+		else if ( strcmp(lcd_log_buffer[line].line, prev_lcd_log_buffer[(prev_line)%BUF_LEN].line) != 0 )
 		{
 			// If lines are different, print new line
 			strcpy(line_to_print, lcd_log_buffer[line].line);
@@ -97,7 +99,7 @@ void lcd_print_buf_complete(uint8_t is_screen_refresh)
 		}
 		else
 		{
-#ifndef DISPLAY_NB_LINES
+#ifndef DISPLAY_NB_LINES // Deprecated option, corrected by is_screen_refresh
 			// Avoid display issues after a screen refresh
 			// Otherwise, strings stored in prev_lcd_log_buffer and that remains the same after a new lcd_printf
 			// are not printed again after a screen refresh. This leads to missing lines.
@@ -124,7 +126,7 @@ void lcd_print_buf_complete(uint8_t is_screen_refresh)
 void lcd_printf(uint16_t color, const char* format, ...)
 {
 #ifdef LCD_DISPLAY
-	// Probeer maar wacht niet op mutex, en naam het. Anders er is een deadlock
+	// Probeer, maar wacht niet op mutex, en naam het. Anders er is een deadlock
 	if (buffer_mutex != 0) return;
 	buffer_mutex = 1;
 
@@ -154,7 +156,7 @@ void lcd_printf(uint16_t color, const char* format, ...)
 	line_nb = (line_nb + 1) % 100;
 #endif // DISPLAY_NB_LINES
 
-	// Init variadiques arguments
+	// Init variadic arguments
 	strcpy(lcd_log_buffer[buf_end].line, str_line_nb);
 	va_start(args, format);
 	vsnprintf(lcd_log_buffer[buf_end].line + str_line_nb_len, LINE_SIZE - str_line_nb_len, format, args); // Format string

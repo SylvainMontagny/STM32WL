@@ -7,9 +7,6 @@
 #include "stm32wlxx_hal_spi.h"
 #include "st7789.h"
 #include "lcd_printf.h"
-
-
-
 #include "lora_app.h"
 #include "sys_app.h"
 #include "stm32_seq.h"
@@ -25,32 +22,20 @@ int main(void)
 	HAL_Init();
 	SystemClock_Config();
 	MX_I2C2_Init();
-
-	LCD_Buffer_Init();
-
 	SystemApp_Init();
 
-	/*Initialize the Sensors */
+	/* Initialize the Sensors *******************/
 	EnvSensors_Init();
 
-	// LCD init
+	/* LCD init *********************************/
+	LCD_Buffer_Init();
 	MX_GPIO_Init();
 	MX_SPI1_Init();
 	ST7789_Init();
 
-	// LCD test
-	//ST7789_Fill_Color(LCD_BLACK);
-//	lcd_printf(LCD_BLACK, "HELLO");
-//	lcd_printf(LCD_RED, "World");
-//	lcd_printf(LCD_BLUE, "!");
-//	lcd_printf(LCD_GREEN, "iiiiiiiiiiiiiiiiiiii");
-//	lcd_printf(LCD_GREEN, "wwwwwwwwwwwwwwwwwwww");
-//	lcd_print_buf();
+	/* LCD test *********************************/
 	lcd_printf(LCD_BLUE, "Device turned On");
 	lcd_printf(LCD_BLUE, "Init LoRaWAN Stack...");
-//	lcd_printf(LCD_BLUE, "{{{ ||| }}} ~~~ \x01\x01""C \x01 C www");
-//	lcd_printf(LCD_BLUE, "----–––––—————");
-//	lcd_printf(LCD_BLUE, "123456789012345678901234567890123456789");
 	lcd_print_buf();
 
 	LoRaWAN_Init();
@@ -110,14 +95,6 @@ void SystemClock_Config(void)
   */
 void MX_SPI1_Init(void)
 {
-
-  /* USER CODE BEGIN SPI1_Init 0 */
-
-  /* USER CODE END SPI1_Init 0 */
-
-  /* USER CODE BEGIN SPI1_Init 1 */
-
-  /* USER CODE END SPI1_Init 1 */
   /* SPI1 parameter configuration*/
   hspi1.Instance = SPI1;
   hspi1.Init.Mode = SPI_MODE_MASTER;
@@ -137,10 +114,6 @@ void MX_SPI1_Init(void)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN SPI1_Init 2 */
-
-  /* USER CODE END SPI1_Init 2 */
-
 }
 
 /**
@@ -150,15 +123,11 @@ void MX_SPI1_Init(void)
   */
 void MX_GPIO_Init(void)
 {
-/* USER CODE BEGIN MX_GPIO_Init_1 */
-/* USER CODE END MX_GPIO_Init_1 */
-
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
-/* USER CODE BEGIN MX_GPIO_Init_2 */
 	GPIO_InitTypeDef CS_init;
 	CS_init.Mode = GPIO_MODE_OUTPUT_PP;
 	CS_init.Pin = GPIO_PIN_2;
@@ -176,8 +145,6 @@ void MX_GPIO_Init(void)
 	DC_init.Pin = GPIO_PIN_10;
 	DC_init.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
 	HAL_GPIO_Init(GPIOB, &DC_init);
-
-/* USER CODE END MX_GPIO_Init_2 */
 }
 
 void Error_Handler(void)

@@ -19,7 +19,7 @@
 #include "radio.h"
 #include "send_raw_lora.h"
 #include "stdlib.h"
-#include "lcd_printf.h" /* To print logs on the LCD screen */
+#include "lcd_printf.h" /* To print logs on the GFX01M2 LCD screen */
 
 #include  "General_Setup.h"
 uint8_t simuTemperature(void);
@@ -137,7 +137,6 @@ void LoRaWAN_Init(void)
 		lcd_printf(LCD_BLUE, "Raw LoRa Packet Application");
 		lcd_printf(LCD_DEFAULT_FONT_COLOR, "Please refer to the console");
 
-		//lcd_printf(LCD_DEFAULT_FONT_COLOR, "LoRaWANInit Raw mode");
 		lcd_print_buf();
 	}
 
@@ -238,7 +237,6 @@ void LoRaWAN_Init(void)
 		APP_LOG_COLOR(BLUE);
 
 		// Display buffer on screen
-		//lcd_printf(LCD_DEFAULT_FONT_COLOR, "LoRaWAN Init");
 		lcd_print_buf();
 
 		UTIL_TIMER_Create(&TxLedTimer, 0xFFFFFFFFU, UTIL_TIMER_ONESHOT, OnTxTimerLedEvent, NULL);
@@ -375,20 +373,27 @@ static void byteReception(uint8_t *PData, uint16_t Size, uint8_t Error){
 	APP_LOG_COLOR(RESET_COLOR);
 }
 
+/**
+ * MFX01M2 Center Button pressed
+ */
 void CENTER_Pressed_Button(void){
-	//APP_LOG(0, 1, "Center button pressed!\r\n");
 	APP_LOG(0, 1, "Forced transmission by user\r\n");
 	lcd_printf(LCD_BLUE, "Forced transmission");
 }
 
+/**
+ * MFX01M2 Down Button pressed
+ */
 void DOWN_Pressed_Button(void){
-	//APP_LOG(0, 1, "Down button pressed!\r\n");
 	APP_LOG(0, 1, "\r\nClearing LCD screen...\r\n");
 	ST7789_Fill_Color(LCD_DEFAULT_BACKGROUND);
 	APP_LOG(0, 1, "Done\r\n");
 	lcd_print_buf_complete(0);
 }
 
+/**
+ * MFX01M2 Left Button pressed
+ */
 void LEFT_Pressed_Button(void){
 	// Reset device
 	APP_LOG(0, 1, "Reset Forced by user\r\n");
@@ -405,12 +410,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	case GPIO_PIN_4:
 		LEFT_Pressed_Button();
 		break;
-	//PROJECT BUTTON LCD
 	case  GPIO_PIN_9:
 		CENTER_Pressed_Button();
 		UTIL_SEQ_SetTask((1 << CFG_SEQ_Task_LoRaSendOnTxTimerOrButtonEvent), CFG_SEQ_Prio_0);
 		break;
-	//PROJECT BUTTON LCD END
 	case  GPIO_PIN_8:
 		DOWN_Pressed_Button();
 	case  BUTTON_SW2_PIN:
@@ -422,15 +425,16 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	}
 }
 
-//PROJECT BUTTON LCD
 void EXTI9_5_IRQHandler(void)
 {
 	if ((EXTI->PR1 & EXTI_PR1_PIF8) == EXTI_PR1_PIF8) {
+		// GFX01M2 right button pressed
 		// Pin 8 is IT source
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
 
 	}
 	else if ((EXTI->PR1 & EXTI_PR1_PIF9) == EXTI_PR1_PIF9) {
+		// GFX01M2 center button pressed
 		// Pin 9 is IT source
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_9);
 	}
@@ -438,11 +442,10 @@ void EXTI9_5_IRQHandler(void)
 
 	UTIL_SEQ_SetTask((1 << CFG_SEQ_Task_DisplayOnLCD), CFG_SEQ_Prio_LCD);
 }
-//PROJECT BUTTON LCD END
 
 void EXTI4_IRQHandler(void)
 {
-	// st7789 left button pressed
+	// GFX01M2 left button pressed. Right button application should also be handled here
 	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
 }
 
@@ -740,8 +743,6 @@ static void OnTxData(LmHandlerTxParams_t *params)
 			else{
 				APP_LOG(TS_OFF, VLEVEL_L, "- Fcnt        %d \r\n",params->UplinkCounter);
 			}
-			// Print on LCD screen
-			//lcd_printf(LCD_DEFAULT_FONT_COLOR, "OnTxDATA");
 			lcd_print_buf();
 		}
 	}
@@ -861,7 +862,7 @@ static void OnRxData(LmHandlerAppData_t *appData, LmHandlerRxParams_t *params)
 
 		if (is_join != 0) {
 			// Display logs on screen
-			//lcd_printf(LCD_DEFAULT_FONT_COLOR, "OnRxDATA");
+			// Avoid to print join mac command
 			lcd_print_buf();
 		}
 	}
@@ -917,7 +918,6 @@ static void OnJoinRequest(LmHandlerJoinParams_t *joinParams)
 			}
 
 			// Display logs on screen
-			//lcd_printf(LCD_DEFAULT_FONT_COLOR, "OnJoinRequest, Success");
 			lcd_print_buf();
 
 			// Send a first frame just after the Join (When using timer event to send packets)
@@ -934,7 +934,6 @@ static void OnJoinRequest(LmHandlerJoinParams_t *joinParams)
 			lcd_printf(LCD_DEFAULT_FONT_COLOR, "");
 
 			// Display logs on screen
-			//lcd_printf(LCD_DEFAULT_FONT_COLOR, "OnJoinRequest, failed");
 			lcd_print_buf();
 
 			LmHandlerJoin(ActivationType);

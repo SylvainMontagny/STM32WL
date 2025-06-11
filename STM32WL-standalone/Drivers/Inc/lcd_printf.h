@@ -1,8 +1,9 @@
 /**
- * lcd_printf.h
- *
- *  Created on: May 19, 2025
- *  Author: Sacha USMB
+ * 	lcd_printf.h
+ * 	@brief 	Header file for lcd_printf.c source file. Contains all lcd_printf
+ * 			configurations that can be changed.
+ * @author 	Sacha USMB
+ * @Date 	May 19, 2025
  */
 
 #ifndef INC_LCD_PRINTF_H_
@@ -26,8 +27,8 @@
 
 /* Choose font size */
 #define SMALL_FONT
-//#define MEDIUM_FONT
-//#define LARGE_FONT
+//#define MEDIUM_FONT		// Not fully tested
+//#define LARGE_FONT		// Not tested
 
 #ifdef SMALL_FONT
 	#define FONT Font_7x10
@@ -37,8 +38,8 @@
 #else
 	#define LEFT_MARGIN 10
 #endif /* DISPLAY_NB_LINES */
-	#define BUF_LEN 26 // Default 26
-	#define LINE_SIZE 34 // Please consider 3 characters less when DISPLAY_NB_LINE is define and 1 less for the final character (end of line)
+	#define BUF_LEN 26 		// Default 26
+	#define LINE_SIZE 34 	// Please consider that 3 characters will be truncated when DISPLAY_NB_LINE is define and 1 less for the final character (end of line)
 #endif /* SMALL_FONT */
 
 #ifdef MEDIUM_FONT
