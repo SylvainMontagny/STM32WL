@@ -19,8 +19,8 @@
 #include "General_Setup.h"
 
 /* Defined in General_Steup.h */
-//#define LCD_DISPLAY			// Allow logs to be display on the LCD screen
-//#define DISPLAY_NB_LINES	// Add line number to the logs
+//#define LCD_DISPLAY     	false	// Allow logs to be display on the LCD screen
+//#define DISPLAY_NB_LINES	false	// Add line number to the logs
 
 #define LCD_DEFAULT_BACKGROUND 	LCD_WHITE
 #define LCD_DEFAULT_FONT_COLOR 	LCD_BLACK
